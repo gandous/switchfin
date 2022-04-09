@@ -5,7 +5,7 @@ project(switchfin)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if (SWITCH)
+if(SWITCH)
     list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
     list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Switch)
 
@@ -27,12 +27,11 @@ include_directories("src")
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/lib/")
 
-file(GLOB_RECURSE SRC "src/*")
-add_executable(switchfin ${SRC})
+file(GLOB_RECURSE SWITCHFIN_SRC "src/*")
+add_executable(switchfin ${SWITCHFIN_SRC})
 
 target_compile_options(switchfin PRIVATE -g3 -Wall -Wextra)
 
-target_link_libraries(switchfin gana)
 if (SWITCH)
     set_target_properties(switchfin PROPERTIES
     APP_TITLE "switchfin"
@@ -44,7 +43,7 @@ if (SWITCH)
 
     add_nro_target(switchfin)
 else()
-    target_link_libraries(switchfin sfml-window sfml-graphics sfml-audio sfml-system gana)
+    target_link_libraries(switchfin sfml-window EGL GL sfml-graphics sfml-audio sfml-system gana)
 endif()
 
 # file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})

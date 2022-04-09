@@ -5,6 +5,8 @@
 #include <string>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Window.hpp>
+#include "nanovg/src/nanovg.h"
 
 namespace gana {
 
@@ -17,6 +19,7 @@ class App {
     private:
         sf::VideoMode _mode;
         sf::RenderWindow _window;
+        NVGcontext* _vg;
 };
 
 }

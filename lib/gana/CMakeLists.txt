@@ -1,11 +1,15 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(gana)
+include_directories(gana PRIVATE ".")
+include_directories(gana PRIVATE "${PROJECT_SOURCE_DIR}/lib")
+include_directories(gana PRIVATE "${PROJECT_SOURCE_DIR}/lib/glad/include")
 
-set(CMAKE_CXX_STANDARD 17)
+file(GLOB_RECURSE GANA_SRC "*")
 
+add_library(gana ${GANA_SRC})
+if (SWITCH)
+    target_link_libraries(gana nanovg)
+else()
+    target_link_libraries(gana nanovg glad)
+endif()
 
-include_directories("${PROJECT_SOURCE_DIR}")
-
-file(GLOB_RECURSE SRC "*")
-add_library(gana ${SRC})
