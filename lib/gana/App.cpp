@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <SFML/Window/Event.hpp>
 #include <SFML/System/String.hpp>
 #include "App.hpp"
 #include "nanovg/src/nanovg.h"
@@ -38,6 +39,13 @@ App::~App()
 void App::run()
 {
     while (_window.isOpen()) {
+        sf::Event evt;
+        while (_window.pollEvent(evt)) {
+            if (evt.type == sf::Event::Closed) {
+                _window.close();
+                return;
+            }
+        }
         nvgBeginFrame(_vg, _mode.width, _mode.height, 4);
         nvgBeginPath(_vg);
         nvgRect(_vg, 100,100, 120,30);

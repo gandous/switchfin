@@ -30,7 +30,7 @@ include_directories("${PROJECT_SOURCE_DIR}/lib/")
 file(GLOB_RECURSE SWITCHFIN_SRC "src/*")
 add_executable(switchfin ${SWITCHFIN_SRC})
 
-target_compile_options(switchfin PRIVATE -g3 -Wall -Wextra)
+target_compile_options(switchfin PRIVATE -Wall -Wextra)
 
 if (SWITCH)
     set_target_properties(switchfin PROPERTIES
@@ -38,12 +38,8 @@ if (SWITCH)
     APP_AUTHOR " "
     APP_VERSION "0.1.0")
 
-    target_link_libraries(switchfin -Wl,--whole-archive switch::libnx -Wl,--no-whole-archive)
-    target_link_libraries(switchfin sfml-window-s sfml-graphics-s sfml-audio-s sfml-system-s FLAC vorbisfile vorbisenc vorbis ogg SDL2 EGL glapi GLESv2 glad drm_nouveau drm_nouveaud freetype bz2 png z gana)
-
     add_nro_target(switchfin)
-else()
-    target_link_libraries(switchfin sfml-window EGL GL sfml-graphics sfml-audio sfml-system gana)
 endif()
+target_link_libraries(switchfin gana)
 
 # file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
