@@ -38,6 +38,8 @@ App::~App()
 
 void App::run()
 {
+    bool refresh_ui = true;
+
     while (_window.isOpen()) {
         sf::Event evt;
         while (_window.pollEvent(evt)) {
@@ -46,15 +48,20 @@ void App::run()
                 return;
             }
         }
+        if (refresh_ui) {
+            _root_node->update_layout(gana::Vector2f(1920, 1080));
+            refresh_ui = false;
+        }
         nvgBeginFrame(_vg, _mode.width, _mode.height, 4);
-        nvgBeginPath(_vg);
-        nvgRect(_vg, 100,100, 120,30);
-        nvgFillColor(_vg, nvgRGBA(255,192,0,255));
-        nvgFill(_vg);
+        _root_node->draw(_vg);
         nvgEndFrame(_vg);
         _window.display();
     }
+}
 
+void App::set_root_node(std::shared_ptr<Node> node)
+{
+    _root_node = node;
 }
 
 }

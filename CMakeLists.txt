@@ -26,6 +26,7 @@ add_subdirectory("lib")
 include_directories("src")
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/lib/")
+include_directories("${PROJECT_SOURCE_DIR}/lib/gana")
 
 file(GLOB_RECURSE SWITCHFIN_SRC "src/*")
 add_executable(switchfin ${SWITCHFIN_SRC})
