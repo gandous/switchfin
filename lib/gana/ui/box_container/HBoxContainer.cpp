@@ -1,7 +1,6 @@
 
 #include "type/Vector2.hpp"
 #include "HBoxContainer.hpp"
-#include <iostream>
 
 namespace gana {
 
@@ -19,6 +18,7 @@ void HBoxContainer::update_layout(const Vector2f &size)
     std::size_t nb_expand = 0;
     float remaining_space = size.x - _min_size.x;
 
+    set_size(size);
     for (auto &child: _childs)
         if (child->get_expand())
             nb_expand++;
@@ -26,9 +26,17 @@ void HBoxContainer::update_layout(const Vector2f &size)
         remaining_space = remaining_space / nb_expand;
     for (auto &child: _childs) {
         Vector2f new_size = child->get_min_size();
-        child->_position.x = x;
+        float y = _position.y;
+        if (child->get_vsizing() == Node::Sizing::FILL) {
+            new_size.y = size.y;
+        } else if (child->get_vsizing() == Node::Sizing::SHRINK_CENTER) {
+            y = _position.y + (size.y / 2) - (new_size.y / 2);
+        } else if (child->get_vsizing() == Node::Sizing::SHRINK_END) {
+            y = _position.y + size.y - new_size.y;
+        }
         if (child->get_expand())
             new_size.x += remaining_space;
+        child->set_position(Vector2f(x, y));
         x += new_size.x;
         child->update_layout(new_size);
     }
@@ -41,7 +49,7 @@ Vector2f HBoxContainer::get_min_size()
 
     for (auto &child: _childs) {
         w += child->get_min_size().x;
-        if (h > child->get_min_size().y)
+        if (child->get_min_size().y > h)
             h = child->get_min_size().y;
     }
     set_min_size(Vector2f(w, h));

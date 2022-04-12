@@ -14,6 +14,7 @@ class App;
 
 class Node {
     friend class HBoxContainer;
+    friend class VBoxContainer;
     public:
         Node();
         ~Node();

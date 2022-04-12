@@ -1,6 +1,5 @@
 
 #include "Node.hpp"
-#include <iostream>
 
 namespace gana {
 
@@ -194,7 +193,6 @@ void Node::set_anchor(Anchor anchor)
             set_ygrow_direction(GrowDirection::BEGIN);
             break;
         default:
-            std::cout << "default" << std::endl;
             break;
     }
 }

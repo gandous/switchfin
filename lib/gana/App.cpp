@@ -17,7 +17,7 @@ App::App(const std::string& title):
     _vg(nullptr)
 #else
 App::App(const std::string& title):
-    _mode(1920, 1080),
+    _mode(1280, 720),
     _window(_mode, title),
     _vg(nullptr)
 #endif
@@ -39,6 +39,7 @@ App::~App()
 void App::run()
 {
     bool refresh_ui = true;
+    Vector2f wsize = Vector2f(_mode.width, _mode.height);
 
     while (_window.isOpen()) {
         sf::Event evt;
@@ -49,10 +50,11 @@ void App::run()
             }
         }
         if (refresh_ui) {
-            _root_node->update_layout(gana::Vector2f(1920, 1080));
+            _root_node->update_layout(wsize);
             refresh_ui = false;
         }
-        nvgBeginFrame(_vg, _mode.width, _mode.height, 4);
+        _window.clear(sf::Color::Black);
+        nvgBeginFrame(_vg, _mode.width, _mode.height, _mode.bitsPerPixel / 8);
         _root_node->draw(_vg);
         nvgEndFrame(_vg);
         _window.display();
