@@ -260,11 +260,11 @@ get_target_property(romfs ${target} "ROMFS")
 set_app_icon(${icon})
 
 # Construct the `NROFLAGS` to invoke elf2nro with.
-set(NROFLAGS "")
+set(NROFLAGS)
 
 # Set icon for the NRO, if given.
 if(__HOMEBREW_ICON)
-    string(APPEND NROFLAGS "--icon=${__HOMEBREW_ICON}")
+    list(APPEND NROFLAGS --icon=${__HOMEBREW_ICON})
 endif()
 
 # Add RomFS to the NRO, if given.
@@ -272,12 +272,12 @@ if(NOT "${romfs}" STREQUAL "romfs-NOTFOUND")
     if(IS_DIRECTORY ${romfs})
         # RomFS is a directory, pass --romfsdir to
         # elf2nro and let it build an image for us.
-        string(APPEND NROFLAGS " --romfsdir=${romfs}")
+        list(APPEND NROFLAGS  --romfsdir=${romfs})
     else()
         # A RomFS image was provided, which can be
         # supplied to the --romfs flag.
         if(EXISTS ${romfs})
-            string(APPEND NROFLAGS " --romfs=${romfs}")
+        list(APPEND NROFLAGS --romfs=${romfs})
         else()
             message(WARNING "The provided RomFS image at ${romfs} doesn't exist")
         endif()
