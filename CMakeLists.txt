@@ -37,7 +37,9 @@ if (SWITCH)
     set_target_properties(switchfin PROPERTIES
     APP_TITLE "switchfin"
     APP_AUTHOR " "
-    APP_VERSION "0.1.0")
+    APP_VERSION "0.1.0"
+    ROMFS ${PROJECT_SOURCE_DIR}/romfs
+    ICON ${PROJECT_SOURCE_DIR}/icon.jpg)
 
     add_nro_target(switchfin)
 endif()

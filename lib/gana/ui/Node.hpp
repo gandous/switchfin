@@ -7,6 +7,7 @@
 #include "nanovg/src/nanovg.h"
 #include "type/Vector2.hpp"
 #include "type/Rect.hpp"
+#include "type/Event.hpp"
 
 namespace gana {
 
@@ -15,6 +16,7 @@ class App;
 class Node {
     friend class HBoxContainer;
     friend class VBoxContainer;
+    friend class App;
     public:
         Node();
         ~Node();
@@ -59,6 +61,7 @@ class Node {
 
         void add_child(const std::shared_ptr<Node> &node);
         virtual void draw(NVGcontext *ctx);
+        virtual void process_event(Event &evt);
         virtual void update_layout(const Vector2f &size);
         virtual const Vector2f &get_position() const;
         virtual void set_position(const Vector2f &pos);
@@ -79,12 +82,14 @@ class Node {
         void set_anchor(Anchor anchor);
         void set_xgrow_direction(GrowDirection direction);
         void set_ygrow_direction(GrowDirection direction);
+        bool inside_node(const Vector2f &pos) const;
     protected:
         std::vector<std::shared_ptr<Node>> _childs;
         App *_app;
     private:
         void enter_tree(App *app);
         void apply_anchor(const Vector2f &size);
+        void propagate_event(Event &evt);
         Vector2f _position;
         Vector2f _size;
         Vector2f _min_size;

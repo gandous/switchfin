@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <functional>
+#include "Logger.hpp"
 
 namespace gana {
 
@@ -44,6 +45,11 @@ typedef Vector2<float> Vector2f;
 typedef Vector2<int> Vector2i;
 typedef Vector2<unsigned int> Vector2u;
 
+template<typename T>
+std::string to_string(Vector2<T> vector)
+{
+    return ("Vector2(" + std::to_string(vector.x) + ", " + std::to_string(vector.y) + ")");
+}
 }
 
 #endif /* !VECTOR2_HPP_ */

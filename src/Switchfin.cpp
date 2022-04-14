@@ -4,6 +4,9 @@
 #include "ui/Node.hpp"
 #include "ui/box_container/HBoxContainer.hpp"
 #include "ui/box_container/VBoxContainer.hpp"
+#include "ui/Label.hpp"
+#include "ui/Button.hpp"
+#include "Logger.hpp"
 
 std::shared_ptr<gana::Node> add_rect(std::shared_ptr<gana::Node> parent, int m)
 {
@@ -42,10 +45,19 @@ void Switchfin::run()
     std::shared_ptr<gana::Node> node = std::make_shared<gana::Node>();
     std::shared_ptr<gana::VBoxContainer> container = std::make_shared<gana::VBoxContainer>();
     std::shared_ptr<gana::Node> c1 = add_rect(container, 0);
+    std::shared_ptr<gana::Label> lbl = std::make_shared<gana::Label>();
+    std::shared_ptr<gana::Button> btn = std::make_shared<gana::Button>();
     add_rect(container, 1);
     // c1->set_expand(true);
     node->add_child(container);
     container->set_min_size(gana::Vector2f(1200, 400));
+    lbl->set_text("super text");
+    lbl->set_hsizing(gana::Node::SHRINK_CENTER);
+    container->add_child(lbl);
+    btn->set_text("Press me");
+    btn->set_min_size(gana::Vector2f(200, 50));
+    container->add_child(btn);
+    gana::Logger::print("ceci est un super test $", 5);
     // std::shared_ptr<gana::ColorRect> rect = std::make_shared<gana::ColorRect>();
     // rect->set_min_size(gana::Vector2f(200, 200));
     // rect->set_color(gana::Color(255, 0, 0));

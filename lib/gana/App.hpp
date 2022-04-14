@@ -19,6 +19,7 @@ class App {
 
         void run();
         void set_root_node(std::shared_ptr<Node> node);
+        NVGcontext *get_nvg_context();
     private:
         sf::VideoMode _mode;
         sf::RenderWindow _window;

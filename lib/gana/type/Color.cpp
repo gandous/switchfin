@@ -3,7 +3,7 @@
 
 namespace gana {
 
-Color::Color(): r(0), g(0), b(0), a(255)
+Color::Color(): r(255), g(255), b(255), a(255)
 {}
 
 Color::Color(int r, int g, int b, int a): r(r), g(g), b(b), a(a)

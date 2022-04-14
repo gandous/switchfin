@@ -22,6 +22,9 @@ void Node::draw(NVGcontext *ctx)
         child->draw(ctx);
 }
 
+void Node::process_event(Event &evt)
+{}
+
 void Node::update_layout(const Vector2f &size)
 {
     set_size(size);
@@ -207,6 +210,15 @@ void Node::set_ygrow_direction(Node::GrowDirection direction)
     _vdirection = direction;
 }
 
+bool Node::inside_node(const Vector2f &pos) const
+{
+    if (pos.x < _position.x || pos.x > _position.x + _size.x)
+        return (false);
+    if (pos.y < _position.y || pos.y > _position.y + _size.y)
+        return (false);
+    return (true);
+}
+
 void Node::enter_tree(App *app)
 {
     _app = app;
@@ -249,6 +261,18 @@ void Node::apply_anchor(const Vector2f &size)
     }
     set_position(top_left);
     set_size(new_size);
+}
+
+void Node::propagate_event(Event &evt)
+{
+    process_event(evt);
+    if (!evt.handle) {
+        for (auto &child: _childs) {
+            child->propagate_event(evt);
+            if (evt.handle)
+                return;
+        }
+    }
 }
 
 }
