@@ -14,6 +14,7 @@ class Logger {
 
         template<typename ...ARGS>
         static void print(const std::string &format, ARGS ...args);
+        static void print(const std::string &format);
 
     private:
         template<typename T, typename ...ARGS>

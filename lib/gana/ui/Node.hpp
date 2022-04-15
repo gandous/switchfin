@@ -16,6 +16,7 @@ class App;
 class Node {
     friend class HBoxContainer;
     friend class VBoxContainer;
+    friend class RectContainer;
     friend class App;
     public:
         Node();
@@ -83,6 +84,8 @@ class Node {
         void set_xgrow_direction(GrowDirection direction);
         void set_ygrow_direction(GrowDirection direction);
         bool inside_node(const Vector2f &pos) const;
+        bool as_focus() const;
+        void set_focus(bool focus = true);
     protected:
         std::vector<std::shared_ptr<Node>> _childs;
         App *_app;
@@ -90,6 +93,7 @@ class Node {
         void enter_tree(App *app);
         void apply_anchor(const Vector2f &size);
         void propagate_event(Event &evt);
+        void propagate_draw(NVGcontext *ctx);
         Vector2f _position;
         Vector2f _size;
         Vector2f _min_size;
@@ -100,6 +104,7 @@ class Node {
         GrowDirection _vdirection;
         bool _expand;
         Rectf _anchor;
+        bool _has_focus;
 };
 
 }

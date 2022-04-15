@@ -3,7 +3,13 @@
 
 namespace gana {
 
-Node::Node(): _app(nullptr), _layout(POSITION), _hsizing(SHRINK_BEGIN), _vsizing(SHRINK_BEGIN), _expand(false)
+Node::Node():
+    _app(nullptr),
+    _layout(POSITION),
+    _hsizing(SHRINK_BEGIN),
+    _vsizing(SHRINK_BEGIN),
+    _expand(false),
+    _has_focus(false)
 {}
 
 Node::~Node()
@@ -17,10 +23,7 @@ void Node::add_child(const std::shared_ptr<Node> &node)
 }
 
 void Node::draw(NVGcontext *ctx)
-{
-    for (auto &child: _childs)
-        child->draw(ctx);
-}
+{}
 
 void Node::process_event(Event &evt)
 {}
@@ -30,11 +33,9 @@ void Node::update_layout(const Vector2f &size)
     set_size(size);
     for (auto &child: _childs) {
         child->get_min_size();
-        if (child->get_layout_mode() == Layout::POSITION) {
-            child->update_layout(child->get_size());
-        } else {
+        if (child->get_layout_mode() == Layout::ANCHOR)
             child->apply_anchor(size);
-        }
+        child->update_layout(child->get_size());
     }
 }
 
@@ -56,6 +57,10 @@ const Vector2f &Node::get_size() const
 void Node::set_size(const Vector2f &size)
 {
     _size = size;
+    if (_min_size.x > _size.x)
+        _size.x = _min_size.x;
+    if (_min_size.y > _size.y)
+        _size.y = _min_size.y;
 }
 
 Vector2f Node::get_min_size()
@@ -124,6 +129,7 @@ void Node::set_anchor(const Rectf &anchor)
 
 void Node::set_anchor(Anchor anchor)
 {
+    set_layout_mode(Layout::ANCHOR);
     switch (anchor) {
         case TOP_LEFT:
             set_anchor(Rectf(0, 0, 0, 0));
@@ -219,6 +225,16 @@ bool Node::inside_node(const Vector2f &pos) const
     return (true);
 }
 
+bool Node::as_focus() const
+{
+    return (_has_focus);
+}
+
+void Node::set_focus(bool focus)
+{
+    _has_focus = focus;
+}
+
 void Node::enter_tree(App *app)
 {
     _app = app;
@@ -273,6 +289,13 @@ void Node::propagate_event(Event &evt)
                 return;
         }
     }
+}
+
+void Node::propagate_draw(NVGcontext *ctx)
+{
+    draw(ctx);
+    for (auto &child: _childs)
+        child->propagate_draw(ctx);
 }
 
 }
