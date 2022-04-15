@@ -78,7 +78,6 @@ void App::run()
             _root_node->update_layout(wsize);
             refresh_ui = false;
         }
-        _window.clear(sf::Color::Black);
         nvgBeginFrame(_vg, _mode.width, _mode.height, _mode.bitsPerPixel / 8);
         _root_node->propagate_draw(_vg);
         nvgEndFrame(_vg);

@@ -10,7 +10,7 @@ add_library(gana STATIC ${GANA_SRC})
 
 if (SWITCH)
     target_link_libraries(gana -Wl,--whole-archive switch::libnx -Wl,--no-whole-archive)
-    target_link_libraries(gana sfml-window-s sfml-graphics-s sfml-audio-s sfml-system-s FLAC vorbisfile vorbisenc vorbis ogg SDL2 EGL glapi GLESv2 glad drm_nouveau drm_nouveaud freetype bz2 png z nanovg)
+    target_link_libraries(gana sfml-window-s sfml-audio-s sfml-system-s FLAC vorbisfile vorbisenc vorbis ogg SDL2 EGL glapi GLESv2 glad drm_nouveau drm_nouveaud freetype bz2 png z nanovg)
 else()
     target_link_libraries(gana sfml-window EGL GL sfml-graphics sfml-audio sfml-system nanovg glad)
 endif()
