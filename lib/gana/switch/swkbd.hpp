@@ -6,7 +6,7 @@
 
 #include <string>
 
-std::string get_text();
+std::string get_text(const std::string &initial = "");
 
 #endif
 

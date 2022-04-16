@@ -1,5 +1,8 @@
 
 #include "Node.hpp"
+#include "theme/color.hpp"
+#include "type/SwitchPadButton.hpp"
+#include "App.hpp"
 
 namespace gana {
 
@@ -19,7 +22,7 @@ void Node::add_child(const std::shared_ptr<Node> &node)
 {
     _childs.push_back(node);
     if (_app != nullptr)
-        node->enter_tree(_app);
+        node->propagate_enter_tree(_app);
 }
 
 void Node::draw(NVGcontext *ctx)
@@ -225,7 +228,7 @@ bool Node::inside_node(const Vector2f &pos) const
     return (true);
 }
 
-bool Node::as_focus() const
+bool Node::has_focus() const
 {
     return (_has_focus);
 }
@@ -235,11 +238,44 @@ void Node::set_focus(bool focus)
     _has_focus = focus;
 }
 
-void Node::enter_tree(App *app)
+void Node::set_left_node(std::shared_ptr<Node> node)
+{
+    _left_node = node;
+}
+
+void Node::set_up_node(std::shared_ptr<Node> node)
+{
+    _top_node = node;
+}
+
+void Node::set_right_node(std::shared_ptr<Node> node)
+{
+    _right_node = node;
+}
+
+void Node::set_bottom_node(std::shared_ptr<Node> node)
+{
+    _bottom_node = node;
+}
+
+void Node::draw_outline(NVGcontext *ctx)
+{
+    nvgBeginPath(ctx);
+    nvgRoundedRect(ctx, get_position().x - 4, get_position().y - 4, get_size().x + 8, get_size().y + 8  , 12);
+    nvgStrokeColor(ctx, theme::OUTLINE_COLOR.nvg_color());
+    nvgStrokeWidth(ctx, 2);
+    nvgStroke(ctx);
+}
+
+void Node::enter_tree()
+{}
+
+void Node::propagate_enter_tree(App *app)
 {
     _app = app;
+    enter_tree();
     for (auto &child: _childs)
-        child->enter_tree(app);
+        child->propagate_enter_tree(app);
 }
 
 void Node::apply_anchor(const Vector2f &size)
@@ -282,6 +318,8 @@ void Node::apply_anchor(const Vector2f &size)
 void Node::propagate_event(Event &evt)
 {
     process_event(evt);
+    if (_has_focus && (evt.type == sf::Event::JoystickButtonReleased || evt.type == sf::Event::KeyReleased))
+        check_move_focus_event(evt);
     if (!evt.handle) {
         for (auto &child: _childs) {
             child->propagate_event(evt);
@@ -294,8 +332,45 @@ void Node::propagate_event(Event &evt)
 void Node::propagate_draw(NVGcontext *ctx)
 {
     draw(ctx);
+    if (_has_focus)
+        draw_outline(ctx);
     for (auto &child: _childs)
         child->propagate_draw(ctx);
+}
+
+void Node::check_move_focus_event(Event &evt)
+{
+    int button;
+
+    if (evt.type == sf::Event::JoystickButtonReleased)
+        button = evt.joystickButton.button;
+    else
+        button = evt.key.code;
+    switch (button) {
+        case SwitchPadButton::LEFT:
+        case sf::Keyboard::Left:
+            if (_left_node)
+                _app->set_focused_node(_left_node);
+            break;
+        case SwitchPadButton::UP:
+        case sf::Keyboard::Up:
+            if (_top_node)
+                _app->set_focused_node(_top_node);
+            break;
+        case SwitchPadButton::RIGHT:
+        case sf::Keyboard::Right:
+            if (_right_node)
+                _app->set_focused_node(_right_node);
+            break;
+        case SwitchPadButton::DOWN:
+        case sf::Keyboard::Down:
+            if (_bottom_node)
+                _app->set_focused_node(_bottom_node);
+            break;
+        default:
+            return;
+    }
+    evt.handle = true;
 }
 
 }

@@ -12,7 +12,7 @@ RectContainer::~RectContainer()
 void RectContainer::draw(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, get_position().x, get_position().y, get_size().x, get_size().y, 10);
+    nvgRoundedRect(ctx, get_position().x, get_position().y, get_size().x, get_size().y, 16);
     nvgFillColor(ctx, _color.nvg_color());
     nvgFill(ctx);
 }

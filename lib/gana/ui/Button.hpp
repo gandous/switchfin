@@ -11,8 +11,15 @@ class Button: public Label {
         Button();
         ~Button();
 
+        enum Type {
+            PRIMARY,
+            SECONDARY
+        };
+
         void draw(NVGcontext *ctx) override;
         void process_event(Event &evt) override;
+        void set_background_color(const Color &color);
+        void set_button_type(Type type);
     private:
         Color _color;
 };

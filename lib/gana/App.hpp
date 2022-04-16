@@ -9,6 +9,7 @@
 #include <SFML/Window/Window.hpp>
 #include "nanovg/src/nanovg.h"
 #include "ui/Node.hpp"
+#include "AssetManager.hpp"
 
 namespace gana {
 
@@ -20,11 +21,15 @@ class App {
         void run();
         void set_root_node(std::shared_ptr<Node> node);
         NVGcontext *get_nvg_context();
+        AssetManager &get_asset_manager();
+        void set_focused_node(std::shared_ptr<Node> node);
     private:
         sf::VideoMode _mode;
         sf::Window _window;
         NVGcontext* _vg;
         std::shared_ptr<Node> _root_node;
+        std::unique_ptr<AssetManager> _amanager;
+        std::shared_ptr<Node> _focused_node;
 };
 
 }

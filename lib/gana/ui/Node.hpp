@@ -84,16 +84,23 @@ class Node {
         void set_xgrow_direction(GrowDirection direction);
         void set_ygrow_direction(GrowDirection direction);
         bool inside_node(const Vector2f &pos) const;
-        bool as_focus() const;
+        bool has_focus() const;
         void set_focus(bool focus = true);
+        void set_left_node(std::shared_ptr<Node> node);
+        void set_up_node(std::shared_ptr<Node> node);
+        void set_right_node(std::shared_ptr<Node> node);
+        void set_bottom_node(std::shared_ptr<Node> node);
     protected:
         std::vector<std::shared_ptr<Node>> _childs;
         App *_app;
+        virtual void draw_outline(NVGcontext *ctx);
+        virtual void enter_tree();
     private:
-        void enter_tree(App *app);
+        void propagate_enter_tree(App *app);
         void apply_anchor(const Vector2f &size);
         void propagate_event(Event &evt);
         void propagate_draw(NVGcontext *ctx);
+        void check_move_focus_event(Event &evt);
         Vector2f _position;
         Vector2f _size;
         Vector2f _min_size;
@@ -105,6 +112,10 @@ class Node {
         bool _expand;
         Rectf _anchor;
         bool _has_focus;
+        std::shared_ptr<Node> _left_node;
+        std::shared_ptr<Node> _top_node;
+        std::shared_ptr<Node> _right_node;
+        std::shared_ptr<Node> _bottom_node;
 };
 
 }

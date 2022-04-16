@@ -1,10 +1,16 @@
 
 #include "Label.hpp"
 #include "App.hpp"
+#include "theme/color.hpp"
 
 namespace gana {
 
-Label::Label(): _size(20), _update_min_rect(true)
+Label::Label():
+    _color(theme::TEXT_COLOR_W),
+    _size(20),
+    _update_min_rect(true),
+    _text_align(NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT),
+    _align(LEFT)
 {}
 
 Label::~Label()
@@ -12,9 +18,15 @@ Label::~Label()
 
 void Label::draw(NVGcontext *ctx)
 {
+    float x = get_position().x;
+
     nvgBeginPath(ctx);
     apply_font(ctx);
-    nvgText(ctx, get_position().x, get_position().y + get_size().y / 2, _text.c_str(), NULL);
+    if (_align == TextAlign::CENTER)
+        x += get_size().x / 2;
+    else if (_align == TextAlign::RIGHT)
+        x += get_size().x;
+    nvgText(ctx, x, get_position().y + get_size().y / 2, _text.c_str(), NULL);
 }
 
 Vector2f Label::get_min_size()
@@ -50,11 +62,28 @@ void Label::set_font_size(unsigned int size)
     _size = size;
 }
 
+void Label::set_text_align(TextAlign align)
+{
+    _align = align;
+    switch (align) {
+        default:
+        case LEFT:
+            _text_align = NVG_ALIGN_MIDDLE | NVG_ALIGN_LEFT;
+            break;
+        case RIGHT:
+            _text_align = NVG_ALIGN_MIDDLE | NVG_ALIGN_RIGHT;
+            break;
+        case CENTER:
+            _text_align = NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER;
+            break;
+    }
+}
+
 void Label::apply_font(NVGcontext *ctx)
 {
     nvgFontFace(ctx, "montserrat-medium");
     nvgFontSize(ctx, _size);
-    nvgTextAlign(ctx, NVG_ALIGN_MIDDLE);
+    nvgTextAlign(ctx, _text_align);
     nvgFillColor(ctx, _color.nvg_color());
 }
 

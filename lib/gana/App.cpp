@@ -7,7 +7,6 @@
 #include "glad/glad.h"
 #define NANOVG_GL3_IMPLEMENTATION
 #include "nanovg/src/nanovg_gl.h"
-#include "AssetLoader.hpp"
 #include "type/SwitchPadButton.hpp"
 #include "type/Event.hpp"
 #if SWITCH
@@ -20,12 +19,14 @@ namespace gana {
 App::App(const std::string& title):
     _mode(sf::VideoMode::getDesktopMode()),
     _window(_mode, title),
-    _vg(nullptr)
+    _vg(nullptr),
+    _focused_node(nullptr)
 #else
 App::App(const std::string& title):
     _mode(1280, 720),
     _window(_mode, title),
-    _vg(nullptr)
+    _vg(nullptr),
+    _focused_node(nullptr)
 #endif
 {
 #if SWITCH
@@ -45,8 +46,9 @@ App::App(const std::string& title):
     if (_vg == nullptr) {
         std::cout << "Failed to initialize nanovg context" << std::endl;
     }
+    _amanager = std::make_unique<AssetManager>(_vg);
     _window.setFramerateLimit(60);
-    AssetLoader::load_font(_vg, "montserrat-medium", "Montserrat-Medium.ttf");
+    _amanager->load_font("montserrat-medium", "Montserrat-Medium.ttf");;
 }
 
 App::~App()
@@ -59,6 +61,7 @@ App::~App()
 void App::run()
 {
     bool refresh_ui = true;
+    float ratio = _mode.width / _mode.height;
     Vector2f wsize = Vector2f(_mode.width, _mode.height);
 
     while (_window.isOpen()) {
@@ -78,7 +81,7 @@ void App::run()
             _root_node->update_layout(wsize);
             refresh_ui = false;
         }
-        nvgBeginFrame(_vg, _mode.width, _mode.height, _mode.bitsPerPixel / 8);
+        nvgBeginFrame(_vg, _mode.width, _mode.height, ratio);
         _root_node->propagate_draw(_vg);
         nvgEndFrame(_vg);
         _window.display();
@@ -88,12 +91,26 @@ void App::run()
 void App::set_root_node(std::shared_ptr<Node> node)
 {
     _root_node = node;
-    node->enter_tree(this);
+    node->propagate_enter_tree(this);
 }
 
 NVGcontext *App::get_nvg_context()
 {
     return (_vg);
+}
+
+AssetManager &App::get_asset_manager()
+{
+    return (*_amanager.get());
+}
+
+void App::set_focused_node(std::shared_ptr<Node> node)
+{
+    if (_focused_node != nullptr)
+        _focused_node->set_focus(false);
+    if (node != nullptr)
+        node->set_focus(true);
+    _focused_node = node;
 }
 
 }
