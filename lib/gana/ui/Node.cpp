@@ -39,6 +39,7 @@ void Node::remove_child(Node *node)
 {
     for (std::vector<Node*>::iterator it = _childs.begin(); it != _childs.end(); it++) {
         if (*it == node) {
+            (*it)->_parent = nullptr;
             _childs.erase(it);
             return;
         }
