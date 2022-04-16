@@ -23,13 +23,14 @@ class App {
         NVGcontext *get_nvg_context();
         AssetManager &get_asset_manager();
         void set_focused_node(std::shared_ptr<Node> node);
+        void set_focused_node(Node *node);
     private:
         sf::VideoMode _mode;
         sf::Window _window;
         NVGcontext* _vg;
         std::shared_ptr<Node> _root_node;
         std::unique_ptr<AssetManager> _amanager;
-        std::shared_ptr<Node> _focused_node;
+        Node *_focused_node;
 };
 
 }

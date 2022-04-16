@@ -13,7 +13,7 @@ class ServerSelect: public gana::Node {
     protected:
         void enter_tree();
     private:
-        std::shared_ptr<gana::LineEdit> _server_address;
+        gana::LineEdit _server_address;
 };
 
 #endif /* SERVERSELECT_HPP_ */

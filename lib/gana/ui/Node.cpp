@@ -8,21 +8,41 @@ namespace gana {
 
 Node::Node():
     _app(nullptr),
+    _parent(nullptr),
     _layout(POSITION),
     _hsizing(SHRINK_BEGIN),
     _vsizing(SHRINK_BEGIN),
     _expand(false),
-    _has_focus(false)
+    _has_focus(false),
+    _left_node(nullptr),
+    _top_node(nullptr),
+    _right_node(nullptr),
+    _bottom_node(nullptr)
 {}
 
 Node::~Node()
 {}
 
-void Node::add_child(const std::shared_ptr<Node> &node)
+void Node::add_child(Node *node)
 {
+    if (node->_parent != nullptr) {
+        std::cerr << "Child already in tree" << std::endl;
+        return;
+    }
     _childs.push_back(node);
+    node->_parent = this;
     if (_app != nullptr)
         node->propagate_enter_tree(_app);
+}
+
+void Node::remove_child(Node *node)
+{
+    for (std::vector<Node*>::iterator it = _childs.begin(); it != _childs.end(); it++) {
+        if (*it == node) {
+            _childs.erase(it);
+            return;
+        }
+    }
 }
 
 void Node::draw(NVGcontext *ctx)
@@ -238,22 +258,22 @@ void Node::set_focus(bool focus)
     _has_focus = focus;
 }
 
-void Node::set_left_node(std::shared_ptr<Node> node)
+void Node::set_left_node(Node *node)
 {
     _left_node = node;
 }
 
-void Node::set_up_node(std::shared_ptr<Node> node)
+void Node::set_up_node(Node *node)
 {
     _top_node = node;
 }
 
-void Node::set_right_node(std::shared_ptr<Node> node)
+void Node::set_right_node(Node *node)
 {
     _right_node = node;
 }
 
-void Node::set_bottom_node(std::shared_ptr<Node> node)
+void Node::set_bottom_node(Node *node)
 {
     _bottom_node = node;
 }

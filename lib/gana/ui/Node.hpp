@@ -60,7 +60,8 @@ class Node {
             BOTH,
         };
 
-        void add_child(const std::shared_ptr<Node> &node);
+        void add_child(Node *node);
+        void remove_child(Node *node);
         virtual void draw(NVGcontext *ctx);
         virtual void process_event(Event &evt);
         virtual void update_layout(const Vector2f &size);
@@ -86,12 +87,14 @@ class Node {
         bool inside_node(const Vector2f &pos) const;
         bool has_focus() const;
         void set_focus(bool focus = true);
-        void set_left_node(std::shared_ptr<Node> node);
-        void set_up_node(std::shared_ptr<Node> node);
-        void set_right_node(std::shared_ptr<Node> node);
-        void set_bottom_node(std::shared_ptr<Node> node);
+        void set_left_node(Node *node);
+        void set_up_node(Node *node);
+        void set_right_node(Node *node);
+        void set_bottom_node(Node *node);
+        template<typename T>
+        T *make_managed();
     protected:
-        std::vector<std::shared_ptr<Node>> _childs;
+        std::vector<Node*> _childs;
         App *_app;
         virtual void draw_outline(NVGcontext *ctx);
         virtual void enter_tree();
@@ -101,6 +104,7 @@ class Node {
         void propagate_event(Event &evt);
         void propagate_draw(NVGcontext *ctx);
         void check_move_focus_event(Event &evt);
+        Node *_parent;
         Vector2f _position;
         Vector2f _size;
         Vector2f _min_size;
@@ -112,11 +116,14 @@ class Node {
         bool _expand;
         Rectf _anchor;
         bool _has_focus;
-        std::shared_ptr<Node> _left_node;
-        std::shared_ptr<Node> _top_node;
-        std::shared_ptr<Node> _right_node;
-        std::shared_ptr<Node> _bottom_node;
+        Node *_left_node;
+        Node *_top_node;
+        Node *_right_node;
+        Node *_bottom_node;
+        std::vector<std::shared_ptr<Node>> _managed_childs;
 };
+
+#include "Node.inl"
 
 }
 

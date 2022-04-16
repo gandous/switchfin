@@ -106,6 +106,11 @@ AssetManager &App::get_asset_manager()
 
 void App::set_focused_node(std::shared_ptr<Node> node)
 {
+    set_focused_node(node.get());
+}
+
+void App::set_focused_node(Node *node)
+{
     if (_focused_node != nullptr)
         _focused_node->set_focus(false);
     if (node != nullptr)
