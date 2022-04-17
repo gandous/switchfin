@@ -28,6 +28,9 @@ void Node::add_child(Node *node)
     if (node->_parent != nullptr) {
         std::cerr << "Child already in tree" << std::endl;
         return;
+    } else if (node == this) {
+        std::cerr << "You can't add a child as a child of himself" << std::endl;
+        return;
     }
     _childs.push_back(node);
     node->_parent = this;
@@ -279,6 +282,18 @@ void Node::set_bottom_node(Node *node)
     _bottom_node = node;
 }
 
+void Node::set_process(bool process)
+{
+    if (_app == nullptr) {
+        std::cerr << "Not in tree" << std::endl;
+        return;
+    }
+    if (process)
+        _app->add_process_node(this);
+    else
+        _app->remove_process_node(this);
+}
+
 void Node::draw_outline(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
@@ -289,6 +304,9 @@ void Node::draw_outline(NVGcontext *ctx)
 }
 
 void Node::enter_tree()
+{}
+
+void Node::process()
 {}
 
 void Node::propagate_enter_tree(App *app)

@@ -40,9 +40,10 @@ void LineEdit::process_event(Event &evt)
         evt.handle = true;
 #endif
     } else if (evt.type == sf::Event::MouseButtonReleased && evt.mouseButton.button == sf::Mouse::Left) {
-        if (inside_node(Vector2f(evt.mouseButton.x, evt.mouseButton.y)))
+        if (inside_node(Vector2f(evt.mouseButton.x, evt.mouseButton.y))) {
             std::cout << "pressed" << std::endl;
-        evt.handle = true;
+            evt.handle = true;
+        }
     } else if (has_focus() && evt.type == sf::Event::TextEntered) {
         if (evt.text.unicode == 8) {
             if (_value.size() > 0) {

@@ -1,6 +1,6 @@
 
 #include "Switchfin.hpp"
-#include "ui/ServerSelect.hpp"
+#include "ui/login/ServerSelect.hpp"
 
 Switchfin::Switchfin(): _app("Switchfin")
 {

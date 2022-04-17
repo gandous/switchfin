@@ -3,6 +3,7 @@
 #define BUTTON_HPP_
 
 #include "ui/Label.hpp"
+#include "type/Signal.hpp"
 
 namespace gana {
 
@@ -15,6 +16,8 @@ class Button: public Label {
             PRIMARY,
             SECONDARY
         };
+
+        Signal<> signal_pressed;
 
         void draw(NVGcontext *ctx) override;
         void process_event(Event &evt) override;

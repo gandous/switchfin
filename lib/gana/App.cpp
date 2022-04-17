@@ -81,6 +81,8 @@ void App::run()
             _root_node->update_layout(wsize);
             refresh_ui = false;
         }
+        for (auto &node: _process_node)
+            node->process();
         nvgBeginFrame(_vg, _mode.width, _mode.height, ratio);
         _root_node->propagate_draw(_vg);
         nvgEndFrame(_vg);
@@ -116,6 +118,21 @@ void App::set_focused_node(Node *node)
     if (node != nullptr)
         node->set_focus(true);
     _focused_node = node;
+}
+
+void App::add_process_node(Node *node)
+{
+    _process_node.push_back(node);
+}
+
+void App::remove_process_node(Node *node)
+{
+    for (std::vector<Node*>::iterator it = _process_node.begin(); it != _process_node.end(); it++) {
+        if (*it = node) {
+            _process_node.erase(it);
+            return;
+        }
+    }
 }
 
 }

@@ -3,7 +3,7 @@
 #define SERVERSELECT_HPP_
 
 #include "ui/Node.hpp"
-#include "ui/LineEdit.hpp"
+#include "ServerAddress.hpp"
 
 class ServerSelect: public gana::Node {
     public:
@@ -11,9 +11,9 @@ class ServerSelect: public gana::Node {
         ~ServerSelect();
 
     protected:
-        void enter_tree();
     private:
-        gana::LineEdit _server_address;
+        ServerAddress _server_address;
+        void on_go_to_login();
 };
 
 #endif /* SERVERSELECT_HPP_ */

@@ -91,6 +91,7 @@ class Node {
         void set_up_node(Node *node);
         void set_right_node(Node *node);
         void set_bottom_node(Node *node);
+        void set_process(bool process = true);
         template<typename T>
         T *make_managed();
     protected:
@@ -98,6 +99,7 @@ class Node {
         App *_app;
         virtual void draw_outline(NVGcontext *ctx);
         virtual void enter_tree();
+        virtual void process();
     private:
         void propagate_enter_tree(App *app);
         void apply_anchor(const Vector2f &size);

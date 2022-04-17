@@ -24,6 +24,8 @@ class App {
         AssetManager &get_asset_manager();
         void set_focused_node(std::shared_ptr<Node> node);
         void set_focused_node(Node *node);
+        void add_process_node(Node *node);
+        void remove_process_node(Node *node);
     private:
         sf::VideoMode _mode;
         sf::Window _window;
@@ -31,6 +33,7 @@ class App {
         std::shared_ptr<Node> _root_node;
         std::unique_ptr<AssetManager> _amanager;
         Node *_focused_node;
+        std::vector<Node*> _process_node;
 };
 
 }
