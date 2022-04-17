@@ -2,13 +2,15 @@
 #include <iostream>
 #include "Http.hpp"
 
+static bool lib_curl_init = false;
+
 static size_t read_callback(char *buffer, std::size_t size, std::size_t nitems, void *userdata)
 {
     Http::Request *req = (Http::Request*)userdata;
     std::size_t end = std::min(size * nitems + req->rindex, req->rdata.size());
     std::size_t i = req->rindex;
 
-    for (std::size_t windex ; i < end; i++, windex++)
+    for (std::size_t windex = 0 ; i < end; i++, windex++)
         buffer[windex] = req->rdata[i];
     return (end - req->rdata.size());
 }
@@ -20,8 +22,16 @@ static size_t write_callback(char *buffer, std::size_t size, std::size_t nitems,
     return (size * nitems);
 }
 
-Http::Http()
+Http::Http(): _multi_handle(nullptr)
 {
+    if (!lib_curl_init) {
+        CURLcode code = curl_global_init(CURL_GLOBAL_NOTHING);
+        if (code != 0) {
+            std::cerr << "Curl global init failed (code: " << (int)code << ")" << std::endl;
+            return;
+        }
+        lib_curl_init = true;
+    }
     _multi_handle = curl_multi_init();
     if (_multi_handle == nullptr) {
         std::cerr << "Failed to init curl" << std::endl;
@@ -29,7 +39,22 @@ Http::Http()
 }
 
 Http::~Http()
-{}
+{
+    std::cout << "Closing all connection" << std::endl;
+    if (lib_curl_init) {
+        curl_global_cleanup();
+        lib_curl_init = false;
+    }
+    for (auto &pd: _pending_request) {
+        curl_multi_remove_handle(_multi_handle, pd.handle);
+        curl_easy_cleanup(pd.handle);
+    }
+    for (auto handle: _handles)
+        curl_easy_cleanup(handle);
+    if (_multi_handle != nullptr)
+        curl_multi_cleanup(_multi_handle);
+    std::cout << "All connection closed" << std::endl;
+}
 
 int Http::process()
 {
@@ -103,6 +128,7 @@ void Http::on_response(CURLMsg *msg)
     for (std::vector<Request>::iterator it = _pending_request.begin(); it != _pending_request.end(); it++) {
         if (it->handle == msg->easy_handle) {
             (it->callback)(msg->data.result, it->wdata);
+            curl_multi_remove_handle(_multi_handle, it->handle);
             curl_easy_reset(it->handle);
             _handles.push_front(it->handle);
             _pending_request.erase(it);

@@ -3,6 +3,7 @@
 #define SWITCHFIN_HPP_
 
 #include "gana/App.hpp"
+#include "ui/login/ServerSelect.hpp"
 
 class Switchfin {
     public:
@@ -12,6 +13,7 @@ class Switchfin {
         void run();
     private:
         gana::App _app;
+        ServerSelect _server_select;
 };
 
 #endif /* SWITCHFIN_HPP_ */

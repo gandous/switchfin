@@ -313,6 +313,7 @@ void Node::propagate_enter_tree(App *app)
 {
     _app = app;
     enter_tree();
+    app->update_layout();
     for (auto &child: _childs)
         child->propagate_enter_tree(app);
 }

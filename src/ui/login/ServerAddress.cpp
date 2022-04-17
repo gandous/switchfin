@@ -67,7 +67,9 @@ void ServerAddress::connect_pressed()
 {
     _client = std::make_shared<JellyfinClient>("https://jellyfin.gama.ovh");
 
-    _client->ping([](PingResponse &resp){
-        std::cout << "Callback: "  << (int)(resp.get_error()) << std::endl;
+    _client->ping([this](PingResponse &resp){
+        if (resp.get_error() == 0) {
+            go_to_login.emit();
+        }
     });
 }

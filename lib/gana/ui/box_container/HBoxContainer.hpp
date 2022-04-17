@@ -13,6 +13,7 @@ class HBoxContainer: public Node {
 
         void update_layout(const Vector2f &size) override;
         Vector2f get_min_size() override;
+        void add_spacer(float w = 16, bool expand = false);
     private:
 };
 

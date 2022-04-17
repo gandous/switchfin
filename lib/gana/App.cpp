@@ -12,6 +12,7 @@
 #if SWITCH
 #include <switch.h>
 #endif
+#include "theme/color.hpp"
 
 namespace gana {
 
@@ -20,13 +21,15 @@ App::App(const std::string& title):
     _mode(sf::VideoMode::getDesktopMode()),
     _window(_mode, title),
     _vg(nullptr),
-    _focused_node(nullptr)
+    _focused_node(nullptr),
+    _update_layout(true)
 #else
 App::App(const std::string& title):
     _mode(1280, 720),
     _window(_mode, title),
     _vg(nullptr),
-    _focused_node(nullptr)
+    _focused_node(nullptr),
+    _update_layout(true)
 #endif
 {
 #if SWITCH
@@ -60,7 +63,6 @@ App::~App()
 
 void App::run()
 {
-    bool refresh_ui = true;
     float ratio = _mode.width / _mode.height;
     Vector2f wsize = Vector2f(_mode.width, _mode.height);
 
@@ -77,20 +79,26 @@ void App::run()
                 _root_node->propagate_event(evt);
             }
         }
-        if (refresh_ui) {
-            _root_node->update_layout(wsize);
-            refresh_ui = false;
-        }
         for (auto &node: _process_node)
             node->process();
+        if (_update_layout) {
+            _root_node->update_layout(wsize);
+            _update_layout = false;
+        }
         nvgBeginFrame(_vg, _mode.width, _mode.height, ratio);
         _root_node->propagate_draw(_vg);
-        nvgEndFrame(_vg);
+         nvgEndFrame(_vg);
         _window.display();
     }
 }
 
 void App::set_root_node(std::shared_ptr<Node> node)
+{
+    _root_node = node.get();
+    node->propagate_enter_tree(this);
+}
+
+void App::set_root_node(Node *node)
 {
     _root_node = node;
     node->propagate_enter_tree(this);
@@ -128,11 +136,16 @@ void App::add_process_node(Node *node)
 void App::remove_process_node(Node *node)
 {
     for (std::vector<Node*>::iterator it = _process_node.begin(); it != _process_node.end(); it++) {
-        if (*it = node) {
+        if (*it == node) {
             _process_node.erase(it);
             return;
         }
     }
+}
+
+void App::update_layout()
+{
+    _update_layout = true;
 }
 
 }

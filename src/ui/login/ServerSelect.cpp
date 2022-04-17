@@ -27,5 +27,6 @@ ServerSelect::~ServerSelect()
 
 void ServerSelect::on_go_to_login()
 {
-    std::cout << "ici" << std::endl;
+    remove_child(&_server_address);
+    add_child(&_login);
 }
