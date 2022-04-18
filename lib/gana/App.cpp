@@ -148,4 +148,9 @@ void App::update_layout()
     _update_layout = true;
 }
 
+sf::Window &App::get_window()
+{
+    return (_window);
+}
+
 }

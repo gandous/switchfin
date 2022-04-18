@@ -30,6 +30,7 @@ class App {
         void add_process_node(Node *node);
         void remove_process_node(Node *node);
         void update_layout();
+        sf::Window &get_window();
     private:
         sf::VideoMode _mode;
         sf::Window _window;
