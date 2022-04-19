@@ -66,7 +66,7 @@ void LineEdit::set_value(const std::string &value)
 {
     _value = value;
     Label::set_text(_value);
-    Logger::print(_value);
+    Logger::info(_value);
 }
 
 }

@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <stdio.h>
 
 namespace gana {
 
@@ -13,14 +14,15 @@ class Logger {
         ~Logger() = default;
 
         template<typename ...ARGS>
-        static void print(const std::string &format, ARGS ...args);
-        static void print(const std::string &format);
+        static void print(FILE *fd, const std::string &format, ARGS ...args);
+        template<typename ...ARGS>
+        static void error(const std::string &format, ARGS ...args);
+        template<typename ...ARGS>
+        static void warning(const std::string &format, ARGS ...args);
+        template<typename ...ARGS>
+        static void info(const std::string &format, ARGS ...args);
 
     private:
-        template<typename T, typename ...ARGS>
-        static void parse_arg(std::vector<std::string> &args, T arg, ARGS ...rest);
-        template<typename T>
-        static void parse_arg(std::vector<std::string> &args, T arg);
 };
 
 #include "Logger.inl"

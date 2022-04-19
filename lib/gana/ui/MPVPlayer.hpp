@@ -13,8 +13,8 @@ class MPVPlayer: public Node {
         MPVPlayer();
         ~MPVPlayer();
 
-        void draw(NVGcontext *ctx);
     protected:
+        void process();
         void enter_tree();
     private:
         mpv_handle *_handle;

@@ -13,6 +13,7 @@
 #include <switch.h>
 #endif
 #include "theme/color.hpp"
+#include <unistd.h>
 
 namespace gana {
 
@@ -67,6 +68,7 @@ void App::run()
     Vector2f wsize = Vector2f(_mode.width, _mode.height);
 
     while (_window.isOpen()) {
+        _cl_frame_time.restart();
         Event evt;
         while (_window.pollEvent(evt)) {
             if (evt.type == sf::Event::Closed) {
@@ -87,7 +89,11 @@ void App::run()
         }
         nvgBeginFrame(_vg, _mode.width, _mode.height, ratio);
         _root_node->propagate_draw(_vg);
-         nvgEndFrame(_vg);
+        _debug.set("FPS", std::to_string(_fps_clock.get_fps()));
+        _debug.set("frame time", std::to_string(_frame_time));
+        _debug.draw(_vg);
+        nvgEndFrame(_vg);
+        _frame_time = _cl_frame_time.getElapsedTime().asMilliseconds();
         _window.display();
     }
 }

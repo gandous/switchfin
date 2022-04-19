@@ -12,6 +12,7 @@
 #include "ui/Node.hpp"
 #include "AssetManager.hpp"
 #include "type/FPSClock.hpp"
+#include "DebugScreen.hpp"
 
 namespace gana {
 
@@ -40,6 +41,10 @@ class App {
         Node *_focused_node;
         std::vector<Node*> _process_node;
         bool _update_layout;
+        FPSClock _fps_clock;
+        DebugScreen _debug;
+        int _frame_time;
+        sf::Clock _cl_frame_time;
 };
 
 }
