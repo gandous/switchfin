@@ -20,8 +20,8 @@ class MPVPlayer: public Node {
         void enter_tree();
     private:
         void set_option_string(const std::string &option, const std::string &value);
-#if DEBUG_MPV
         void event();
+#if DEBUG_MPV
         static const int OUTPUT_BUFFER_SIZE = 256;
         char output_buffer[OUTPUT_BUFFER_SIZE];
 #endif

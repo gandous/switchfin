@@ -69,6 +69,7 @@ void MPVPlayer::enter_tree()
         return;
     }
     const char *cmd[] = {"loadfile", "http://jellyfin.gama.ovh/videos/044d30e1c62993d8efdac0761a0e1b72/stream?static=true&DeviceId=TW96aWxsYS81LjAgKFgxMTsgRmVkb3JhOyBMaW51eCB4ODZfNjQ7IHJ2Ojk4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTguMHwxNjQ5MzQzMjk5NTE3&api_key=c0bda90ebdab46aab26fa61a6a3131f9", NULL};
+    // const char *cmd[] = {"loadfile", "http://jellyfin.gama.ovh/videos/044d30e1c62993d8efdac0761a0e1b72-yyy/stream?static=true&DeviceId=TW96aWxsYS81LjAgKFgxMTsgRmVkb3JhOyBMaW51eCB4ODZfNjQ7IHJ2Ojk4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTguMHwxNjQ5MzQzMjk5NTE3&api_key=c0bda90ebdab46aab26fa61a6a3131f9", NULL};
     err = mpv_command_async(_handle, 0, cmd);
     if (err < 0) {
         Logger::error("MPV mpv_command_async failed %s", mpv_error_string(err));
@@ -78,9 +79,9 @@ void MPVPlayer::enter_tree()
 
 void MPVPlayer::process()
 {
-#if DEBUG_MPV
     event();
-#endif
+    // We don't wait for the MPV_RENDER_UPDATE_FRAME signal to draw
+    // Because otherwise when swapping back and front buffer we will redraw the previous frame
     mpv_render_context_update(_context);
     int one{1};
     mpv_opengl_fbo fbo = {
@@ -102,27 +103,34 @@ void MPVPlayer::set_option_string(const std::string &option, const std::string &
         Logger::error("MPV Failed to set option %s with value: %s", option, value);
 }
 
-#if DEBUG_MPV
 void MPVPlayer::event()
 {
-    if (_mpv_event) {
-        while (1) {
-            mpv_event *mp_event = mpv_wait_event(_handle, 0);
-            if (mp_event->event_id == MPV_EVENT_NONE)
-                break;
-            if (mp_event->event_id == MPV_EVENT_LOG_MESSAGE) {
-                mpv_event_log_message *msg = (mpv_event_log_message*)mp_event->data;
-                std::strncpy(output_buffer, msg->text, OUTPUT_BUFFER_SIZE);
-                output_buffer[OUTPUT_BUFFER_SIZE - 1] = '\0';
-                output_buffer[std::strlen(output_buffer) - 1] = '\0';
-                Logger::info("MPV: %s %s", msg->prefix, output_buffer);
-                continue;
+    if (!_mpv_event)
+        return;
+    while (1) {
+        mpv_event *mp_event = mpv_wait_event(_handle, 0);
+        if (mp_event->event_id == MPV_EVENT_NONE) {
+            break;
+        } else if (mp_event->event_id == MPV_EVENT_LOG_MESSAGE) {
+#if DEBUG_MPV
+            mpv_event_log_message *msg = (mpv_event_log_message*)mp_event->data;
+            std::strncpy(output_buffer, msg->text, OUTPUT_BUFFER_SIZE);
+            output_buffer[OUTPUT_BUFFER_SIZE - 1] = '\0';
+            output_buffer[std::strlen(output_buffer) - 1] = '\0';
+            Logger::info("MPV: %s %s", msg->prefix, output_buffer);
+#endif
+        } else if (mp_event->event_id == MPV_EVENT_END_FILE) {
+            mpv_event_end_file *data = (mpv_event_end_file*)mp_event->data;
+            if (data->reason == MPV_END_FILE_REASON_ERROR) {
+                Logger::error("MPV %s", mpv_error_string(data->error));
+            } else {
+                Logger::info("MPV event: END OF FILE");
             }
+        } else {
             Logger::info("MPV event: %s", mpv_event_name(mp_event->event_id));
         }
-        _mpv_event = false;
     }
+    _mpv_event = false;
 }
-#endif
 
 }
