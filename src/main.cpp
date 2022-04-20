@@ -10,9 +10,6 @@ int main()
 }
 
 
-
-// Build with: gcc -o main main.c `pkg-config --libs --cflags mpv sdl2` -std=c99
-
 // #include <stddef.h>
 // #include <stdio.h>
 // #include <stdlib.h>
@@ -27,8 +24,7 @@ int main()
 
 // static void die(const char *msg)
 // {
-//     fprintf(stderr, "%s\n", msg);
-//     exit(1);
+//     printf("%s\n", msg);
 // }
 
 // static void *get_proc_address_mpv(void *fn_ctx, const char *name)
@@ -76,16 +72,20 @@ int main()
 // {
 //     // if (argc != 2)
 //     //     die("pass a single media file as argument");
-
+//     socketInitializeDefault();
+//     nxlinkStdio();
+//     printf("OK1\n");
 //     mpv_handle *mpv = mpv_create();
 //     if (!mpv)
 //         die("context init failed");
 
+//     printf("OK1\n");
 //     // Some minor options can only be set before mpv_initialize().
 //     if (mpv_initialize(mpv) < 0)
 //         die("mpv init failed");
 //     mpv_request_log_messages(mpv, "debug");
 
+//     printf("OK2\n");
 //     sf::Window window(sf::VideoMode::getDesktopMode(), "slt");
 //     window.setFramerateLimit(60);
 
@@ -98,19 +98,30 @@ int main()
 //         {(mpv_render_param_type)0}
 //     };
 
+
+//     mpv_set_option_string(mpv, "vd-lavc-threads", "4");
+//     // TODO: test this
+//     mpv_set_option_string(mpv, "fbo-format", "rgba8");
+//     mpv_set_option_string(mpv, "opengl-pbo", "yes");
+
+//     printf("OK3\n");
 //     // This makes mpv use the currently set GL context. It will use the callback
 //     // (passed via params) to resolve GL builtin functions, as well as extensions.
 //     mpv_render_context *mpv_gl;
 //     if (mpv_render_context_create(&mpv_gl, mpv, params) < 0)
 //         die("failed to initialize mpv GL context");
 
+//     printf("OK4\n");
 
 //     mpv_set_wakeup_callback(mpv, on_mpv_events, NULL);
 //     mpv_render_context_set_update_callback(mpv_gl, on_mpv_render_update, NULL);
 
 //     // Play this file.
-//     const char *cmd[] = {"loadfile", "http://jellyfin.gama.ovh/videos/044d30e1c62993d8efdac0761a0e1b72/stream?static=true&DeviceId=TW96aWxsYS81LjAgKFgxMTsgRmVkb3JhOyBMaW51eCB4ODZfNjQ7IHJ2Ojk4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTguMHwxNjQ5MzQzMjk5NTE3&api_key=c0bda90ebdab46aab26fa61a6a3131f9", NULL};
+//     // const char *cmd[] = {"loadfile", "http://samples.ffmpeg.org/V-codecs/h264/NeroAVC.mp4", NULL};
+//     // const char *cmd[] = {"loadfile", "http://jellyfin.gama.ovh/videos/044d30e1c62993d8efdac0761a0e1b72/stream?static=true&DeviceId=TW96aWxsYS81LjAgKFgxMTsgRmVkb3JhOyBMaW51eCB4ODZfNjQ7IHJ2Ojk4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTguMHwxNjQ5MzQzMjk5NTE3&api_key=c0bda90ebdab46aab26fa61a6a3131f9", NULL};
+//     const char *cmd[] = {"loadfile", "http://5.135.166.198:8096/videos/044d30e1c62993d8efdac0761a0e1b72/stream?static=true&DeviceId=TW96aWxsYS81LjAgKFgxMTsgRmVkb3JhOyBMaW51eCB4ODZfNjQ7IHJ2Ojk4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTguMHwxNjQ5MzQzMjk5NTE3&api_key=c0bda90ebdab46aab26fa61a6a3131f9", NULL};
 //     mpv_command_async(mpv, 0, cmd);
+//     printf("OK\n");
 
 //     bool draw = false;
 //     while (window.isOpen()) {

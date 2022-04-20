@@ -2,7 +2,7 @@
 #include <SFML/Window/Context.hpp>
 // #include <mpv/render.h>
 #include <mpv/render_gl.h>
-#include <SDL2/SDL_video.h>
+#include <cstring>
 #include "App.hpp"
 #include "Logger.hpp"
 #include "MPVPlayer.hpp"
@@ -13,31 +13,14 @@ static void *get_proc_address_mpv(void *unused, const char *name) {
 
 static void on_mpv_events(void *ctx)
 {
-    std::cout << "mpv event" << std::endl;
-    mpv_event *mp_event = mpv_wait_event((mpv_handle*)ctx, 0);
-    while (mp_event) {
-        if (mp_event->event_id == MPV_EVENT_NONE)
-            return;
-        if (mp_event->event_id == MPV_EVENT_LOG_MESSAGE) {
-            mpv_event_log_message *msg = (mpv_event_log_message*)mp_event->data;
-            // Print log messages about DR allocations, just to
-            // test whether it works. If there is more than 1 of
-            // these, it works. (The log message can actually change
-            // any time, so it's possible this logging stops working
-            // in the future.)
-            if (strstr(msg->text, "DR image"))
-                printf("log: %s", msg->text);
-            continue;
-        }
-        printf("event: %s\n", mpv_event_name(mp_event->event_id));
-        mp_event = mpv_wait_event((mpv_handle*)ctx, 0);
-    }
+    bool *evt = (bool*)ctx;
+    *evt = true;
 }
 
 
 namespace gana {
 
-MPVPlayer::MPVPlayer()
+MPVPlayer::MPVPlayer(): _mpv_event(false)
 {
     _handle = mpv_create();
     if (_handle == nullptr) {
@@ -53,9 +36,11 @@ MPVPlayer::MPVPlayer()
     }
     double frame_time = 0;
     mpv_set_option(_handle, "video-timing-offset", MPV_FORMAT_DOUBLE, &frame_time);
-    // mpv_request_log_messages(_handle, "debug");
+    mpv_request_log_messages(_handle, "debug");
+    set_option_string("vd-lavc-threads", "4");
+    set_option_string("fbo-format", "rgba8");
+    set_option_string("opengl-pbo", "yes");
     // mpv_set_option_string(_handle, "msg-level", "all=v");
-    // mpv_set_wakeup_callback(_handle, on_mpv_events, _handle);
 }
 
 MPVPlayer::~MPVPlayer()
@@ -88,24 +73,56 @@ void MPVPlayer::enter_tree()
     if (err < 0) {
         Logger::error("MPV mpv_command_async failed %s", mpv_error_string(err));
     }
+    mpv_set_wakeup_callback(_handle, on_mpv_events, &_mpv_event);
 }
 
 void MPVPlayer::process()
 {
-    if (mpv_render_context_update(_context) & MPV_RENDER_UPDATE_FRAME) {
-        int one{1};
-        mpv_opengl_fbo fbo = {
-            .fbo = 0,
-            .w = (int)_app->get_window().getSize().x,
-            .h = (int)_app->get_window().getSize().y,
-        };
-        mpv_render_param params[] = {
-            {MPV_RENDER_PARAM_OPENGL_FBO, &fbo},
-            {MPV_RENDER_PARAM_FLIP_Y, &one},
-        };
-        // on_mpv_events(_handle);
-        mpv_render_context_render(_context, params);
+#if DEBUG_MPV
+    event();
+#endif
+    mpv_render_context_update(_context);
+    int one{1};
+    mpv_opengl_fbo fbo = {
+        .fbo = 0,
+        .w = (int)_app->get_window().getSize().x,
+        .h = (int)_app->get_window().getSize().y,
+    };
+    mpv_render_param params[] = {
+        {MPV_RENDER_PARAM_OPENGL_FBO, &fbo},
+        {MPV_RENDER_PARAM_FLIP_Y, &one},
+    };
+    mpv_render_context_render(_context, params);
+}
+
+void MPVPlayer::set_option_string(const std::string &option, const std::string &value)
+{
+    int ret = mpv_set_option_string(_handle, option.c_str(), value.c_str());
+    if (ret < 0)
+        Logger::error("MPV Failed to set option %s with value: %s", option, value);
+}
+
+#if DEBUG_MPV
+void MPVPlayer::event()
+{
+    if (_mpv_event) {
+        while (1) {
+            mpv_event *mp_event = mpv_wait_event(_handle, 0);
+            if (mp_event->event_id == MPV_EVENT_NONE)
+                break;
+            if (mp_event->event_id == MPV_EVENT_LOG_MESSAGE) {
+                mpv_event_log_message *msg = (mpv_event_log_message*)mp_event->data;
+                std::strncpy(output_buffer, msg->text, OUTPUT_BUFFER_SIZE);
+                output_buffer[OUTPUT_BUFFER_SIZE - 1] = '\0';
+                output_buffer[std::strlen(output_buffer) - 1] = '\0';
+                Logger::info("MPV: %s %s", msg->prefix, output_buffer);
+                continue;
+            }
+            Logger::info("MPV event: %s", mpv_event_name(mp_event->event_id));
+        }
+        _mpv_event = false;
     }
 }
+#endif
 
 }
