@@ -12,10 +12,9 @@ int JellyfinClient::process()
     return (http.process());
 }
 
-void JellyfinClient::ping(std::function<void(PingResponse &)> callback)
+std::shared_ptr<PingRequest> JellyfinClient::ping()
 {
-    http.get(_url + "/System/Ping", "", [callback](int code, std::string body){
-        PingResponse resp(code, body);
-        callback(resp);
-    });
+    std::shared_ptr<PingRequest> req = std::make_shared<PingRequest>();
+    http.get(req, _url + "/System/Ping", "");
+    return (req);
 };

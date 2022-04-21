@@ -6,19 +6,19 @@ static bool lib_curl_init = false;
 
 static size_t read_callback(char *buffer, std::size_t size, std::size_t nitems, void *userdata)
 {
-    Http::Request *req = (Http::Request*)userdata;
-    std::size_t end = std::min(size * nitems + req->rindex, req->rdata.size());
-    std::size_t i = req->rindex;
+    Request::ReadStruct *req = (Request::ReadStruct*)userdata;
+    std::size_t end = std::min(size * nitems + req->index, req->data.size());
+    std::size_t i = req->index;
 
     for (std::size_t windex = 0 ; i < end; i++, windex++)
-        buffer[windex] = req->rdata[i];
-    return (end - req->rdata.size());
+        buffer[windex] = req->data[i];
+    return (end - req->data.size());
 }
 
 static size_t write_callback(char *buffer, std::size_t size, std::size_t nitems, void *userdata)
 {
-    Http::Request *req = (Http::Request*)userdata;
-    req->wdata += buffer;
+    Request::WriteStruct *req = (Request::WriteStruct*)userdata;
+    req->data += buffer;
     return (size * nitems);
 }
 
@@ -46,8 +46,11 @@ Http::~Http()
         lib_curl_init = false;
     }
     for (auto &pd: _pending_request) {
-        curl_multi_remove_handle(_multi_handle, pd.handle);
-        curl_easy_cleanup(pd.handle);
+        if (!pd.expired()) {
+            std::shared_ptr<Request> req = pd.lock();
+            curl_multi_remove_handle(_multi_handle, req->_handle);
+            curl_easy_cleanup(req->_handle);
+        }
     }
     for (auto handle: _handles)
         curl_easy_cleanup(handle);
@@ -66,14 +69,14 @@ int Http::process()
     return (still_running);
 }
 
-void Http::request(const std::string &url, const std::string &body, Method method, std::function<void(int code, std::string &body)> callback, std::unordered_map<std::string, std::string> headers)
+void Http::request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, std::unordered_map<std::string, std::string> headers)
 {
     CURL *handle = get_avai_handle();
-    _pending_request.push_back({body, 0, "", handle, callback});
+    _pending_request.push_back(std::weak_ptr<Request>(req));
     (void)headers;
 
     curl_easy_setopt(handle, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void*)&_pending_request.back());
+    curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void*)&req->_wdata);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, write_callback);
     curl_easy_setopt(handle, CURLOPT_USERAGENT, "Switchfin");
     switch (method) {
@@ -83,21 +86,23 @@ void Http::request(const std::string &url, const std::string &body, Method metho
             break;
         case Method::POST:
             curl_easy_setopt(handle, CURLOPT_POST, 1L);
-            curl_easy_setopt(handle, CURLOPT_READDATA, (void*)&_pending_request.back());
+            curl_easy_setopt(handle, CURLOPT_READDATA, (void*)&req->_rdata);
             curl_easy_setopt(handle, CURLOPT_READFUNCTION, read_callback);
             break;
     }
+    req->_handle = handle;
+    req->_parent = this;
     curl_multi_add_handle(_multi_handle, handle);
 }
 
-void Http::post(const std::string &url, const std::string &body, callback_func callback, std::unordered_map<std::string, std::string> headers)
+void Http::post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, std::unordered_map<std::string, std::string> headers)
 {
-    request(url, body, Method::POST, callback, headers);
+    request(req, url, body, Method::POST, headers);
 }
 
-void Http::get(const std::string &url, const std::string &body, callback_func callback, std::unordered_map<std::string, std::string> headers)
+void Http::get(std::shared_ptr<Request> req, const std::string &url, const std::string &body, std::unordered_map<std::string, std::string> headers)
 {
-    request(url, body, Method::GET, callback, headers);
+    request(req, url, body, Method::GET, headers);
 }
 
 CURL *Http::get_avai_handle()
@@ -125,13 +130,20 @@ void Http::check_response()
 
 void Http::on_response(CURLMsg *msg)
 {
-    for (std::vector<Request>::iterator it = _pending_request.begin(); it != _pending_request.end(); it++) {
-        if (it->handle == msg->easy_handle) {
-            (it->callback)(msg->data.result, it->wdata);
-            curl_multi_remove_handle(_multi_handle, it->handle);
-            curl_easy_reset(it->handle);
-            _handles.push_front(it->handle);
+    for (std::vector<std::weak_ptr<Request>>::iterator it = _pending_request.begin(); it != _pending_request.end(); it++) {
+        if (it->expired())
+            return;
+        std::shared_ptr<Request> req = it->lock();
+        if (req->_handle == msg->easy_handle) {
+            req->parse();
+            curl_multi_remove_handle(_multi_handle, req->_handle);
+            curl_easy_reset(req->_handle);
+            _handles.push_front(req->_handle);
             _pending_request.erase(it);
+            req->_handle = nullptr;
+            req->_parent = nullptr;
+            req->_completed = true;
+            req->_completed = msg->data.result;
             return;
         }
     }

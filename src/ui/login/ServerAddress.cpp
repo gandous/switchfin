@@ -67,9 +67,8 @@ void ServerAddress::connect_pressed()
 {
     _client = std::make_shared<JellyfinClient>("https://jellyfin.gama.ovh");
 
-    _client->ping([this](PingResponse &resp){
-        if (resp.get_error() == 0) {
-            go_to_login.emit();
-        }
+    _ping_req = _client->ping();
+    _ping_req->set_callback([this](int code, std::string &body){
+        gana::Logger::info(body);
     });
 }

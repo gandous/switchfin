@@ -20,6 +20,7 @@ class ServerAddress: public gana::RectContainer {
         void connect_pressed();
         gana::LineEdit _server_address;
         std::shared_ptr<JellyfinClient> _client;
+        std::shared_ptr<PingRequest> _ping_req;
 };
 
 #endif /* SERVERADDRESS_HPP_ */
