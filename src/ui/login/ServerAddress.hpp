@@ -13,6 +13,7 @@ class ServerAddress: public gana::RectContainer {
         ~ServerAddress();
 
         gana::Signal<> go_to_login;
+        std::shared_ptr<JellyfinClient> get_client();
     protected:
         void enter_tree() override;
         void process() override;

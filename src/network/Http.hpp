@@ -19,11 +19,12 @@ class Http {
             POST,
             GET
         };
+        using Headers = std::unordered_map<std::string, std::string>;
 
         int process();
-        void request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, std::unordered_map<std::string, std::string> headers);
-        void post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, std::unordered_map<std::string, std::string> headers = {});
-        void get(std::shared_ptr<Request> req, const std::string &url, const std::string &body, std::unordered_map<std::string, std::string> headers = {});
+        void request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, const std::unordered_map<std::string, std::string> &headers);
+        void post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, const std::unordered_map<std::string, std::string> &headers = {});
+        void get(std::shared_ptr<Request> req, const std::string &url, const std::unordered_map<std::string, std::string> &headers = {});
     private:
         CURL *get_avai_handle();
         void check_response();

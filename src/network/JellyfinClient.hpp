@@ -7,6 +7,7 @@
 #include "Http.hpp"
 #include "Request.hpp"
 #include "PingRequest.hpp"
+#include "LoginRequest.hpp"
 
 class JellyfinClient {
     public:
@@ -16,6 +17,7 @@ class JellyfinClient {
         int process();
 
         std::shared_ptr<PingRequest> ping();
+        std::shared_ptr<LoginRequest> login(const std::string &name, const std::string &password);
     private:
         std::string _url;
         Http http;

@@ -1,7 +1,11 @@
 
 #include "Request.hpp"
 
-Request::Request(): _completed(false)
+Request::Request():
+    _parent(nullptr),
+    _handle(nullptr),
+    _headers(nullptr),
+    _completed(false)
 {}
 
 Request::~Request()

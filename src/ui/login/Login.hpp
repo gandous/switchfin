@@ -8,15 +8,20 @@
 #include "ui/Label.hpp"
 #include "ui/LineEdit.hpp"
 #include "ui/Button.hpp"
+#include "network/JellyfinClient.hpp"
 
 class Login: public gana::RectContainer {
     public:
         Login();
         ~Login();
 
+        void set_client(std::shared_ptr<JellyfinClient> client);
     protected:
         void enter_tree() override;
     private:
+        void on_login_pressed();
+        std::shared_ptr<JellyfinClient> _client;
+        std::shared_ptr<LoginRequest> _rlogin;
         gana::VBoxContainer _container;
         gana::Label _lbl_login;
         gana::Label _lbl_name;

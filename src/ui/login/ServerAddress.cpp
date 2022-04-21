@@ -51,6 +51,11 @@ ServerAddress::ServerAddress()
 ServerAddress::~ServerAddress()
 {}
 
+std::shared_ptr<JellyfinClient> ServerAddress::get_client()
+{
+    return (_client);
+}
+
 void ServerAddress::enter_tree()
 {
     _app->set_focused_node(&_server_address);
@@ -70,5 +75,6 @@ void ServerAddress::connect_pressed()
     _ping_req = _client->ping();
     _ping_req->set_callback([this](int code, std::string &body){
         gana::Logger::info(body);
+        go_to_login.emit();
     });
 }

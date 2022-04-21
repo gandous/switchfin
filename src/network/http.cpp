@@ -9,10 +9,12 @@ static size_t read_callback(char *buffer, std::size_t size, std::size_t nitems, 
     Request::ReadStruct *req = (Request::ReadStruct*)userdata;
     std::size_t end = std::min(size * nitems + req->index, req->data.size());
     std::size_t i = req->index;
+    std::size_t start = req->index;
 
     for (std::size_t windex = 0 ; i < end; i++, windex++)
         buffer[windex] = req->data[i];
-    return (end - req->data.size());
+    req->index = end;
+    return (end - start);
 }
 
 static size_t write_callback(char *buffer, std::size_t size, std::size_t nitems, void *userdata)
@@ -69,22 +71,30 @@ int Http::process()
     return (still_running);
 }
 
-void Http::request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, std::unordered_map<std::string, std::string> headers)
+void Http::request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, const std::unordered_map<std::string, std::string> &headers)
 {
     CURL *handle = get_avai_handle();
     _pending_request.push_back(std::weak_ptr<Request>(req));
-    (void)headers;
 
     curl_easy_setopt(handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void*)&req->_wdata);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, write_callback);
     curl_easy_setopt(handle, CURLOPT_USERAGENT, "Switchfin");
+    if (headers.size() > 0) {
+        for (auto header: headers) {
+            std::string hs = header.first + ": " + header.second;
+            req->_headers = curl_slist_append(req->_headers, hs.c_str());
+        }
+        curl_easy_setopt(handle, CURLOPT_HTTPHEADER, req->_headers);
+    }
     switch (method) {
         default:
         case Method::GET:
             curl_easy_setopt(handle, CURLOPT_HTTPGET, 1L);
             break;
         case Method::POST:
+            req->_rdata.data = body;
+            req->_rdata.index = 0;
             curl_easy_setopt(handle, CURLOPT_POST, 1L);
             curl_easy_setopt(handle, CURLOPT_READDATA, (void*)&req->_rdata);
             curl_easy_setopt(handle, CURLOPT_READFUNCTION, read_callback);
@@ -95,14 +105,14 @@ void Http::request(std::shared_ptr<Request> req, const std::string &url, const s
     curl_multi_add_handle(_multi_handle, handle);
 }
 
-void Http::post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, std::unordered_map<std::string, std::string> headers)
+void Http::post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, const std::unordered_map<std::string, std::string> &headers)
 {
     request(req, url, body, Method::POST, headers);
 }
 
-void Http::get(std::shared_ptr<Request> req, const std::string &url, const std::string &body, std::unordered_map<std::string, std::string> headers)
+void Http::get(std::shared_ptr<Request> req, const std::string &url, const std::unordered_map<std::string, std::string> &headers)
 {
-    request(req, url, body, Method::GET, headers);
+    request(req, url, "", Method::GET, headers);
 }
 
 CURL *Http::get_avai_handle()
@@ -144,6 +154,10 @@ void Http::on_response(CURLMsg *msg)
             req->_parent = nullptr;
             req->_completed = true;
             req->_completed = msg->data.result;
+            if (req->_headers != nullptr) {
+                curl_slist_free_all(req->_headers);
+                req->_headers = nullptr;
+            }
             return;
         }
     }

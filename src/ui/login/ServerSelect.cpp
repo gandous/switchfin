@@ -28,5 +28,6 @@ ServerSelect::~ServerSelect()
 void ServerSelect::on_go_to_login()
 {
     remove_child(&_server_address);
+    _login.set_client(_server_address.get_client());
     add_child(&_login);
 }

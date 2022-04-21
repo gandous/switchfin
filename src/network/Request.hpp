@@ -43,6 +43,7 @@ class Request {
     private:
         Http *_parent;
         CURL *_handle;
+        struct curl_slist *_headers;
         bool _completed;
 };
 

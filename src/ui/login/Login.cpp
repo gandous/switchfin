@@ -51,6 +51,7 @@ Login::Login()
     _btn_login.set_text("Login");
     _btn_login.set_up_node(&_le_password);
     _btn_login.set_left_node(&_btn_back);
+    _btn_login.signal_pressed.connect(*this, &Login::on_login_pressed);
     _ctn_button.add_child(&_btn_login);
     _ctn_button.add_spacer(32, true);
 }
@@ -58,7 +59,20 @@ Login::Login()
 Login::~Login()
 {}
 
+void Login::set_client(std::shared_ptr<JellyfinClient> client)
+{
+    _client = client;
+}
+
 void Login::enter_tree()
 {
     _app->set_focused_node(&_le_name);
+}
+
+void Login::on_login_pressed()
+{
+    _rlogin = _client->login("ff", "ff");
+    _rlogin->set_callback([this](int code, std::string &body){
+        gana::Logger::info(body);
+    });
 }
