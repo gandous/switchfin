@@ -1,5 +1,5 @@
 
-#include <iostream>
+#include "Logger.hpp"
 #include "Http.hpp"
 
 static bool lib_curl_init = false;
@@ -27,20 +27,20 @@ Http::Http(): _multi_handle(nullptr)
     if (!lib_curl_init) {
         CURLcode code = curl_global_init(CURL_GLOBAL_NOTHING);
         if (code != 0) {
-            std::cerr << "Curl global init failed (code: " << (int)code << ")" << std::endl;
+            gana::Logger::error("Curl global init failed (code: %d)", code);
             return;
         }
         lib_curl_init = true;
     }
     _multi_handle = curl_multi_init();
     if (_multi_handle == nullptr) {
-        std::cerr << "Failed to init curl" << std::endl;
+        gana::Logger::error("Failed to init curl");
     }
 }
 
 Http::~Http()
 {
-    std::cout << "Closing all connection" << std::endl;
+    gana::Logger::info("Closing all connection");
     if (lib_curl_init) {
         curl_global_cleanup();
         lib_curl_init = false;
@@ -53,7 +53,7 @@ Http::~Http()
         curl_easy_cleanup(handle);
     if (_multi_handle != nullptr)
         curl_multi_cleanup(_multi_handle);
-    std::cout << "All connection closed" << std::endl;
+    gana::Logger::info("All connection closed");
 }
 
 int Http::process()

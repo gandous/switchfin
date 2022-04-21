@@ -5,7 +5,6 @@
 #include "gana/App.hpp"
 #include "ui/login/ServerSelect.hpp"
 
-#include "ui/MPVPlayer.hpp"
 class Switchfin {
     public:
         Switchfin();
@@ -14,8 +13,7 @@ class Switchfin {
         void run();
     private:
         gana::App _app;
-        // ServerSelect _server_select;
-        gana::MPVPlayer _player;
+        ServerSelect _server_select;
 };
 
 #endif /* SWITCHFIN_HPP_ */

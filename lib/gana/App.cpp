@@ -38,17 +38,17 @@ App::App(const std::string& title):
     nxlinkStdio();
     Result rc = romfsInit();
     if (R_FAILED(rc))
-        std::cout << "Failed to init romfs" << std::endl;
+        Logger::error("Failed to init romfs");
     else
-        std::cerr << "romfs OK" << std::endl;
+        Logger::info("romfs OK");
 #endif
     if (!gladLoadGL()) {
-        std::cout << "Failed to initialize OpenGL context" << std::endl;
+        Logger::error("Failed to initialize OpenGL context");
         return;
     }
     _vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
     if (_vg == nullptr) {
-        std::cout << "Failed to initialize nanovg context" << std::endl;
+        Logger::error("Failed to initialize nanovg context");
     }
     _amanager = std::make_unique<AssetManager>(_vg);
     _window.setFramerateLimit(60);

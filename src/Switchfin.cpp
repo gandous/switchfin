@@ -3,8 +3,7 @@
 
 Switchfin::Switchfin(): _app("Switchfin")
 {
-    _app.set_root_node(&_player);
-    // _app.set_root_node(&_server_select);
+    _app.set_root_node(&_server_select);
 }
 
 Switchfin::~Switchfin()
