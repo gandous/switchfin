@@ -66,7 +66,7 @@ int Http::process()
     int still_running;
     CURLMcode mc = curl_multi_perform(_multi_handle, &still_running);
     if(!mc && still_running)
-        mc = curl_multi_poll(_multi_handle, NULL, 0, 1000, NULL);
+        mc = curl_multi_poll(_multi_handle, NULL, 0, 0, NULL);
     check_response();
     return (still_running);
 }
