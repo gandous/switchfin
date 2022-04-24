@@ -8,6 +8,7 @@
 #include "MPVPlayer.hpp"
 
 static void *get_proc_address_mpv(void *unused, const char *name) {
+    (void)unused;
     return ((void*)sf::Context::getFunction(name));
 }
 
@@ -88,6 +89,7 @@ void MPVPlayer::process()
         .fbo = 0,
         .w = (int)_app->get_window().getSize().x,
         .h = (int)_app->get_window().getSize().y,
+        .internal_format = 0,
     };
     mpv_render_param params[] = {
         {MPV_RENDER_PARAM_OPENGL_FBO, &fbo},

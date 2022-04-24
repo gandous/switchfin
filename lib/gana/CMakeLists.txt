@@ -8,6 +8,7 @@ file(GLOB_RECURSE GANA_SRC "*")
 
 add_library(gana STATIC ${GANA_SRC})
 
+target_compile_options(gana PRIVATE -Wall -Wextra)
 if (SWITCH)
     target_link_libraries(gana -Wl,--whole-archive switch::libnx -Wl,--no-whole-archive)
     target_link_libraries(gana sfml-window-s sfml-audio-s sfml-system-s mpv freetype FLAC vorbisfile vorbisenc vorbis bz2 png z nanovg avfilter avcodec avformat avutil bz2 z swscale swresample fribidi ogg SDL2 EGL glapi GLESv2 glad drm_nouveau drm_nouveaud freetype ass freetype)
