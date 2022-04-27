@@ -42,6 +42,7 @@ void Node::remove_child(Node *node)
 {
     for (std::vector<Node*>::iterator it = _childs.begin(); it != _childs.end(); it++) {
         if (*it == node) {
+            (*it)->propagate_exit_tree();
             (*it)->_parent = nullptr;
             _childs.erase(it);
             return;
@@ -50,10 +51,14 @@ void Node::remove_child(Node *node)
 }
 
 void Node::draw(NVGcontext *ctx)
-{}
+{
+    (void)ctx;
+}
 
 void Node::process_event(Event &evt)
-{}
+{
+    (void)evt;
+}
 
 void Node::update_layout(const Vector2f &size)
 {
@@ -306,6 +311,9 @@ void Node::draw_outline(NVGcontext *ctx)
 void Node::enter_tree()
 {}
 
+void Node::exit_tree()
+{}
+
 void Node::process()
 {}
 
@@ -316,6 +324,16 @@ void Node::propagate_enter_tree(App *app)
     app->update_layout();
     for (auto &child: _childs)
         child->propagate_enter_tree(app);
+}
+
+void Node::propagate_exit_tree()
+{
+    exit_tree();
+    set_process(false);
+    _app->update_layout();
+    for (auto &child: _childs)
+        child->propagate_exit_tree();
+    _app = nullptr;
 }
 
 void Node::apply_anchor(const Vector2f &size)

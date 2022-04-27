@@ -99,9 +99,11 @@ class Node {
         App *_app;
         virtual void draw_outline(NVGcontext *ctx);
         virtual void enter_tree();
+        virtual void exit_tree();
         virtual void process();
     private:
         void propagate_enter_tree(App *app);
+        void propagate_exit_tree();
         void apply_anchor(const Vector2f &size);
         void propagate_event(Event &evt);
         void propagate_draw(NVGcontext *ctx);
