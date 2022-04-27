@@ -19,20 +19,20 @@ ServerAddress::ServerAddress()
     lbl_title->set_hsizing(gana::Node::Sizing::SHRINK_CENTER);
     lbl_title->set_font_size(50);
     container->add_child(lbl_title);
-    gana::Node *spacer1 = make_managed<gana::Node>();
-    spacer1->set_expand();
-    container->add_child(spacer1);
+    container->add_spacer(8, true);
     gana::Label *lbl = make_managed<gana::Label>();
     lbl->set_font_size(20);
     lbl->set_text("Server address:");
     container->add_child(lbl);
-    _server_address.set_min_size(gana::Vector2f(207, 44));
-    _server_address.set_hsizing(gana::Node::Sizing::FILL);
-    _server_address.set_value("https://");
-    container->add_child(&_server_address);
-    gana::Node *spacer2 = make_managed<gana::Node>();
-    spacer2->set_expand();
-    container->add_child(spacer2);
+    _le_server_address.set_min_size(gana::Vector2f(207, 44));
+    _le_server_address.set_hsizing(gana::Node::Sizing::FILL);
+    _le_server_address.set_value("https://");
+    container->add_child(&_le_server_address);
+    container->add_spacer(8, true);
+    _lbl_error.set_preset(gana::Label::ERROR);
+    _lbl_error.set_hsizing(gana::Node::Sizing::SHRINK_CENTER);
+    container->add_child(&_lbl_error);
+    container->add_spacer(8, true);
     gana::Button *button = make_managed<gana::Button>();
     button->set_text("Connect");
     button->set_hsizing(gana::Node::Sizing::SHRINK_CENTER);
@@ -40,12 +40,9 @@ ServerAddress::ServerAddress()
     button->set_min_size(gana::Vector2f(207, 44));
     button->signal_pressed.connect(*this, &ServerAddress::connect_pressed);
     container->add_child(button);
-    gana::Node *spacer3 = make_managed<gana::Node>();
-    spacer3->set_expand();
-    container->add_child(spacer3);
-    _server_address.set_bottom_node(button);
-    button->set_up_node(&_server_address);
-
+    container->add_spacer(8, true);
+    _le_server_address.set_bottom_node(button);
+    button->set_up_node(&_le_server_address);
 }
 
 ServerAddress::~ServerAddress()
@@ -58,7 +55,7 @@ std::shared_ptr<JellyfinClient> ServerAddress::get_client()
 
 void ServerAddress::enter_tree()
 {
-    _app->set_focused_node(&_server_address);
+    _app->set_focused_node(&_le_server_address);
     set_process(true);
 }
 
@@ -71,10 +68,18 @@ void ServerAddress::process()
 void ServerAddress::connect_pressed()
 {
     _client = std::make_shared<JellyfinClient>("https://jellyfin.gama.ovh");
+    // _client = std::make_shared<JellyfinClient>(_le_server_address.get_text());
 
     _ping_req = _client->ping();
-    _ping_req->set_callback([this](int code, std::string &body){
-        gana::Logger::info(body);
+    _ping_req->set_callback(Request::mf_callback(*this, &ServerAddress::on_ping_response));
+}
+
+void ServerAddress::on_ping_response(Request::RCode code, std::string &body)
+{
+    gana::Logger::info("%d %s", code, body.c_str());
+    if (code == Request::OK) {
         go_to_login.emit();
-    });
+    } else {
+        _lbl_error.set_text("Failed to connect.");
+    }
 }

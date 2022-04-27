@@ -4,6 +4,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <cstring>
 #include "nanovg/src/nanovg.h"
 
 namespace gana {
@@ -14,6 +15,8 @@ class AssetManager {
 
         AssetManager(NVGcontext *ctx);
         ~AssetManager();
+
+        static std::string get_path(const std::string &path);
 
         int load_font(const std::string &name, const std::string &filepath);
         int load_image(const std::string &filepath, int flag = 0);

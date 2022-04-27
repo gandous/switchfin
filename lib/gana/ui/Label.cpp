@@ -49,6 +49,13 @@ void Label::set_text(const std::string &text)
 {
     _text = text;
     _update_min_rect = true;
+    if (_app != nullptr)
+        _app->update_layout();
+}
+
+const std::string &Label::get_text() const
+{
+    return (_text);
 }
 
 void Label::set_color(const Color &color)
@@ -60,6 +67,8 @@ void Label::set_font_size(unsigned int size)
 {
     _update_min_rect = true;
     _size = size;
+    if (_app != nullptr)
+        _app->update_layout();
 }
 
 void Label::set_text_align(TextAlign align)
@@ -75,6 +84,16 @@ void Label::set_text_align(TextAlign align)
             break;
         case CENTER:
             _text_align = NVG_ALIGN_MIDDLE | NVG_ALIGN_CENTER;
+            break;
+    }
+}
+
+void Label::set_preset(Preset preset)
+{
+    switch (preset) {
+        case Preset::ERROR:
+            set_color(theme::TEXT_COLOR_ERROR);
+        default:
             break;
     }
 }

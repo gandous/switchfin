@@ -15,7 +15,8 @@ class JellyfinClient {
         ~JellyfinClient();
 
         int process();
-
+        
+        const std::string &get_url() const;
         std::shared_ptr<PingRequest> ping();
         std::shared_ptr<LoginRequest> login(const std::string &name, const std::string &password);
     private:

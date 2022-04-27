@@ -14,12 +14,8 @@ class Request {
         Request();
         ~Request();
 
-        template<typename ...ARGS, typename C>
-        std::function<void(ARGS...)> mf_callback(C &obj, void(C::*func)(ARGS...))
-        {
-            return ([&obj, func](ARGS &...args){
-                (obj.*func)(args...);
-            });
+        enum RCode {
+            OK = CURLE_OK,
         };
         struct ReadStruct {
             std::string data;
@@ -28,7 +24,14 @@ class Request {
         struct WriteStruct {
             std::string data;
         };
-        using callback_func = std::function<void(int code, std::string &body)>;
+        using callback_func = std::function<void(RCode code, std::string &body)>;
+        template<typename T>
+        static callback_func mf_callback(T &obj, void(T::*func)(RCode code, std::string &body))
+        {
+            return ([&obj, func](RCode code, std::string &body){
+                (obj.*func)(code, body);
+            });
+        };
 
         bool is_completed() const;
         int get_error() const;
@@ -37,8 +40,8 @@ class Request {
     protected:
         ReadStruct _rdata;
         WriteStruct _wdata;
-        void parse();
-        int _code;
+        virtual void parse();
+        RCode _code;
         callback_func _func;
     private:
         Http *_parent;

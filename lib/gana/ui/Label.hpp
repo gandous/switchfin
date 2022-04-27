@@ -18,13 +18,18 @@ class Label: public Node {
             CENTER,
             RIGHT
         };
+        enum Preset {
+            ERROR,
+        };
 
         void draw(NVGcontext *ctx) override;
         Vector2f get_min_size() override;
         void set_text(const std::string &text);
+        const std::string &get_text() const;
         void set_color(const Color &color);
         void set_font_size(unsigned int size);
         void set_text_align(TextAlign align);
+        void set_preset(Preset preset);
     private:
         void apply_font(NVGcontext *ctx);
         std::string _text;

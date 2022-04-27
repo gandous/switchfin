@@ -4,6 +4,7 @@
 
 #include "ui/RectContainer.hpp"
 #include "ui/LineEdit.hpp"
+#include "ui/Label.hpp"
 #include "type/Signal.hpp"
 #include "network/JellyfinClient.hpp"
 
@@ -19,7 +20,9 @@ class ServerAddress: public gana::RectContainer {
         void process() override;
     private:
         void connect_pressed();
-        gana::LineEdit _server_address;
+        void on_ping_response(Request::RCode code, std::string &body);
+        gana::LineEdit _le_server_address;
+        gana::Label _lbl_error;
         std::shared_ptr<JellyfinClient> _client;
         std::shared_ptr<PingRequest> _ping_req;
 };

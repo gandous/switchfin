@@ -20,6 +20,8 @@ class Login: public gana::RectContainer {
         void enter_tree() override;
     private:
         void on_login_pressed();
+        void on_login(Request::RCode code, std::string &body);
+        void save_data(const std::string &server, const std::string &user, const std::string &password, const std::string &device_id, const std::string &token);
         std::shared_ptr<JellyfinClient> _client;
         std::shared_ptr<LoginRequest> _rlogin;
         gana::VBoxContainer _container;

@@ -12,6 +12,11 @@ int JellyfinClient::process()
     return (http.process());
 }
 
+const std::string &JellyfinClient::get_url() const
+{
+    return (_url);
+}
+
 std::shared_ptr<PingRequest> JellyfinClient::ping()
 {
     std::shared_ptr<PingRequest> req = std::make_shared<PingRequest>();

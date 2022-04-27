@@ -1,6 +1,8 @@
 
-#include "Login.hpp"
+#include "simpleini/SimpleIni.hpp"
 #include "App.hpp"
+#include "AssetManager.hpp"
+#include "Login.hpp"
 
 Login::Login()
 {
@@ -71,8 +73,32 @@ void Login::enter_tree()
 
 void Login::on_login_pressed()
 {
-    _rlogin = _client->login("ff", "ff");
-    _rlogin->set_callback([this](int code, std::string &body){
-        gana::Logger::info(body);
-    });
+    _rlogin = _client->login(_le_name.get_text(), _le_password.get_text());
+    _rlogin->set_callback(Request::mf_callback(*this, &Login::on_login));
+}
+
+void Login::on_login(Request::RCode code, std::string &body)
+{
+    if (code == Request::OK) {
+        gana::Logger::info("Login success");
+        save_data(_client->get_url(), _le_name.get_text(), _le_password.get_text(), "id", _rlogin->get_token());
+    } else {
+        gana::Logger::error("Login failed (code: %d)", code);
+    }
+}
+
+void Login::save_data(const std::string &server, const std::string &user, const std::string &password, const std::string &device_id, const std::string &token)
+{
+    CSimpleIni ini;
+
+    ini.SetValue("SERVER", "address", server.c_str());
+    ini.SetValue("SERVER", "user", user.c_str());
+    ini.SetValue("SERVER", "password", password.c_str());
+    ini.SetValue("SERVER", "device_id", device_id.c_str());
+    ini.SetValue("SERVER", "token", token.c_str());
+    FILE *f = fopen("config.ini", "w+");
+    ini.SetSpaces(false);
+    ini.SaveFile(f);
+    fclose(f);
+    gana::Logger::info("Server info saved");
 }
