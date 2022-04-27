@@ -23,10 +23,7 @@ int Request::get_error() const
 
 const std::string &Request::get_error_str() const
 {
-    switch (_code) {
-        default:
-            return ("");
-    }
+    return (_error_str);
 }
 
 void Request::set_callback(callback_func func)

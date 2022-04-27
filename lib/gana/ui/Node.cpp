@@ -17,7 +17,8 @@ Node::Node():
     _left_node(nullptr),
     _top_node(nullptr),
     _right_node(nullptr),
-    _bottom_node(nullptr)
+    _bottom_node(nullptr),
+    _visibility(true)
 {}
 
 Node::~Node()
@@ -299,6 +300,21 @@ void Node::set_process(bool process)
         _app->remove_process_node(this);
 }
 
+void Node::show()
+{
+    _visibility = true;
+}
+
+void Node::hide()
+{
+    _visibility = false;
+}
+
+void Node::set_visible(bool visibility)
+{
+    _visibility = visibility;
+}
+
 void Node::draw_outline(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
@@ -389,6 +405,8 @@ void Node::propagate_event(Event &evt)
 
 void Node::propagate_draw(NVGcontext *ctx)
 {
+    if (!_visibility)
+        return;
     draw(ctx);
     if (_has_focus)
         draw_outline(ctx);

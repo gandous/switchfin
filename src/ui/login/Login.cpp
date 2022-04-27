@@ -57,6 +57,11 @@ Login::Login()
     _btn_login.signal_pressed.connect(*this, &Login::on_login_pressed);
     _ctn_button.add_child(&_btn_login);
     _ctn_button.add_spacer(32, true);
+
+    _lbl_connecting.set_text("Connecting");
+    _lbl_connecting.set_anchor(gana::Node::Anchor::CENTER);
+    add_child(&_lbl_connecting);
+    show_connecting(false);
 }
 
 Login::~Login()
@@ -70,10 +75,18 @@ void Login::set_client(std::shared_ptr<JellyfinClient> client)
 void Login::enter_tree()
 {
     _app->set_focused_node(&_le_name);
+    set_process(true);
+}
+
+void Login::process()
+{
+    if (_client != nullptr)
+        _client->process();
 }
 
 void Login::on_login_pressed()
 {
+    show_connecting(true);
     _rlogin = _client->login(_le_name.get_text(), _le_password.get_text());
     _rlogin->set_callback(Request::mf_callback(*this, &Login::on_login));
 }
@@ -85,6 +98,7 @@ void Login::on_login(Request::RCode code, std::string &body)
         save_data(_client->get_url(), _le_name.get_text(), _le_password.get_text(), "id", _rlogin->get_token());
     } else {
         gana::Logger::error("Login failed (code: %d)", code);
+        show_connecting(false);
     }
 }
 
@@ -102,4 +116,15 @@ void Login::save_data(const std::string &server, const std::string &user, const 
     ini.SaveFile(f);
     fclose(f);
     gana::Logger::info("Server info saved");
+}
+
+void Login::show_connecting(bool visibility)
+{
+    _lbl_connecting.set_visible(visibility);
+    _lbl_name.set_visible(!visibility);
+    _lbl_password.set_visible(!visibility);
+    _le_name.set_visible(!visibility);
+    _le_password.set_visible(!visibility);
+    _btn_login.set_visible(!visibility);
+    _btn_back.set_visible(!visibility);
 }

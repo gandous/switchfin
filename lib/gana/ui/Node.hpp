@@ -92,6 +92,9 @@ class Node {
         void set_right_node(Node *node);
         void set_bottom_node(Node *node);
         void set_process(bool process = true);
+        void show();
+        void hide();
+        void set_visible(bool visibility);
         template<typename T>
         T *make_managed();
     protected:
@@ -125,6 +128,7 @@ class Node {
         Node *_right_node;
         Node *_bottom_node;
         std::vector<std::shared_ptr<Node>> _managed_childs;
+        bool _visibility;
 };
 
 #include "Node.inl"

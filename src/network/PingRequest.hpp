@@ -9,6 +9,8 @@ class PingRequest: public Request {
         PingRequest();
         ~PingRequest();
 
+    protected:
+        void parse();
     private:
 };
 

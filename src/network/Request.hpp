@@ -15,7 +15,8 @@ class Request {
         ~Request();
 
         enum RCode {
-            OK = CURLE_OK,
+            OK = 0,
+            ERROR,
         };
         struct ReadStruct {
             std::string data;
@@ -42,7 +43,10 @@ class Request {
         WriteStruct _wdata;
         virtual void parse();
         RCode _code;
+        CURLcode _curl_code;
         callback_func _func;
+        long _http_code;
+        std::string _error_str;
     private:
         Http *_parent;
         CURL *_handle;

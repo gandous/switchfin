@@ -15,6 +15,7 @@ Switchfin::Switchfin(): _app("Switchfin")
     } else {
         std::shared_ptr<JellyfinClient> client = std::make_shared<JellyfinClient>("ff");
         _current = std::make_shared<Home>(client);
+        fclose(f);
     }
     _app.set_root_node(_current);
 }

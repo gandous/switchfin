@@ -145,6 +145,7 @@ void Http::on_response(CURLMsg *msg)
             return;
         std::shared_ptr<Request> req = it->lock();
         if (req->_handle == msg->easy_handle) {
+            curl_easy_getinfo(req->_handle, CURLINFO_RESPONSE_CODE, &req->_http_code);
             curl_multi_remove_handle(_multi_handle, req->_handle);
             curl_easy_reset(req->_handle);
             _handles.push_front(req->_handle);
@@ -152,7 +153,7 @@ void Http::on_response(CURLMsg *msg)
             req->_handle = nullptr;
             req->_parent = nullptr;
             req->_completed = true;
-            req->_code = (Request::RCode)msg->data.result;
+            req->_curl_code = msg->data.result;
             if (req->_headers != nullptr) {
                 curl_slist_free_all(req->_headers);
                 req->_headers = nullptr;
