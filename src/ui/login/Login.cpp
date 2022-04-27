@@ -2,6 +2,7 @@
 #include "simpleini/SimpleIni.hpp"
 #include "App.hpp"
 #include "AssetManager.hpp"
+#include "config.hpp"
 #include "Login.hpp"
 
 Login::Login()
@@ -96,7 +97,7 @@ void Login::save_data(const std::string &server, const std::string &user, const 
     ini.SetValue("SERVER", "password", password.c_str());
     ini.SetValue("SERVER", "device_id", device_id.c_str());
     ini.SetValue("SERVER", "token", token.c_str());
-    FILE *f = fopen("config.ini", "w+");
+    FILE *f = fopen(SERVER_CONFIG_PATH, "w+");
     ini.SetSpaces(false);
     ini.SaveFile(f);
     fclose(f);
