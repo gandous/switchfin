@@ -17,7 +17,7 @@ class Home: public gana::ColorRect {
     private:
         void on_resume_receive(Request::RCode code, std::string &body);
         std::shared_ptr<JellyfinClient> _jclient;
-        std::shared_ptr<Items> _rresume;
+        std::shared_ptr<ItemsRequest> _rresume;
 };
 
 #endif /* HOME_HPP_ */

@@ -8,7 +8,7 @@
 #include "Request.hpp"
 #include "PingRequest.hpp"
 #include "LoginRequest.hpp"
-#include "item/Items.hpp"
+#include "item/ItemsRequest.hpp"
 
 class JellyfinClient {
     public:
@@ -23,7 +23,7 @@ class JellyfinClient {
         const std::string &get_url() const;
         std::shared_ptr<PingRequest> ping();
         std::shared_ptr<LoginRequest> login(const std::string &name, const std::string &password);
-        std::shared_ptr<Items> get_resume();
+        std::shared_ptr<ItemsRequest> get_resume();
     private:
         void update_default_header();
         std::string _url;

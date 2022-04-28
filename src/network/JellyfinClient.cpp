@@ -48,7 +48,7 @@ std::shared_ptr<LoginRequest> JellyfinClient::login(const std::string &name, con
     return (req);
 }
 
-std::shared_ptr<Items> JellyfinClient::get_resume()
+std::shared_ptr<ItemsRequest> JellyfinClient::get_resume()
 {
     std::ostringstream url;
     Http::UrlParams params = {
@@ -56,7 +56,7 @@ std::shared_ptr<Items> JellyfinClient::get_resume()
     };
 
     url << _url << "/Users/" << _user_id << "/Items/Resume";
-    std::shared_ptr<Items> req = std::make_shared<Items>();
+    std::shared_ptr<ItemsRequest> req = std::make_shared<ItemsRequest>();
     _http.get(req, url.str(), _default_header);
     return (req);
 }
