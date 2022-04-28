@@ -12,10 +12,12 @@ class LoginRequest: public Request {
         ~LoginRequest();
 
         const std::string &get_token() const;
+        const std::string &get_user_id() const;
     protected:
         void parse();
     private:
         std::string _token;
+        std::string _user_id;
         nlohmann::json _json;
 };
 

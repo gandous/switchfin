@@ -22,7 +22,7 @@ class Login: public gana::RectContainer {
     private:
         void on_login_pressed();
         void on_login(Request::RCode code, std::string &body);
-        void save_data(const std::string &server, const std::string &user, const std::string &password, const std::string &device_id, const std::string &token);
+        void save_data(const std::string &server, const std::string &user, const std::string &password, const std::string &device_id, const std::string &token, const std::string &user_id);
         void show_connecting(bool visibility);
         std::shared_ptr<JellyfinClient> _client;
         std::shared_ptr<LoginRequest> _rlogin;

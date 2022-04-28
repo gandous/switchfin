@@ -95,14 +95,14 @@ void Login::on_login(Request::RCode code, std::string &body)
 {
     if (code == Request::OK) {
         gana::Logger::info("Login success");
-        save_data(_client->get_url(), _le_name.get_text(), _le_password.get_text(), "id", _rlogin->get_token());
+        save_data(_client->get_url(), _le_name.get_text(), _le_password.get_text(), "id", _rlogin->get_token(), _rlogin->get_user_id());
     } else {
         gana::Logger::error("Login failed (code: %d)", code);
         show_connecting(false);
     }
 }
 
-void Login::save_data(const std::string &server, const std::string &user, const std::string &password, const std::string &device_id, const std::string &token)
+void Login::save_data(const std::string &server, const std::string &user, const std::string &password, const std::string &device_id, const std::string &token, const std::string &user_id)
 {
     CSimpleIni ini;
 
@@ -111,6 +111,7 @@ void Login::save_data(const std::string &server, const std::string &user, const 
     ini.SetValue("SERVER", "password", password.c_str());
     ini.SetValue("SERVER", "device_id", device_id.c_str());
     ini.SetValue("SERVER", "token", token.c_str());
+    ini.SetValue("SERVER", "user_id", user_id.c_str());
     FILE *f = fopen(SERVER_CONFIG_PATH, "w+");
     ini.SetSpaces(false);
     ini.SaveFile(f);

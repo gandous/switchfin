@@ -6,4 +6,7 @@
 
 static const char *SERVER_CONFIG_PATH = "server.ini";
 
+static const std::string CLIENT_NAME = "Switchfin";
+static const std::string DEVICE_NAME = "Switch";
+
 #endif /* CONFIG_SWITCHFIN_HPP_ */

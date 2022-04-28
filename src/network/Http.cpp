@@ -1,4 +1,5 @@
 
+#include <sstream>
 #include "Logger.hpp"
 #include "Http.hpp"
 
@@ -71,7 +72,7 @@ int Http::process()
     return (still_running);
 }
 
-void Http::request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, const std::unordered_map<std::string, std::string> &headers)
+void Http::request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, const Headers &headers)
 {
     CURL *handle = get_avai_handle();
     _pending_request.push_back(std::weak_ptr<Request>(req));
@@ -103,16 +104,25 @@ void Http::request(std::shared_ptr<Request> req, const std::string &url, const s
     req->_handle = handle;
     req->_parent = this;
     curl_multi_add_handle(_multi_handle, handle);
+#if DEBUG_HTTP
+    gana::Logger::info("Request %s %s", Method::POST ? "POST" : "GET", url.c_str());
+#endif
 }
 
-void Http::post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, const std::unordered_map<std::string, std::string> &headers)
+void Http::post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, const Headers &headers, const UrlParams &params)
 {
-    request(req, url, body, Method::POST, headers);
+    if (params.size() != 0)
+        request(req, format_url_params(url, params), body, Method::POST, headers);
+    else
+        request(req, url, body, Method::POST, headers);
 }
 
-void Http::get(std::shared_ptr<Request> req, const std::string &url, const std::unordered_map<std::string, std::string> &headers)
+void Http::get(std::shared_ptr<Request> req, const std::string &url, const Headers &headers, const UrlParams &params)
 {
-    request(req, url, "", Method::GET, headers);
+    if (params.size() != 0)
+        request(req, format_url_params(url, params), "", Method::GET, headers);
+    else
+        request(req, url, "", Method::GET, headers);
 }
 
 CURL *Http::get_avai_handle()
@@ -159,7 +169,26 @@ void Http::on_response(CURLMsg *msg)
                 req->_headers = nullptr;
             }
             req->parse();
+#if DEBUG_HTTP
+            gana::Logger::info("Response (code: %d)", req->_http_code);
+#endif
             return;
         }
     }
+}
+
+std::string Http::format_url_params(const std::string &url, const UrlParams &params)
+{
+    std::ostringstream param(url);
+    bool first = true;
+
+    param << "?";
+    for (UrlParams::const_iterator p = params.begin(); p != params.end(); p++) {
+        if (first)
+            first = false;
+        else
+            param << "&";
+        param << p->first << "=" << p->second;
+    }
+    return (param.str());
 }

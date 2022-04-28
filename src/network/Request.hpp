@@ -37,6 +37,7 @@ class Request {
         bool is_completed() const;
         int get_error() const;
         const std::string &get_error_str() const;
+        int get_http_code() const;
         void set_callback(callback_func func);
     protected:
         ReadStruct _rdata;

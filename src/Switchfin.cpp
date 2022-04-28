@@ -13,7 +13,12 @@ Switchfin::Switchfin(): _app("Switchfin")
     if (f == nullptr) {
         _current = std::make_shared<ServerSelect>();
     } else {
-        std::shared_ptr<JellyfinClient> client = std::make_shared<JellyfinClient>("ff");
+        CSimpleIni ini;
+
+        ini.LoadFile(f);
+        std::shared_ptr<JellyfinClient> client = std::make_shared<JellyfinClient>(ini.GetValue("SERVER", "address", ""));
+        client->set_token(ini.GetValue("SERVER", "token"));
+        client->set_user_id(ini.GetValue("SERVER", "user_id"));
         _current = std::make_shared<Home>(client);
         fclose(f);
     }
