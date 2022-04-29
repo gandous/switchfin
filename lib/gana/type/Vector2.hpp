@@ -3,6 +3,7 @@
 #define VECTOR2_HPP_
 
 #include <cmath>
+#include <sstream>
 #include <functional>
 #include "Logger.hpp"
 
@@ -18,6 +19,7 @@ class Vector2 {
 
         Vector2 normalize();
         float length();
+        std::string to_string() const;
         Vector2<T> &operator*(T nb);
         Vector2<T> operator*(const Vector2<T> &vec) const;
         Vector2<T> operator-(const Vector2<T> &vec) const;

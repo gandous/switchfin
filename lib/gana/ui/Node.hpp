@@ -17,6 +17,7 @@ class Node {
     friend class HBoxContainer;
     friend class VBoxContainer;
     friend class RectContainer;
+    friend class ScrollView;
     friend class App;
     public:
         Node();
@@ -60,13 +61,16 @@ class Node {
             BOTH,
         };
 
-        void add_child(Node *node);
-        void remove_child(Node *node);
+        virtual void add_child(Node *node);
+        virtual void remove_child(Node *node);
+        bool has_child(const Node *node);
         virtual void draw(NVGcontext *ctx);
         virtual void process_event(Event &evt);
         virtual void update_layout(const Vector2f &size);
         virtual const Vector2f &get_position() const;
         virtual void set_position(const Vector2f &pos);
+        virtual const Vector2f &get_gposition() const;
+        virtual void set_gposition(const Vector2f &pos);
         virtual const Vector2f &get_size() const;
         virtual void set_size(const Vector2f &size);
         virtual Vector2f get_min_size();
@@ -95,6 +99,7 @@ class Node {
         void show();
         void hide();
         void set_visible(bool visibility);
+        bool is_visible();
         template<typename T>
         T *make_managed();
     protected:
@@ -104,6 +109,8 @@ class Node {
         virtual void enter_tree();
         virtual void exit_tree();
         virtual void process();
+        virtual void on_focus();
+        void set_draw_propagation(bool prop);
     private:
         void propagate_enter_tree(App *app);
         void propagate_exit_tree();
@@ -113,6 +120,7 @@ class Node {
         void check_move_focus_event(Event &evt);
         Node *_parent;
         Vector2f _position;
+        Vector2f _global_position;
         Vector2f _size;
         Vector2f _min_size;
         Layout _layout;
@@ -129,6 +137,8 @@ class Node {
         Node *_bottom_node;
         std::vector<std::shared_ptr<Node>> _managed_childs;
         bool _visibility;
+        bool _draw_propagation;
+        bool _process;
 };
 
 #include "Node.inl"

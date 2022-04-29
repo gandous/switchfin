@@ -14,7 +14,7 @@ VBoxContainer::~VBoxContainer()
 
 void VBoxContainer::update_layout(const Vector2f &size)
 {
-    float y = get_position().y;
+    float y = 0;
     std::size_t nb_expand = 0;
     float remaining_space = size.y - _min_size.y;
 
@@ -26,13 +26,13 @@ void VBoxContainer::update_layout(const Vector2f &size)
         remaining_space = remaining_space / nb_expand;
     for (auto &child: _childs) {
         Vector2f new_size = child->get_min_size();
-        float x = _position.x;
+        float x = 0;
         if (child->get_hsizing() == Node::Sizing::FILL) {
             new_size.x = size.x;
         } else if (child->get_hsizing() == Node::Sizing::SHRINK_CENTER) {
-            x = _position.x + (size.x / 2) - (new_size.x / 2);
+            x = (size.x / 2) - (new_size.x / 2);
         } else if (child->get_hsizing() == Node::Sizing::SHRINK_END) {
-            x = _position.x + size.x - new_size.x;
+            x = size.x - new_size.x;
         }
         child->set_position(Vector2f(x, y));
         if (child->get_expand()) {

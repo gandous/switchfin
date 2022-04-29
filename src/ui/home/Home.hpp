@@ -3,6 +3,7 @@
 #define HOME_HPP_
 
 #include <memory>
+#include "ui/box_container/HBoxContainer.hpp"
 #include "network/JellyfinClient.hpp"
 #include "ui/ColorRect.hpp"
 
@@ -18,6 +19,7 @@ class Home: public gana::ColorRect {
         void on_resume_receive(Request::RCode code, std::string &body);
         std::shared_ptr<JellyfinClient> _jclient;
         std::shared_ptr<ItemsRequest> _rresume;
+        gana::HBoxContainer _ctn_main;
 };
 
 #endif /* HOME_HPP_ */

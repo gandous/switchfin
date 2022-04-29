@@ -10,6 +10,7 @@
 #include <SFML/Window/Window.hpp>
 #include "nanovg/src/nanovg.h"
 #include "ui/Node.hpp"
+#include "type/Signal.hpp"
 #include "AssetManager.hpp"
 #include "type/FPSClock.hpp"
 #include "DebugScreen.hpp"
@@ -32,6 +33,7 @@ class App {
         void remove_process_node(Node *node);
         void update_layout();
         sf::Window &get_window();
+        Signal<Node*> signal_node_focus;
     private:
         sf::VideoMode _mode;
         sf::Window _window;

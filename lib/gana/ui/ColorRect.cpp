@@ -12,7 +12,7 @@ ColorRect::~ColorRect()
 void ColorRect::draw(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
-    nvgRect(ctx, get_position().x, get_position().y, get_size().x, get_size().y);
+    nvgRect(ctx, get_gposition().x, get_gposition().y, get_size().x, get_size().y);
     nvgFillColor(ctx, _color.nvg_color());
     nvgFill(ctx);
 }

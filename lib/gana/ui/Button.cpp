@@ -17,7 +17,7 @@ Button::~Button()
 void Button::draw(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, get_position().x, get_position().y, get_size().x, get_size().y, 7);
+    nvgRoundedRect(ctx, get_gposition().x, get_gposition().y, get_size().x, get_size().y, 7);
     nvgFillColor(ctx, _color.nvg_color());
     nvgFill(ctx);
     Label::draw(ctx);

@@ -1,5 +1,6 @@
 
 #include "type/Vector2.hpp"
+#include "App.hpp"
 #include "HBoxContainer.hpp"
 
 namespace gana {
@@ -12,9 +13,18 @@ HBoxContainer::HBoxContainer()
 HBoxContainer::~HBoxContainer()
 {}
 
+void HBoxContainer::add_child(Node *node)
+{
+    if (_childs.size() > 0) {
+        _childs.back()->set_right_node(node);
+        node->set_left_node(_childs.back());
+    }
+    Node::add_child(node);
+}
+
 void HBoxContainer::update_layout(const Vector2f &size)
 {
-    float x = get_position().x;
+    float x = 0;
     std::size_t nb_expand = 0;
     float remaining_space = size.x - _min_size.x;
 
@@ -26,13 +36,13 @@ void HBoxContainer::update_layout(const Vector2f &size)
         remaining_space = remaining_space / nb_expand;
     for (auto &child: _childs) {
         Vector2f new_size = child->get_min_size();
-        float y = _position.y;
+        float y = 0;
         if (child->get_vsizing() == Node::Sizing::FILL) {
             new_size.y = size.y;
         } else if (child->get_vsizing() == Node::Sizing::SHRINK_CENTER) {
-            y = _position.y + (size.y / 2) - (new_size.y / 2);
+            y = (size.y / 2) - (new_size.y / 2);
         } else if (child->get_vsizing() == Node::Sizing::SHRINK_END) {
-            y = _position.y + size.y - new_size.y;
+            y = size.y - new_size.y;
         }
         if (child->get_expand())
             new_size.x += remaining_space;
@@ -63,6 +73,11 @@ void HBoxContainer::add_spacer(float w, bool expand)
     if (expand)
         spacer->set_expand();
     add_child(spacer);
+}
+
+void HBoxContainer::on_focus()
+{
+    _app->set_focused_node(_childs.front());
 }
 
 }

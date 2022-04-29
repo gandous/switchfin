@@ -18,7 +18,7 @@ Label::~Label()
 
 void Label::draw(NVGcontext *ctx)
 {
-    float x = get_position().x;
+    float x = get_gposition().x;
 
     nvgBeginPath(ctx);
     apply_font(ctx);
@@ -26,7 +26,7 @@ void Label::draw(NVGcontext *ctx)
         x += get_size().x / 2;
     else if (_align == TextAlign::RIGHT)
         x += get_size().x;
-    nvgText(ctx, x, get_position().y + get_size().y / 2, _text.c_str(), NULL);
+    nvgText(ctx, x, get_gposition().y + get_size().y / 2, _text.c_str(), NULL);
 }
 
 Vector2f Label::get_min_size()

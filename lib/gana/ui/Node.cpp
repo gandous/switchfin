@@ -18,7 +18,9 @@ Node::Node():
     _top_node(nullptr),
     _right_node(nullptr),
     _bottom_node(nullptr),
-    _visibility(true)
+    _visibility(true),
+    _draw_propagation(true),
+    _process(false)
 {}
 
 Node::~Node()
@@ -51,6 +53,17 @@ void Node::remove_child(Node *node)
     }
 }
 
+bool Node::has_child(const Node *node)
+{
+    for (auto child: _childs) {
+        if (child == node)
+            return (true);
+        else if (child->has_child(node))
+            return (true);
+    }
+    return (false);
+}
+
 void Node::draw(NVGcontext *ctx)
 {
     (void)ctx;
@@ -79,7 +92,33 @@ const Vector2f &Node::get_position() const
 
 void Node::set_position(const Vector2f &pos)
 {
+    Vector2f diff = _position - pos;
+
     _position = pos;
+    if (_parent != nullptr)
+        _global_position = _parent->_global_position + _position;
+    else
+        _global_position = _position;
+    for (auto child: _childs)
+        child->set_position(child->get_position() - diff);
+}
+
+const Vector2f &Node::get_gposition() const
+{
+    return (_global_position);
+}
+
+void Node::set_gposition(const Vector2f &pos)
+{
+    Vector2f diff = _global_position - pos;
+
+    _global_position = pos;
+    if (_parent != nullptr)
+        _position = _global_position - _parent->_global_position;
+    else
+        _position = _global_position;
+    for (auto child: _childs)
+        child->set_gposition(child->get_gposition() - diff);
 }
 
 const Vector2f &Node::get_size() const
@@ -251,9 +290,9 @@ void Node::set_ygrow_direction(Node::GrowDirection direction)
 
 bool Node::inside_node(const Vector2f &pos) const
 {
-    if (pos.x < _position.x || pos.x > _position.x + _size.x)
+    if (pos.x < _global_position.x || pos.x > _global_position.x + _size.x)
         return (false);
-    if (pos.y < _position.y || pos.y > _position.y + _size.y)
+    if (pos.y < _global_position.y || pos.y > _global_position.y + _size.y)
         return (false);
     return (true);
 }
@@ -290,14 +329,13 @@ void Node::set_bottom_node(Node *node)
 
 void Node::set_process(bool process)
 {
-    if (_app == nullptr) {
-        std::cerr << "Not in tree" << std::endl;
+    if (_app == nullptr)
         return;
-    }
     if (process)
         _app->add_process_node(this);
     else
         _app->remove_process_node(this);
+    _process = process;
 }
 
 void Node::show()
@@ -315,10 +353,15 @@ void Node::set_visible(bool visibility)
     _visibility = visibility;
 }
 
+bool Node::is_visible()
+{
+    return (_visibility);
+}
+
 void Node::draw_outline(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, get_position().x - 4, get_position().y - 4, get_size().x + 8, get_size().y + 8  , 12);
+    nvgRoundedRect(ctx, get_gposition().x - 4, get_gposition().y - 4, get_size().x + 8, get_size().y + 8  , 12);
     nvgStrokeColor(ctx, theme::OUTLINE_COLOR.nvg_color());
     nvgStrokeWidth(ctx, 2);
     nvgStroke(ctx);
@@ -333,13 +376,23 @@ void Node::exit_tree()
 void Node::process()
 {}
 
+void Node::on_focus()
+{}
+
+void Node::set_draw_propagation(bool prop)
+{
+    _draw_propagation = prop;
+}
+
 void Node::propagate_enter_tree(App *app)
 {
     _app = app;
-    enter_tree();
+    if (_process)
+        set_process(_process);
     app->update_layout();
     for (auto &child: _childs)
         child->propagate_enter_tree(app);
+    enter_tree();
 }
 
 void Node::propagate_exit_tree()
@@ -410,8 +463,9 @@ void Node::propagate_draw(NVGcontext *ctx)
     draw(ctx);
     if (_has_focus)
         draw_outline(ctx);
-    for (auto &child: _childs)
-        child->propagate_draw(ctx);
+    if (_draw_propagation)
+        for (auto &child: _childs)
+            child->propagate_draw(ctx);
 }
 
 void Node::check_move_focus_event(Event &evt)
