@@ -100,7 +100,7 @@ void Node::set_position(const Vector2f &pos)
     else
         _global_position = _position;
     for (auto child: _childs)
-        child->set_position(child->get_position() - diff);
+        child->set_gposition(_global_position + child->get_position());
 }
 
 const Vector2f &Node::get_gposition() const
