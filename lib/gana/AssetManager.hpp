@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 #include <cstring>
+#include <vector>
 #include "nanovg/src/nanovg.h"
 
 namespace gana {
@@ -20,9 +21,11 @@ class AssetManager {
 
         int load_font(const std::string &name, const std::string &filepath);
         int load_image(const std::string &filepath, int flag = 0);
+        int load_image(const std::string &name, const std::vector<unsigned char> &data, int flag = 0);
     private:
         NVGcontext *_ctx;
         std::unordered_map<std::string, int> _images;
+        std::unordered_map<std::string, std::vector<unsigned char>> _images_data;
 };
 
 }

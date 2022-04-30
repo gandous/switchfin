@@ -30,6 +30,10 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     _ctn_main.add_child(rect);
     scroll->add_child(&_ctn_main);
     _ctn_main.set_anchor(gana::Node::Anchor::CENTER_LEFT);
+
+    add_child(&_img_test);
+    _img_test.set_min_size(gana::Vector2f(500, 500));
+    _img_test.set_image(_jclient->get_http(), "https://jellyfin.gama.ovh/Items/d3e58ca1a18662ffc877e4c61869ac79/Images/Backdrop?fillHeight=200&fillWidth=355&quality=96&tag=bb27624f1a9b0722b2efdee2ed680d6d");
 }
 
 Home::~Home()

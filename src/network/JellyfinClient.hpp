@@ -21,6 +21,7 @@ class JellyfinClient {
         int process();
 
         const std::string &get_url() const;
+        gana::Http &get_http();
         std::shared_ptr<PingRequest> ping();
         std::shared_ptr<LoginRequest> login(const std::string &name, const std::string &password);
         std::shared_ptr<ItemsRequest> get_resume();

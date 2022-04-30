@@ -22,7 +22,8 @@ class Image: public Node {
         void set_size(const Vector2f &size) override;
         void set_image(const std::string &filepath);
         void set_stretch_mode(StretchMode stretch_mode);
-    private:
+    protected:
+        void enter_tree();
         void apply_strectch_mode();
         int _image_id;
         std::string _img_path;

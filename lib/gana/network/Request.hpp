@@ -21,7 +21,7 @@ class Request {
             OK = 0,
             ERROR,
         };
-        using WBody = std::vector<char>;
+        using WBody = std::vector<unsigned char>;
         struct ReadStruct {
             std::string data;
             std::size_t index;
@@ -51,10 +51,10 @@ class Request {
         virtual void parse();
         RCode _code;
         CURLcode _curl_code;
-        callback_func _func;
         long _http_code;
         std::string _error_str;
     private:
+        callback_func _func;
         Http *_parent;
         CURL *_handle;
         struct curl_slist *_headers;

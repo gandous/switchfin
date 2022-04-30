@@ -30,6 +30,11 @@ const std::string &JellyfinClient::get_url() const
     return (_url);
 }
 
+gana::Http &JellyfinClient::get_http()
+{
+    return (_http);
+}
+
 std::shared_ptr<PingRequest> JellyfinClient::ping()
 {
     std::shared_ptr<PingRequest> req = std::make_shared<PingRequest>();

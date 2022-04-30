@@ -12,16 +12,8 @@ Image::~Image()
 
 void Image::draw(NVGcontext *ctx)
 {
-    if (_image_id == AssetManager::FAILED_RCODE) {
-        if (_img_path != "") {
-            set_image(_img_path);
-            _img_path = "";
-            if (_image_id == AssetManager::FAILED_RCODE)
-                return;
-        } else {
-            return;
-        }
-    }
+    if (_image_id == AssetManager::FAILED_RCODE)
+        return;
     nvgBeginPath(ctx);
     nvgRect(ctx, get_gposition().x, get_gposition().y, get_size().x, get_size().y);
     nvgFillPaint(ctx, _paint);
@@ -52,6 +44,16 @@ void Image::set_stretch_mode(StretchMode stretch_mode)
     _stretch_mode = stretch_mode;
     if (_image_id != AssetManager::FAILED_RCODE)
         apply_strectch_mode();
+}
+
+void Image::enter_tree()
+{
+    if (_img_path != "") {
+        set_image(_img_path);
+        _img_path = "";
+        if (_image_id == AssetManager::FAILED_RCODE)
+            return;
+    }
 }
 
 void Image::apply_strectch_mode()
