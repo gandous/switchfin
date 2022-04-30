@@ -4,6 +4,7 @@
 
 #include <curl/curl.h>
 #include <string>
+#include <vector>
 #include <functional>
 
 class Http;
@@ -18,19 +19,20 @@ class Request {
             OK = 0,
             ERROR,
         };
+        using WBody = std::vector<char>;
         struct ReadStruct {
             std::string data;
             std::size_t index;
         };
         struct WriteStruct {
-            std::string data;
+            WBody data;
         };
-        using callback_func = std::function<void(RCode code, std::string &body)>;
+        using callback_func = std::function<void(RCode code, Request &req)>;
         template<typename T>
-        static callback_func mf_callback(T &obj, void(T::*func)(RCode code, std::string &body))
+        static callback_func mf_callback(T &obj, void(T::*func)(RCode code, Request &req))
         {
-            return ([&obj, func](RCode code, std::string &body){
-                (obj.*func)(code, body);
+            return ([&obj, func](RCode code, Request &req){
+                (obj.*func)(code, req);
             });
         };
 
@@ -39,6 +41,8 @@ class Request {
         const std::string &get_error_str() const;
         int get_http_code() const;
         void set_callback(callback_func func);
+        std::string get_body_as_string() const;
+        const WBody &get_body() const;
     protected:
         ReadStruct _rdata;
         WriteStruct _wdata;

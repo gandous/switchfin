@@ -36,11 +36,21 @@ void Request::set_callback(callback_func func)
     _func = func;
 }
 
+std::string Request::get_body_as_string() const
+{
+    return (std::string(&_wdata.data.front(), _wdata.data.size()));
+}
+
+const Request::WBody &Request::get_body() const
+{
+    return (_wdata.data);
+}
+
 void Request::parse()
 {
     if (_curl_code != CURLE_OK && _error_str == "") {
         _error_str = "Http default error (code: %d)";
         _code = ERROR;
     }
-    _func(_code, _wdata.data);
+    _func(_code, *this);
 }

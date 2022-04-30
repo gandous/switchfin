@@ -91,7 +91,7 @@ void Login::on_login_pressed()
     _rlogin->set_callback(Request::mf_callback(*this, &Login::on_login));
 }
 
-void Login::on_login(Request::RCode code, std::string &body)
+void Login::on_login(Request::RCode code, Request &req)
 {
     if (code == Request::OK) {
         gana::Logger::info("Login success");

@@ -26,7 +26,7 @@ void LoginRequest::parse()
         _user_id = _json["User"]["Id"].get<std::string>();
         _code = OK;
     } else {
-        gana::Logger::info("Response %d |%s|", _http_code, _wdata.data.c_str());
+        gana::Logger::info("Response %d |%s|", _http_code, get_body_as_string().c_str());
         _code = ERROR;
         _error_str = "Login failed";
     }

@@ -21,7 +21,11 @@ static size_t read_callback(char *buffer, std::size_t size, std::size_t nitems, 
 static size_t write_callback(char *buffer, std::size_t size, std::size_t nitems, void *userdata)
 {
     Request::WriteStruct *req = (Request::WriteStruct*)userdata;
-    req->data += buffer;
+    std::size_t last_index = req->data.size();
+    std::size_t new_size = last_index + (size * nitems);
+    req->data.resize(new_size);
+    for (std::size_t i = 0; last_index < new_size; last_index++, i++)
+        req->data[last_index] = buffer[i];
     return (size * nitems);
 }
 

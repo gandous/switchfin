@@ -46,9 +46,9 @@ void Home::process()
     _jclient->process();
 }
 
-void Home::on_resume_receive(Request::RCode code, std::string &body)
+void Home::on_resume_receive(Request::RCode code, Request &req)
 {
-    gana::Logger::info("%s %s", _rresume->get_error_str().c_str(), body.c_str());
+    gana::Logger::info("%s %s", _rresume->get_error_str().c_str(), req.get_body_as_string().c_str());
     for (auto &item: _rresume->get_items())
         gana::Logger::info("Name: %s", item.get_name().c_str());
 }
