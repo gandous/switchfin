@@ -1,6 +1,8 @@
 
 #include "Request.hpp"
 
+namespace gana {
+
 Request::Request():
     _parent(nullptr),
     _handle(nullptr),
@@ -53,4 +55,6 @@ void Request::parse()
         _code = ERROR;
     }
     _func(_code, *this);
+}
+
 }

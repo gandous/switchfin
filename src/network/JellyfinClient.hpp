@@ -4,8 +4,8 @@
 
 #include <string>
 #include <memory>
-#include "Http.hpp"
-#include "Request.hpp"
+#include "network/Http.hpp"
+#include "network/Request.hpp"
 #include "PingRequest.hpp"
 #include "LoginRequest.hpp"
 #include "item/ItemsRequest.hpp"
@@ -27,8 +27,8 @@ class JellyfinClient {
     private:
         void update_default_header();
         std::string _url;
-        Http _http;
-        Http::Headers _default_header;
+        gana::Http _http;
+        gana::Http::Headers _default_header;
         std::string _token;
         std::string _user_id;
 };

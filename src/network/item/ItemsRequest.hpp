@@ -9,7 +9,7 @@
 
 using Items = std::vector<Item>;
 
-class ItemsRequest: public Request {
+class ItemsRequest: public gana::Request {
     public:
         ItemsRequest();
         ~ItemsRequest();

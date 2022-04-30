@@ -4,9 +4,9 @@
 
 #include <string>
 #include "json/json.hpp"
-#include "Request.hpp"
+#include "network/Request.hpp"
 
-class LoginRequest: public Request {
+class LoginRequest: public gana::Request {
     public:
         LoginRequest();
         ~LoginRequest();

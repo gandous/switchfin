@@ -2,9 +2,9 @@
 #ifndef PINGREQUEST_HPP_
 #define PINGREQUEST_HPP_
 
-#include "Request.hpp"
+#include "network/Request.hpp"
 
-class PingRequest: public Request {
+class PingRequest: public gana::Request {
     public:
         PingRequest();
         ~PingRequest();

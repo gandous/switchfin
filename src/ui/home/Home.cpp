@@ -9,7 +9,7 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     set_color(gana::Color(255, 128, 128));
     set_min_size(gana::Vector2f(500, 500));
     _rresume = _jclient->get_resume();
-    _rresume->set_callback(Request::mf_callback(*this, &Home::on_resume_receive));
+    _rresume->set_callback(gana::Request::mf_callback(*this, &Home::on_resume_receive));
 
     gana::ScrollView *scroll = make_managed<gana::ScrollView>();
     scroll->set_size(gana::Vector2f(700, 520));
@@ -46,7 +46,7 @@ void Home::process()
     _jclient->process();
 }
 
-void Home::on_resume_receive(Request::RCode code, Request &req)
+void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
 {
     gana::Logger::info("%s %s", _rresume->get_error_str().c_str(), req.get_body_as_string().c_str());
     for (auto &item: _rresume->get_items())

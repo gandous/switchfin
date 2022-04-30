@@ -39,7 +39,7 @@ std::shared_ptr<PingRequest> JellyfinClient::ping()
 
 std::shared_ptr<LoginRequest> JellyfinClient::login(const std::string &name, const std::string &password)
 {
-    Http::Headers headers = {
+    gana::Http::Headers headers = {
         {"X-Emby-Authorization", "MediaBrowser Client=\"Jellyfin Web\", Device=\"Firefox\", DeviceId=\"TW96aWxsYS81LjAgKFgxMTsgRmVkb3JhOyBMaW51eCB4ODZfNjQ7IHJ2Ojk4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTguMHwxNjUwMjM4ODU5MjQx\", Version=\"10.7.6\""},
         {"Content-Type", "application/json"}
     };
@@ -51,7 +51,7 @@ std::shared_ptr<LoginRequest> JellyfinClient::login(const std::string &name, con
 std::shared_ptr<ItemsRequest> JellyfinClient::get_resume()
 {
     std::ostringstream url;
-    Http::UrlParams params = {
+    gana::Http::UrlParams params = {
         {"MediaTypes", "Video"}
     };
 

@@ -68,13 +68,13 @@ void ServerAddress::connect_pressed()
 
     show_connecting(true);
     _ping_req = _client->ping();
-    _ping_req->set_callback(Request::mf_callback(*this, &ServerAddress::on_ping_response));
+    _ping_req->set_callback(gana::Request::mf_callback(*this, &ServerAddress::on_ping_response));
 }
 
-void ServerAddress::on_ping_response(Request::RCode code, Request &req)
+void ServerAddress::on_ping_response(gana::Request::RCode code, gana::Request &req)
 {
     gana::Logger::info("%d %s", code, req.get_body_as_string().c_str());
-    if (code != Request::OK) {
+    if (code != gana::Request::OK) {
         _lbl_error.set_text(_ping_req->get_error_str());
         show_connecting(false);
     } else {

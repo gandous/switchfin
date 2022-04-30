@@ -3,6 +3,8 @@
 #include "Logger.hpp"
 #include "Http.hpp"
 
+namespace gana {
+
 static bool lib_curl_init = false;
 
 static size_t read_callback(char *buffer, std::size_t size, std::size_t nitems, void *userdata)
@@ -195,4 +197,6 @@ std::string Http::format_url_params(const std::string &url, const UrlParams &par
         param << p->first << "=" << p->second;
     }
     return (param.str());
+}
+
 }

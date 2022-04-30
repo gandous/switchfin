@@ -88,12 +88,12 @@ void Login::on_login_pressed()
 {
     show_connecting(true);
     _rlogin = _client->login(_le_name.get_text(), _le_password.get_text());
-    _rlogin->set_callback(Request::mf_callback(*this, &Login::on_login));
+    _rlogin->set_callback(gana::Request::mf_callback(*this, &Login::on_login));
 }
 
-void Login::on_login(Request::RCode code, Request &req)
+void Login::on_login(gana::Request::RCode code, gana::Request &req)
 {
-    if (code == Request::OK) {
+    if (code == gana::Request::OK) {
         gana::Logger::info("Login success");
         save_data(_client->get_url(), _le_name.get_text(), _le_password.get_text(), "id", _rlogin->get_token(), _rlogin->get_user_id());
     } else {

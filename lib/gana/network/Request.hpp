@@ -7,6 +7,8 @@
 #include <vector>
 #include <functional>
 
+namespace gana {
+
 class Http;
 
 class Request {
@@ -58,5 +60,7 @@ class Request {
         struct curl_slist *_headers;
         bool _completed;
 };
+
+}
 
 #endif /* REQUEST_HPP_ */

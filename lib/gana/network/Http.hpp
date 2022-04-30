@@ -10,6 +10,8 @@
 #include <memory>
 #include "Request.hpp"
 
+namespace gana {
+
 #define DEBUG_HTTP 1
 
 class Http {
@@ -37,5 +39,7 @@ class Http {
         std::list<CURL*> _handles;
         std::vector<std::weak_ptr<Request>> _pending_request;
 };
+
+}
 
 #endif /* Http_HPP_ */

@@ -23,7 +23,7 @@ class ServerAddress: public gana::RectContainer {
         void process() override;
     private:
         void connect_pressed();
-        void on_ping_response(Request::RCode code, Request &req);
+        void on_ping_response(gana::Request::RCode code, gana::Request &req);
         void show_connecting(bool visibility);
         gana::LineEdit _le_server_address;
         gana::Label _lbl_error;

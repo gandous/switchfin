@@ -16,7 +16,7 @@ class Home: public gana::ColorRect {
         void enter_tree() override;
         void process() override;
     private:
-        void on_resume_receive(Request::RCode code, Request &req);
+        void on_resume_receive(gana::Request::RCode code, gana::Request &req);
         std::shared_ptr<JellyfinClient> _jclient;
         std::shared_ptr<ItemsRequest> _rresume;
         gana::HBoxContainer _ctn_main;
