@@ -6,7 +6,7 @@
 #include "ui/box_container/HBoxContainer.hpp"
 #include "network/JellyfinClient.hpp"
 #include "ui/ColorRect.hpp"
-#include "ui/NetworkImage.hpp"
+#include "BigMovieVignette.hpp"
 
 class Home: public gana::ColorRect {
     public:
@@ -21,7 +21,6 @@ class Home: public gana::ColorRect {
         std::shared_ptr<JellyfinClient> _jclient;
         std::shared_ptr<ItemsRequest> _rresume;
         gana::HBoxContainer _ctn_main;
-        gana::NetworkImage _img_test;
 };
 
 #endif /* HOME_HPP_ */

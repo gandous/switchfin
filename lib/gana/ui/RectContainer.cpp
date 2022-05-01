@@ -3,19 +3,11 @@
 
 namespace gana {
 
-RectContainer::RectContainer(): _color(0, 128, 255)
+RectContainer::RectContainer()
 {}
 
 RectContainer::~RectContainer()
 {}
-
-void RectContainer::draw(NVGcontext *ctx)
-{
-    nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, get_gposition().x, get_gposition().y, get_size().x, get_size().y, 16);
-    nvgFillColor(ctx, _color.nvg_color());
-    nvgFill(ctx);
-}
 
 void RectContainer::update_layout(const Vector2f &size)
 {
@@ -52,11 +44,6 @@ void RectContainer::set_content_margin(float margin)
     _content_margin.y = margin;
     _content_margin.w = margin;
     _content_margin.h = margin;
-}
-
-void RectContainer::set_color(const Color &color)
-{
-    _color = color;
 }
 
 }

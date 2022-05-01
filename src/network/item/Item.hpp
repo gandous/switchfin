@@ -11,8 +11,10 @@ class Item {
         ~Item();
 
         const std::string &get_name() const;
+        const std::string &get_id() const;
     private:
         std::string _name;
+        std::string _id;
 };
 
 #endif /* ITEM_HPP_ */

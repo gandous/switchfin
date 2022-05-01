@@ -84,6 +84,7 @@ void App::run()
         for (auto &node: _process_node)
             node->process();
         if (_update_layout) {
+            Logger::info("Update layout");
             _root_node->update_layout(wsize);
             _update_layout = false;
         }

@@ -2,7 +2,7 @@
 #ifndef LOGIN_HPP_
 #define LOGIN_HPP_
 
-#include "ui/RectContainer.hpp"
+#include "ui/BGRectContainer.hpp"
 #include "ui/box_container/VBoxContainer.hpp"
 #include "ui/box_container/HBoxContainer.hpp"
 #include "ui/Label.hpp"
@@ -10,7 +10,7 @@
 #include "ui/Button.hpp"
 #include "network/JellyfinClient.hpp"
 
-class Login: public gana::RectContainer {
+class Login: public gana::BGRectContainer {
     public:
         Login();
         ~Login();

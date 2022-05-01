@@ -2,7 +2,7 @@
 #ifndef SERVERADDRESS_HPP_
 #define SERVERADDRESS_HPP_
 
-#include "ui/RectContainer.hpp"
+#include "ui/BGRectContainer.hpp"
 #include "ui/LineEdit.hpp"
 #include "ui/Label.hpp"
 #include "type/Signal.hpp"
@@ -11,7 +11,7 @@
 #include "ui/box_container/VBoxContainer.hpp"
 #include "network/JellyfinClient.hpp"
 
-class ServerAddress: public gana::RectContainer {
+class ServerAddress: public gana::BGRectContainer {
     public:
         ServerAddress();
         ~ServerAddress();

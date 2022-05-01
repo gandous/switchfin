@@ -162,6 +162,9 @@ void Http::on_response(CURLMsg *msg)
         std::shared_ptr<Request> req = it->lock();
         if (req->_handle == msg->easy_handle) {
             curl_easy_getinfo(req->_handle, CURLINFO_RESPONSE_CODE, &req->_http_code);
+#if DEBUG_HTTP
+            gana::Logger::info("Response (code: %d)", req->_http_code);
+#endif
             curl_multi_remove_handle(_multi_handle, req->_handle);
             curl_easy_reset(req->_handle);
             _handles.push_front(req->_handle);
@@ -175,9 +178,6 @@ void Http::on_response(CURLMsg *msg)
                 req->_headers = nullptr;
             }
             req->parse();
-#if DEBUG_HTTP
-            gana::Logger::info("Response (code: %d)", req->_http_code);
-#endif
             return;
         }
     }
@@ -185,10 +185,10 @@ void Http::on_response(CURLMsg *msg)
 
 std::string Http::format_url_params(const std::string &url, const UrlParams &params)
 {
-    std::ostringstream param(url);
+    std::ostringstream param;
     bool first = true;
 
-    param << "?";
+    param << url << "?";
     for (UrlParams::const_iterator p = params.begin(); p != params.end(); p++) {
         if (first)
             first = false;

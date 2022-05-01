@@ -5,7 +5,7 @@
 #include <curl/curl.h>
 #include <list>
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include <memory>
 #include "Request.hpp"
@@ -23,8 +23,8 @@ class Http {
             POST,
             GET
         };
-        using Headers = std::unordered_map<std::string, std::string>;
-        using UrlParams = std::unordered_map<std::string, std::string>;
+        using Headers = std::map<std::string, std::string>;
+        using UrlParams = std::map<std::string, std::string>;
 
         int process();
         void request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, const Headers &headers);

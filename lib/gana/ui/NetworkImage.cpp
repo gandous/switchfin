@@ -10,17 +10,18 @@ NetworkImage::NetworkImage()
 NetworkImage::~NetworkImage()
 {}
 
-void NetworkImage::set_image(Http &http, const std::string &url)
+void NetworkImage::set_image(Http &http, const std::string &url,  const Http::UrlParams &params)
 {
     _http = &http;
     _img_path = url;
+    _params = params;
 }
 
 void NetworkImage::enter_tree()
 {
     if (_http != nullptr) {
         _req = std::make_shared<Request>();
-        _http->get(_req, _img_path);
+        _http->get(_req, _img_path, {}, _params);
         _req->set_callback(Request::mf_callback(*this, &NetworkImage::on_request_complete));
     }
 }

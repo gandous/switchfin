@@ -77,7 +77,8 @@ void HBoxContainer::add_spacer(float w, bool expand)
 
 void HBoxContainer::on_focus()
 {
-    _app->set_focused_node(_childs.front());
+    if (_childs.size() > 0)
+        _app->set_focused_node(_childs.front());
 }
 
 }

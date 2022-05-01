@@ -100,8 +100,8 @@ class Node {
         void hide();
         void set_visible(bool visibility);
         bool is_visible();
-        template<typename T>
-        T *make_managed();
+        template<typename T, typename ...ARGS>
+        T *make_managed(ARGS&& ...args);
     protected:
         std::vector<Node*> _childs;
         App *_app;

@@ -14,12 +14,13 @@ class NetworkImage: public Image {
         NetworkImage();
         ~NetworkImage();
 
-        void set_image(Http &http, const std::string &url);
+        void set_image(Http &http, const std::string &url, const Http::UrlParams &params = {});
     protected:
         void enter_tree();
     private:
         void on_request_complete(Request::RCode code, Request &req);
         Http *_http;
+        Http::UrlParams _params;
         std::shared_ptr<Request> _req;
 };
 
