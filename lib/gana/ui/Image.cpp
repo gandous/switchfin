@@ -14,10 +14,13 @@ void Image::draw(NVGcontext *ctx)
 {
     if (_image_id == AssetManager::FAILED_RCODE)
         return;
+    nvgSave(ctx);
     nvgBeginPath(ctx);
     nvgRect(ctx, get_gposition().x, get_gposition().y, get_size().x, get_size().y);
+    nvgTranslate(ctx, get_gposition().x, get_gposition().y);
     nvgFillPaint(ctx, _paint);
     nvgFill(ctx);
+    nvgRestore(ctx);
 }
 
 void Image::set_size(const Vector2f &size)
