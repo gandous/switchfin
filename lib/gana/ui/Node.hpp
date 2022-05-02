@@ -100,6 +100,7 @@ class Node {
         void hide();
         void set_visible(bool visibility);
         bool is_visible();
+        virtual int get_outline_corner_radius() const;
         template<typename T, typename ...ARGS>
         T *make_managed(ARGS&& ...args);
     protected:

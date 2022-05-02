@@ -10,6 +10,7 @@ class BigMovieVignette: public gana::RectContainer {
         BigMovieVignette(gana::Http &http, const std::string &url);
         ~BigMovieVignette();
 
+        int get_outline_corner_radius() const override;
     private:
         gana::NetworkImage _img_background;
 };

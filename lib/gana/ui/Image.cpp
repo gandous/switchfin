@@ -4,7 +4,7 @@
 
 namespace gana {
 
-Image::Image(): _image_id(AssetManager::FAILED_RCODE), _stretch_mode(IMAGE)
+Image::Image(): _image_id(AssetManager::FAILED_RCODE), _corner_radius(0), _stretch_mode(IMAGE)
 {}
 
 Image::~Image()
@@ -16,7 +16,7 @@ void Image::draw(NVGcontext *ctx)
         return;
     nvgSave(ctx);
     nvgBeginPath(ctx);
-    nvgRect(ctx, get_gposition().x, get_gposition().y, get_size().x, get_size().y);
+    nvgRoundedRect(ctx, get_gposition().x, get_gposition().y, get_size().x, get_size().y, _corner_radius);
     nvgTranslate(ctx, get_gposition().x, get_gposition().y);
     nvgFillPaint(ctx, _paint);
     nvgFill(ctx);
@@ -47,6 +47,11 @@ void Image::set_stretch_mode(StretchMode stretch_mode)
     _stretch_mode = stretch_mode;
     if (_image_id != AssetManager::FAILED_RCODE)
         apply_strectch_mode();
+}
+
+void Image::set_corner_radius(int radius)
+{
+    _corner_radius = radius;
 }
 
 void Image::enter_tree()

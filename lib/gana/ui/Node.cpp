@@ -358,10 +358,15 @@ bool Node::is_visible()
     return (_visibility);
 }
 
+int Node::get_outline_corner_radius() const
+{
+    return (12);
+}
+
 void Node::draw_outline(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, get_gposition().x - 4, get_gposition().y - 4, get_size().x + 8, get_size().y + 8  , 12);
+    nvgRoundedRect(ctx, get_gposition().x - 4, get_gposition().y - 4, get_size().x + 8, get_size().y + 8, get_outline_corner_radius());
     nvgStrokeColor(ctx, theme::OUTLINE_COLOR.nvg_color());
     nvgStrokeWidth(ctx, 2);
     nvgStroke(ctx);
