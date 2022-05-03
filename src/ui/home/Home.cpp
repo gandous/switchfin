@@ -6,7 +6,7 @@
 
 Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
 {
-    set_color(gana::Color(255, 128, 128));
+    set_color(gana::Color(19, 19, 19));
     set_min_size(gana::Vector2f(500, 500));
     _rresume = _jclient->get_resume();
     _rresume->set_callback(gana::Request::mf_callback(*this, &Home::on_resume_receive));
@@ -16,10 +16,12 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     add_child(&_ctn_main);
 
     _lbl_continue_watching.set_text("Continue watching");
+    _lbl_continue_watching.set_font_size(40);
     _ctn_main.add_child(&_lbl_continue_watching);
 
     gana::ScrollView *scroll = _ctn_main.make_managed<gana::ScrollView>();
-    scroll->set_min_size(gana::Vector2f(700, 400));
+    scroll->set_hsizing(gana::Node::Sizing::FILL);
+    scroll->set_scroll_direction(gana::ScrollView::X);
     _ctn_main.add_child(scroll);
 
     // gana::ColorRect *rect;
@@ -57,6 +59,7 @@ void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
     gana::Logger::info("%s %s", _rresume->get_error_str().c_str(), req.get_body_as_string().c_str());
     for (auto &item: _rresume->get_items()) {
         BigMovieVignette *vign = _ctn_resume_movie.make_managed<BigMovieVignette>(_jclient->get_http(), _jclient->get_img_url(item.get_id(), JellyfinClient::BACKDROP));
+        vign->set_vsizing(gana::Node::Sizing::SHRINK_CENTER);
         gana::Logger::info("Name: %s", item.get_name().c_str());
         _ctn_resume_movie.add_child(vign);
     }
