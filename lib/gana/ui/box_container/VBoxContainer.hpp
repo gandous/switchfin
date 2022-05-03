@@ -11,10 +11,15 @@ class VBoxContainer: public Node {
         VBoxContainer();
         ~VBoxContainer();
 
+        void add_child(Node *node) override;
         void update_layout(const Vector2f &size) override;
         Vector2f get_min_size() override;
         void add_spacer(float h = 16, bool expand = false);
+        void set_space(float space);
+    protected:
+        void on_focus() override;
     private:
+        float _space;
 };
 
 }

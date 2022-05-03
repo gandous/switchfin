@@ -4,7 +4,9 @@
 
 #include <memory>
 #include "ui/box_container/HBoxContainer.hpp"
+#include "ui/box_container/VBoxContainer.hpp"
 #include "network/JellyfinClient.hpp"
+#include "ui/Label.hpp"
 #include "ui/ColorRect.hpp"
 #include "BigMovieVignette.hpp"
 
@@ -20,7 +22,9 @@ class Home: public gana::ColorRect {
         void on_resume_receive(gana::Request::RCode code, gana::Request &req);
         std::shared_ptr<JellyfinClient> _jclient;
         std::shared_ptr<ItemsRequest> _rresume;
-        gana::HBoxContainer _ctn_main;
+        gana::VBoxContainer _ctn_main;
+        gana::HBoxContainer _ctn_resume_movie;
+        gana::Label _lbl_continue_watching;
 };
 
 #endif /* HOME_HPP_ */

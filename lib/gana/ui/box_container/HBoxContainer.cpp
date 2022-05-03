@@ -5,7 +5,7 @@
 
 namespace gana {
 
-HBoxContainer::HBoxContainer()
+HBoxContainer::HBoxContainer(): _space(0)
 {
     set_size(gana::Vector2f(200, 200));
 }
@@ -26,7 +26,7 @@ void HBoxContainer::update_layout(const Vector2f &size)
 {
     float x = 0;
     std::size_t nb_expand = 0;
-    float remaining_space = size.x - _min_size.x;
+    float remaining_space = size.x - _min_size.x - (_childs.size() * _space);
 
     set_size(size);
     for (auto &child: _childs)
@@ -47,7 +47,7 @@ void HBoxContainer::update_layout(const Vector2f &size)
         if (child->get_expand())
             new_size.x += remaining_space;
         child->set_position(Vector2f(x, y));
-        x += new_size.x;
+        x += new_size.x + _space;
         child->update_layout(new_size);
     }
 }
@@ -62,6 +62,7 @@ Vector2f HBoxContainer::get_min_size()
         if (child->get_min_size().y > h)
             h = child->get_min_size().y;
     }
+    w += (_childs.size() - 1) * _space;
     set_min_size(Vector2f(w, h));
     return (_min_size);
 }
@@ -73,6 +74,11 @@ void HBoxContainer::add_spacer(float w, bool expand)
     if (expand)
         spacer->set_expand();
     add_child(spacer);
+}
+
+void HBoxContainer::set_space(float space)
+{
+    _space = space;
 }
 
 void HBoxContainer::on_focus()

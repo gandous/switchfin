@@ -1,5 +1,6 @@
 
 #include "type/Vector2.hpp"
+#include "App.hpp"
 #include "VBoxContainer.hpp"
 
 namespace gana {
@@ -12,11 +13,20 @@ VBoxContainer::VBoxContainer()
 VBoxContainer::~VBoxContainer()
 {}
 
+void VBoxContainer::add_child(Node *node)
+{
+    if (_childs.size() > 0) {
+        _childs.back()->set_right_node(node);
+        node->set_left_node(_childs.back());
+    }
+    Node::add_child(node);
+}
+
 void VBoxContainer::update_layout(const Vector2f &size)
 {
     float y = 0;
     std::size_t nb_expand = 0;
-    float remaining_space = size.y - _min_size.y;
+    float remaining_space = size.y - _min_size.y - (_childs.size() * _space);
 
     set_size(size);
     for (auto &child: _childs)
@@ -38,7 +48,7 @@ void VBoxContainer::update_layout(const Vector2f &size)
         if (child->get_expand()) {
             new_size.y += remaining_space;
         }
-        y += new_size.y;
+        y += new_size.y + _space;
         child->update_layout(new_size);
     }
 }
@@ -53,6 +63,7 @@ Vector2f VBoxContainer::get_min_size()
         if (child->get_min_size().x > w)
             w = child->get_min_size().x;
     }
+    h += (_childs.size() * _space);
     set_min_size(Vector2f(w, h));
     return (_min_size);
 }
@@ -64,6 +75,18 @@ void VBoxContainer::add_spacer(float h, bool expand)
     if (expand)
         spacer->set_expand();
     add_child(spacer);
+}
+
+void VBoxContainer::set_space(float space)
+{
+    _space = space;
+}
+
+
+void VBoxContainer::on_focus()
+{
+    if (_childs.size() > 0)
+        _app->set_focused_node(_childs.front());
 }
 
 }
