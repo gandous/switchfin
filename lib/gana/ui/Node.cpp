@@ -101,6 +101,7 @@ void Node::set_position(const Vector2f &pos)
         _global_position = _position;
     for (auto child: _childs)
         child->set_gposition(_global_position + child->get_position());
+    update_draw_positon();
 }
 
 const Vector2f &Node::get_gposition() const
@@ -119,6 +120,7 @@ void Node::set_gposition(const Vector2f &pos)
         _position = _global_position;
     for (auto child: _childs)
         child->set_gposition(child->get_gposition() - diff);
+    update_draw_positon();
 }
 
 const Vector2f &Node::get_size() const
@@ -129,24 +131,18 @@ const Vector2f &Node::get_size() const
 void Node::set_size(const Vector2f &size)
 {
     _size = size;
-    if (_min_size.x > _size.x)
-        _size.x = _min_size.x;
-    if (_min_size.y > _size.y)
-        _size.y = _min_size.y;
+    update_min_size();
 }
 
 Vector2f Node::get_min_size()
 {
-    return (_min_size);
+    return (_real_min_size);
 }
 
 void Node::set_min_size(const Vector2f &min_size)
 {
     _min_size = min_size;
-    if (_min_size.x > _size.x)
-        _size.x = _min_size.x;
-    if (_min_size.y > _size.y)
-        _size.y = _min_size.y;
+    update_min_size();
 }
 
 Node::Sizing Node::get_hsizing() const
@@ -358,6 +354,35 @@ bool Node::is_visible()
     return (_visibility);
 }
 
+void Node::set_margin(float left, float top, float right, float bottom)
+{
+    _margin.x = left;
+    _margin.y = top;
+    _margin.w = right;
+    _margin.h = bottom;
+    update_draw_positon();
+}
+
+void Node::set_margin(float margin)
+{
+    _margin.x = margin;
+    _margin.y = margin;
+    _margin.w = margin;
+    _margin.h = margin;
+    update_draw_positon();
+}
+
+void Node::set_margin(const Rectf &margin)
+{
+    _margin = margin;
+    update_draw_positon();
+}
+
+const Rectf &Node::get_margin()
+{
+    return (_margin);
+}
+
 int Node::get_outline_corner_radius() const
 {
     return (12);
@@ -387,6 +412,27 @@ void Node::on_focus()
 void Node::set_draw_propagation(bool prop)
 {
     _draw_propagation = prop;
+}
+
+void Node::update_min_size()
+{
+    _real_min_size.x = _min_size.x + _margin.x + _margin.w;
+    _real_min_size.y = _min_size.y + _margin.y + _margin.h;
+    if (_real_min_size.x > _size.x)
+        _size.x = _real_min_size.x;
+    if (_real_min_size.y > _size.y)
+        _size.y = _real_min_size.y;
+    update_draw_positon();
+}
+
+const Vector2f &Node::get_draw_positon() const
+{
+    return (_draw_position);
+}
+
+const Vector2f &Node::get_draw_size() const
+{
+    return (_draw_size);
 }
 
 void Node::propagate_enter_tree(App *app)
@@ -506,6 +552,16 @@ void Node::check_move_focus_event(Event &evt)
             return;
     }
     evt.handle = true;
+}
+
+void Node::update_draw_positon()
+{
+    _draw_position.x = _global_position.x + _margin.x;
+    _draw_position.y = _global_position.y + _margin.y;
+    _draw_size.x = _size.x - _margin.x - _margin.w;
+    _draw_size.y = _size.y - _margin.y - _margin.h;
+    if (_app != nullptr)
+        _app->update_layout();
 }
 
 }

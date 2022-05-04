@@ -24,9 +24,9 @@ void HBoxContainer::add_child(Node *node)
 
 void HBoxContainer::update_layout(const Vector2f &size)
 {
-    float x = 0;
+    float x = _margin.x;
     std::size_t nb_expand = 0;
-    float remaining_space = size.x - _min_size.x - (_childs.size() * _space);
+    float remaining_space = size.x - _min_size.x - (_childs.size() * _space) - _margin.x - _margin.w;
 
     set_size(size);
     for (auto &child: _childs)
@@ -36,13 +36,13 @@ void HBoxContainer::update_layout(const Vector2f &size)
         remaining_space = remaining_space / nb_expand;
     for (auto &child: _childs) {
         Vector2f new_size = child->get_min_size();
-        float y = 0;
+        float y = _margin.y;
         if (child->get_vsizing() == Node::Sizing::FILL) {
-            new_size.y = size.y;
+            new_size.y = get_draw_size().y;
         } else if (child->get_vsizing() == Node::Sizing::SHRINK_CENTER) {
-            y = (size.y / 2) - (new_size.y / 2);
+            y += (get_draw_size().y / 2) - (new_size.y / 2);
         } else if (child->get_vsizing() == Node::Sizing::SHRINK_END) {
-            y = size.y - new_size.y;
+            y += get_draw_size().y - new_size.y;
         }
         if (child->get_expand())
             new_size.x += remaining_space;

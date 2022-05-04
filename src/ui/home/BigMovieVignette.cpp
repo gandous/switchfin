@@ -17,6 +17,7 @@ BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url)
     });
     _img_background.set_stretch_mode(gana::Image::StretchMode::KEEP_ASPECT_COVERED);
     _img_background.set_corner_radius(CORNER_RADIUS);
+    _img_background.set_margin(20);
     add_child(&_img_background);
 }
 

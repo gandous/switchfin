@@ -100,11 +100,16 @@ class Node {
         void hide();
         void set_visible(bool visibility);
         bool is_visible();
+        void set_margin(float left, float top, float right, float bottom);
+        void set_margin(float margin);
+        void set_margin(const Rectf &margin);
+        const Rectf &get_margin();
         virtual int get_outline_corner_radius() const;
         template<typename T, typename ...ARGS>
         T *make_managed(ARGS&& ...args);
     protected:
         std::vector<Node*> _childs;
+        Rectf _margin;
         App *_app;
         virtual void draw_outline(NVGcontext *ctx);
         virtual void enter_tree();
@@ -112,6 +117,12 @@ class Node {
         virtual void process();
         virtual void on_focus();
         void set_draw_propagation(bool prop);
+        void update_min_size();
+
+        // Give the position offset by left and top margin (ready for drawing)
+        const Vector2f &get_draw_positon() const;
+        // Give the size minus the margin
+        const Vector2f &get_draw_size() const;
     private:
         void propagate_enter_tree(App *app);
         void propagate_exit_tree();
@@ -119,11 +130,13 @@ class Node {
         void propagate_event(Event &evt);
         void propagate_draw(NVGcontext *ctx);
         void check_move_focus_event(Event &evt);
+        void update_draw_positon();
         Node *_parent;
         Vector2f _position;
         Vector2f _global_position;
         Vector2f _size;
         Vector2f _min_size;
+        Vector2f _real_min_size; // Min size with the node margin added to it
         Layout _layout;
         Sizing _hsizing;
         Sizing _vsizing;
@@ -140,6 +153,8 @@ class Node {
         bool _visibility;
         bool _draw_propagation;
         bool _process;
+        Vector2f _draw_position;
+        Vector2f _draw_size;
 };
 
 #include "Node.inl"
