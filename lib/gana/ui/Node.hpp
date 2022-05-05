@@ -72,8 +72,11 @@ class Node {
         virtual const Vector2f &get_gposition() const;
         virtual void set_gposition(const Vector2f &pos);
         virtual const Vector2f &get_size() const;
+        // Set the size of the node including margin
         virtual void set_size(const Vector2f &size);
+        // Return the min size of the node including margin
         virtual Vector2f get_min_size();
+        // Set the min size of the node excluding margin (margin will be added)
         virtual void set_min_size(const Vector2f &min_size);
         Sizing get_hsizing() const;
         void set_hsizing(Sizing sizing);

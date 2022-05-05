@@ -37,7 +37,6 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     // rect->set_min_size(gana::Vector2f(500, 500));
     // rect->set_color(gana::Color(0, 0, 255));
     // _ctn_main.add_child(rect);
-    _ctn_resume_movie.set_space(16);
     scroll->add_child(&_ctn_resume_movie);
 }
 

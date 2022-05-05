@@ -37,8 +37,10 @@ void Node::add_child(Node *node)
     }
     _childs.push_back(node);
     node->_parent = this;
-    if (_app != nullptr)
+    if (_app != nullptr) {
         node->propagate_enter_tree(_app);
+        _app->update_layout();
+    }
 }
 
 void Node::remove_child(Node *node)
@@ -360,7 +362,7 @@ void Node::set_margin(float left, float top, float right, float bottom)
     _margin.y = top;
     _margin.w = right;
     _margin.h = bottom;
-    update_draw_positon();
+    update_min_size();
 }
 
 void Node::set_margin(float margin)
@@ -369,13 +371,13 @@ void Node::set_margin(float margin)
     _margin.y = margin;
     _margin.w = margin;
     _margin.h = margin;
-    update_draw_positon();
+    update_min_size();
 }
 
 void Node::set_margin(const Rectf &margin)
 {
     _margin = margin;
-    update_draw_positon();
+    update_min_size();
 }
 
 const Rectf &Node::get_margin()
@@ -391,7 +393,7 @@ int Node::get_outline_corner_radius() const
 void Node::draw_outline(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, get_gposition().x - 4, get_gposition().y - 4, get_size().x + 8, get_size().y + 8, get_outline_corner_radius());
+    nvgRoundedRect(ctx, get_draw_positon().x - 4, get_draw_positon().y - 4, get_draw_size().x + 8, get_draw_size().y + 8, get_outline_corner_radius());
     nvgStrokeColor(ctx, theme::OUTLINE_COLOR.nvg_color());
     nvgStrokeWidth(ctx, 2);
     nvgStroke(ctx);
@@ -440,7 +442,6 @@ void Node::propagate_enter_tree(App *app)
     _app = app;
     if (_process)
         set_process(_process);
-    app->update_layout();
     for (auto &child: _childs)
         child->propagate_enter_tree(app);
     enter_tree();

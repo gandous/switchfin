@@ -8,6 +8,7 @@ static const int OUTLINE_CORNER_RADIUS = 16;
 BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url)
 {
     set_min_size(SIZE);
+    set_margin(16);
 
     _img_background.set_min_size(SIZE);
     _img_background.set_image(http, url, {
@@ -17,7 +18,6 @@ BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url)
     });
     _img_background.set_stretch_mode(gana::Image::StretchMode::KEEP_ASPECT_COVERED);
     _img_background.set_corner_radius(CORNER_RADIUS);
-    _img_background.set_margin(20);
     add_child(&_img_background);
 }
 

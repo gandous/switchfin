@@ -16,17 +16,17 @@ VBoxContainer::~VBoxContainer()
 void VBoxContainer::add_child(Node *node)
 {
     if (_childs.size() > 0) {
-        _childs.back()->set_right_node(node);
-        node->set_left_node(_childs.back());
+        _childs.back()->set_bottom_node(node);
+        node->set_up_node(_childs.back());
     }
     Node::add_child(node);
 }
 
 void VBoxContainer::update_layout(const Vector2f &size)
 {
-    float y = 0;
+    float y = _margin.h;
     std::size_t nb_expand = 0;
-    float remaining_space = size.y - _min_size.y - (_childs.size() * _space);
+    float remaining_space = size.y - _min_size.y - (_childs.size() * _space) - _margin.y - _margin.h;
 
     set_size(size);
     for (auto &child: _childs)
@@ -36,20 +36,19 @@ void VBoxContainer::update_layout(const Vector2f &size)
         remaining_space = remaining_space / nb_expand;
     for (auto &child: _childs) {
         Vector2f new_size = child->get_min_size();
-        float x = 0;
+        float x = _margin.x;
         if (child->get_hsizing() == Node::Sizing::FILL) {
-            new_size.x = size.x;
+            new_size.x = get_draw_size().x;
         } else if (child->get_hsizing() == Node::Sizing::SHRINK_CENTER) {
-            x = (size.x / 2) - (new_size.x / 2);
+            x += (get_draw_size().x / 2) - (new_size.x / 2);
         } else if (child->get_hsizing() == Node::Sizing::SHRINK_END) {
-            x = size.x - new_size.x;
+            x += get_draw_size().x - new_size.x;
         }
-        child->set_position(Vector2f(x, y));
-        if (child->get_expand()) {
+        if (child->get_expand())
             new_size.y += remaining_space;
-        }
-        y += new_size.y + _space;
+        child->set_position(Vector2f(x, y));
         child->update_layout(new_size);
+        y += new_size.y + _space;
     }
 }
 

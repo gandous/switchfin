@@ -18,15 +18,15 @@ Label::~Label()
 
 void Label::draw(NVGcontext *ctx)
 {
-    float x = get_gposition().x;
+    float x = get_draw_positon().x;
 
     nvgBeginPath(ctx);
     apply_font(ctx);
     if (_align == TextAlign::CENTER)
-        x += get_size().x / 2;
+        x += get_draw_size().x / 2;
     else if (_align == TextAlign::RIGHT)
-        x += get_size().x;
-    nvgText(ctx, x, get_gposition().y + get_size().y / 2, _text.c_str(), NULL);
+        x += get_draw_size().x;
+    nvgText(ctx, x, get_draw_positon().y + get_draw_size().y / 2, _text.c_str(), NULL);
 }
 
 Vector2f Label::get_min_size()

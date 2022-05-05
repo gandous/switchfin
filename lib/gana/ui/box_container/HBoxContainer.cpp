@@ -47,8 +47,8 @@ void HBoxContainer::update_layout(const Vector2f &size)
         if (child->get_expand())
             new_size.x += remaining_space;
         child->set_position(Vector2f(x, y));
-        x += new_size.x + _space;
         child->update_layout(new_size);
+        x += new_size.x + _space;
     }
 }
 
