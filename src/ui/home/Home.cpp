@@ -55,9 +55,12 @@ void Home::process()
 
 void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
 {
-    gana::Logger::info("%s %s", _rresume->get_error_str().c_str(), req.get_body_as_string().c_str());
+    if (code != gana::Request::OK) {
+        gana::Logger::error("%s", _rresume->get_error_str().c_str());
+        return;
+    }
     for (auto &item: _rresume->get_items()) {
-        BigMovieVignette *vign = _ctn_resume_movie.make_managed<BigMovieVignette>(_jclient->get_http(), _jclient->get_img_url(item.get_id(), JellyfinClient::BACKDROP));
+        BigMovieVignette *vign = _ctn_resume_movie.make_managed<BigMovieVignette>(_jclient->get_http(), _jclient->get_img_url(item.get_id(), JellyfinClient::BACKDROP), item);
         vign->set_vsizing(gana::Node::Sizing::SHRINK_CENTER);
         gana::Logger::info("Name: %s", item.get_name().c_str());
         _ctn_resume_movie.add_child(vign);

@@ -18,6 +18,11 @@ class Label: public Node {
             CENTER,
             RIGHT
         };
+        enum TextVAlign {
+            TOP,
+            MIDDLE,
+            BOTTOM
+        };
         enum Preset {
             ERROR,
         };
@@ -29,9 +34,11 @@ class Label: public Node {
         void set_color(const Color &color);
         void set_font_size(unsigned int size);
         void set_text_align(TextAlign align);
+        void set_text_valign(TextVAlign align);
         void set_preset(Preset preset);
     private:
         void apply_font(NVGcontext *ctx);
+        void update_align_bitmask();
         std::string _text;
         Color _color;
         unsigned int _size;
@@ -39,6 +46,7 @@ class Label: public Node {
         Vector2f _min_rect;
         int _text_align;
         TextAlign _align;
+        TextVAlign _valign;
 };
 
 }

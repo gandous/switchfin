@@ -5,7 +5,7 @@ static const gana::Vector2f SIZE = gana::Vector2f(368, 215);
 static const int CORNER_RADIUS = 16;
 static const int OUTLINE_CORNER_RADIUS = 16;
 
-BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url)
+BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, const Item &item)
 {
     set_min_size(SIZE);
     set_margin(16);
@@ -19,6 +19,10 @@ BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url)
     _img_background.set_stretch_mode(gana::Image::StretchMode::KEEP_ASPECT_COVERED);
     _img_background.set_corner_radius(CORNER_RADIUS);
     add_child(&_img_background);
+
+    _lbl_title.set_text(item.get_name());
+    _lbl_title.set_text_valign(gana::Label::BOTTOM);
+    add_child(&_lbl_title);
 }
 
 BigMovieVignette::~BigMovieVignette()
