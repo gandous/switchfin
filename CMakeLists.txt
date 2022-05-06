@@ -43,6 +43,6 @@ if (SWITCH)
 
     add_nro_target(switchfin)
 endif()
-target_link_libraries(switchfin gana mpv)
+target_link_libraries(switchfin gana mpv curl)
 
 # file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})

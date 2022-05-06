@@ -1,6 +1,7 @@
 
 #include "ui/ScrollView.hpp"
 #include "ui/ColorRect.hpp"
+#include "LatestView.hpp"
 #include "App.hpp"
 #include "Home.hpp"
 
@@ -10,6 +11,8 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     set_min_size(gana::Vector2f(500, 500));
     _rresume = _jclient->get_resume();
     _rresume->set_callback(gana::Request::mf_callback(*this, &Home::on_resume_receive));
+    _rviews = _jclient->get_views();
+    _rviews->set_callback(gana::Request::mf_callback(*this, &Home::on_views_receive));
 
     _ctn_main.set_anchor(gana::Node::Anchor::FULL_RECT);
     _ctn_main.add_spacer(16);
@@ -23,6 +26,10 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     scroll->set_hsizing(gana::Node::Sizing::FILL);
     scroll->set_scroll_direction(gana::ScrollView::X);
     _ctn_main.add_child(scroll);
+
+    _lbl_next_up.set_text("Next up");
+    _lbl_next_up.set_font_size(40);
+    _ctn_main.add_child(&_lbl_next_up);
 
     // gana::ColorRect *rect;
     // rect = make_managed<gana::ColorRect>();
@@ -46,6 +53,7 @@ Home::~Home()
 void Home::enter_tree()
 {
     set_process(true);
+    _app->set_focused_node(&_lbl_continue_watching);
 }
 
 void Home::process()
@@ -65,5 +73,23 @@ void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
         gana::Logger::info("Name: %s", item.get_name().c_str());
         _ctn_resume_movie.add_child(vign);
     }
-    _app->set_focused_node(&_ctn_resume_movie);
+    // _app->set_focused_node(&_ctn_resume_movie);
+}
+
+void Home::on_views_receive(gana::Request::RCode code, gana::Request &req)
+{
+    if (code != gana::Request::OK) {
+        gana::Logger::error("%s", req.get_error_str().c_str());
+        return;
+    }
+    for (auto &item: _rviews->get_items()) {
+        gana::Logger::info("View: %s", item.get_name().c_str());
+        if (item.get_name() != "Movies")
+            continue;
+        gana::Label *lbl = make_managed<gana::Label>();
+        lbl->set_text("Latest " + item.get_name());
+        lbl->set_font_size(40);
+        _ctn_main.add_child(lbl);
+        LatestView *view = make_managed<LatestView>(*_jclient.get(), item.get_id());
+        _ctn_main.add_child(view);    }
 }

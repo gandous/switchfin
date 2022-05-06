@@ -3,6 +3,7 @@
 #define ITEM_HPP_
 
 #include <string>
+#include <vector>
 #include "json/json.hpp"
 
 class Item {
@@ -16,5 +17,7 @@ class Item {
         std::string _name;
         std::string _id;
 };
+
+using Items = std::vector<Item>;
 
 #endif /* ITEM_HPP_ */

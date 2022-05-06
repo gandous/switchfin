@@ -16,6 +16,7 @@ class BigMovieVignette: public gana::RectContainer {
     private:
         gana::NetworkImage _img_background;
         gana::Label _lbl_title;
+        gana::Node _node;
 };
 
 #endif /* BIGMOVIEVIGNETTE_HPP_ */

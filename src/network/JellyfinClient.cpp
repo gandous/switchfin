@@ -62,11 +62,35 @@ std::shared_ptr<ItemsRequest> JellyfinClient::get_resume()
 
     url << _url << "/Users/" << _user_id << "/Items/Resume";
     std::shared_ptr<ItemsRequest> req = std::make_shared<ItemsRequest>();
+    _http.get(req, url.str(), _default_header, params);
+    return (req);
+}
+
+std::shared_ptr<ItemsRequest> JellyfinClient::get_views()
+{
+    std::ostringstream url;
+
+    url << _url << "/Users/" << _user_id << "/Views";
+    std::shared_ptr<ItemsRequest> req = std::make_shared<ItemsRequest>();
     _http.get(req, url.str(), _default_header);
     return (req);
 }
 
-std::string JellyfinClient::get_img_url(const std::string &img_id, ImageType type)
+std::shared_ptr<ItemListRequest> JellyfinClient::get_latest(const std::string &parent_id)
+{
+    std::ostringstream url;
+    gana::Http::UrlParams params = {
+        {"ParentId", parent_id},
+        {"Limit", "16"}
+    };
+
+    url << _url << "/Users/" << _user_id << "/Items/Latest";
+    std::shared_ptr<ItemListRequest> req = std::make_shared<ItemListRequest>();
+    _http.get(req, url.str(), _default_header, params);
+    return (req);
+}
+
+std::string JellyfinClient::get_img_url(const std::string &img_id, ImageType type) const
 {
     std::ostringstream str;
     str << _url << "/Items/" << img_id << "/Images/" << (type == PRIMARY ? "Primary" : "Backdrop");

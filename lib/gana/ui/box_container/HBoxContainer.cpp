@@ -20,6 +20,8 @@ void HBoxContainer::add_child(Node *node)
         node->set_left_node(_childs.back());
     }
     Node::add_child(node);
+    node->set_top_node(get_top_node());
+    node->set_bottom_node(get_bottom_node());
 }
 
 void HBoxContainer::update_layout(const Vector2f &size)
@@ -85,6 +87,20 @@ void HBoxContainer::on_focus()
 {
     if (_childs.size() > 0)
         _app->set_focused_node(_childs.front());
+}
+
+void HBoxContainer::set_top_node(Node *node)
+{
+    Node::set_top_node(node);
+    for (auto &child: _childs)
+        child->set_top_node(node);
+}
+
+void HBoxContainer::set_bottom_node(Node *node)
+{
+    Node::set_bottom_node(node);
+    for (auto &child: _childs)
+        child->set_bottom_node(node);
 }
 
 }

@@ -7,7 +7,7 @@
 
 static const int BUFFER_SIZE = 128;
 
-std::string get_text(const std::string &initial = "")
+std::string get_swkbd_text(const std::string &initial = "")
 {
     char buffer[BUFFER_SIZE];
 	SwkbdConfig kbd;

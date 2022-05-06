@@ -1,13 +1,13 @@
 
-#ifndef SWKBD_HPP_
-#define SWKBD_HPP_
+#ifndef GANASWKBD_HPP_
+#define GANASWKBD_HPP_
 
 #if SWITCH
 
 #include <string>
 
-std::string get_text(const std::string &initial = "");
+std::string get_swkbd_text(const std::string &initial = "");
 
 #endif
 
-#endif /* SWKBD_HPP_ */
+#endif /* GANASWKBD_HPP_ */

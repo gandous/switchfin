@@ -30,13 +30,13 @@ void LineEdit::process_event(Event &evt)
     if (evt.type == sf::Event::TouchEnded) {
 #if SWITCH
         if (inside_node(Vector2f(evt.touch.x, evt.touch.y))) {
-            set_value(get_text(_value));
+            set_value(get_swkbd_text(_value));
         }
         evt.handle = true;
 #endif
     } else if (has_focus() && evt.type == sf::Event::JoystickButtonReleased && evt.joystickButton.button == SwitchPadButton::A) {
 #if SWITCH
-        set_value(get_text(_value));
+        set_value(get_swkbd_text(_value));
         evt.handle = true;
 #endif
     } else if (evt.type == sf::Event::MouseButtonReleased && evt.mouseButton.button == sf::Mouse::Left) {

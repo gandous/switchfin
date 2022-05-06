@@ -16,6 +16,8 @@ class HBoxContainer: public Node {
         Vector2f get_min_size() override;
         void add_spacer(float w = 16, bool expand = false);
         void set_space(float space);
+        virtual void set_top_node(Node *node) override;
+        virtual void set_bottom_node(Node *node) override;
     protected:
         void on_focus() override;
     private:

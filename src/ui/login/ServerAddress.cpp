@@ -34,7 +34,7 @@ ServerAddress::ServerAddress()
     _ctn_main.add_child(&_btn_connect);
     _ctn_main.add_spacer(8, true);
     _le_server_address.set_bottom_node(&_btn_connect);
-    _btn_connect.set_up_node(&_le_server_address);
+    _btn_connect.set_top_node(&_le_server_address);
 
     _lbl_connecting.set_text("Connecting");
     set_anchor(gana::Node::Anchor::CENTER);

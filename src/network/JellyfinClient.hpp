@@ -9,6 +9,7 @@
 #include "PingRequest.hpp"
 #include "LoginRequest.hpp"
 #include "item/ItemsRequest.hpp"
+#include "item/ItemListRequest.hpp"
 
 class JellyfinClient {
     public:
@@ -30,7 +31,9 @@ class JellyfinClient {
         std::shared_ptr<PingRequest> ping();
         std::shared_ptr<LoginRequest> login(const std::string &name, const std::string &password);
         std::shared_ptr<ItemsRequest> get_resume();
-        std::string get_img_url(const std::string &id, ImageType type = PRIMARY);
+        std::shared_ptr<ItemsRequest> get_views();
+        std::shared_ptr<ItemListRequest> get_latest(const std::string &parent_id);
+        std::string get_img_url(const std::string &id, ImageType type = PRIMARY) const;
     private:
         void update_default_header();
         std::string _url;

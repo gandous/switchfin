@@ -94,10 +94,14 @@ class Node {
         bool inside_node(const Vector2f &pos) const;
         bool has_focus() const;
         void set_focus(bool focus = true);
-        void set_left_node(Node *node);
-        void set_up_node(Node *node);
-        void set_right_node(Node *node);
-        void set_bottom_node(Node *node);
+        virtual void set_left_node(Node *node);
+        virtual void set_top_node(Node *node);
+        virtual void set_right_node(Node *node);
+        virtual void set_bottom_node(Node *node);
+        Node *get_left_node();
+        Node *get_top_node();
+        Node *get_right_node();
+        Node *get_bottom_node();
         void set_process(bool process = true);
         void show();
         void hide();

@@ -17,9 +17,11 @@ void VBoxContainer::add_child(Node *node)
 {
     if (_childs.size() > 0) {
         _childs.back()->set_bottom_node(node);
-        node->set_up_node(_childs.back());
+        node->set_top_node(_childs.back());
     }
     Node::add_child(node);
+    node->set_left_node(get_left_node());
+    node->set_right_node(get_right_node());
 }
 
 void VBoxContainer::update_layout(const Vector2f &size)
@@ -86,6 +88,20 @@ void VBoxContainer::on_focus()
 {
     if (_childs.size() > 0)
         _app->set_focused_node(_childs.front());
+}
+
+void VBoxContainer::set_left_node(Node *node)
+{
+    Node::set_left_node(node);
+    for (auto &child: _childs)
+        child->set_left_node(node);
+}
+
+void VBoxContainer::set_right_node(Node *node)
+{
+    Node::set_right_node(node);
+    for (auto &child: _childs)
+        child->set_right_node(node);
 }
 
 }

@@ -310,7 +310,7 @@ void Node::set_left_node(Node *node)
     _left_node = node;
 }
 
-void Node::set_up_node(Node *node)
+void Node::set_top_node(Node *node)
 {
     _top_node = node;
 }
@@ -323,6 +323,25 @@ void Node::set_right_node(Node *node)
 void Node::set_bottom_node(Node *node)
 {
     _bottom_node = node;
+}
+
+Node *Node::get_left_node()
+{
+    return (_left_node);
+}
+
+Node *Node::get_top_node()
+{
+    return (_top_node);
+}
+Node *Node::get_right_node()
+{
+    return (_right_node);
+}
+
+Node *Node::get_bottom_node()
+{
+    return (_bottom_node);
 }
 
 void Node::set_process(bool process)

@@ -32,7 +32,7 @@ Login::Login()
     _container.add_child(&_lbl_password);
 
     _le_password.set_hsizing(gana::Node::Sizing::FILL);
-    _le_password.set_up_node(&_le_name);
+    _le_password.set_top_node(&_le_name);
     _le_password.set_bottom_node(&_btn_login);
     _le_password.set_min_size(gana::Vector2f(207, 44));
     _container.add_child(&_le_password);
@@ -44,7 +44,7 @@ Login::Login()
     _ctn_button.add_spacer(32, true);
     _btn_back.set_min_size(gana::Vector2f(207, 44));
     _btn_back.set_text("Cancel");
-    _btn_back.set_up_node(&_le_password);
+    _btn_back.set_top_node(&_le_password);
     _btn_back.set_right_node(&_btn_login);
     _ctn_button.add_child(&_btn_back);
 
@@ -52,7 +52,7 @@ Login::Login()
     _btn_login.set_button_type(gana::Button::PRIMARY);
     _btn_login.set_min_size(gana::Vector2f(207, 44));
     _btn_login.set_text("Login");
-    _btn_login.set_up_node(&_le_password);
+    _btn_login.set_top_node(&_le_password);
     _btn_login.set_left_node(&_btn_back);
     _btn_login.signal_pressed.connect(*this, &Login::on_login_pressed);
     _ctn_button.add_child(&_btn_login);

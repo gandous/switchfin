@@ -15,10 +15,15 @@ ScrollView::~ScrollView()
 
 void ScrollView::add_child(Node *node)
 {
-    if (_childs.size() == 0)
+    if (_childs.size() == 0) {
         Node::add_child(node);
-    else
+        node->set_left_node(get_left_node());
+        node->set_top_node(get_top_node());
+        node->set_right_node(get_right_node());
+        node->set_bottom_node(get_bottom_node());
+    } else {
         Logger::error("ScrollView cannot have more than 1 child");
+    }
 }
 
 Vector2f ScrollView::get_min_size()
@@ -51,6 +56,12 @@ void ScrollView::enter_tree()
     _app->signal_node_focus.connect(*this, &ScrollView::on_node_focus);
 }
 
+void ScrollView::on_focus()
+{
+    if (_childs.size() > 0)
+        _app->set_focused_node(_childs[0]);
+}
+
 void ScrollView::on_node_focus(Node *node)
 {
     if (has_child(node)) {
@@ -63,6 +74,34 @@ void ScrollView::on_node_focus(Node *node)
 void ScrollView::set_scroll_direction(ScrollDirection direction)
 {
     _direction = direction;
+}
+
+void ScrollView::set_left_node(Node *node)
+{
+    Node::set_left_node(node);
+    for (auto &child: _childs)
+        child->set_left_node(node);
+}
+
+void ScrollView::set_top_node(Node *node)
+{
+    Node::set_top_node(node);
+    for (auto &child: _childs)
+        child->set_top_node(node);
+}
+
+void ScrollView::set_right_node(Node *node)
+{
+    Node::set_right_node(node);
+    for (auto &child: _childs)
+        child->set_right_node(node);
+}
+
+void ScrollView::set_bottom_node(Node *node)
+{
+    Node::set_bottom_node(node);
+    for (auto &child: _childs)
+        child->set_bottom_node(node);
 }
 
 }
