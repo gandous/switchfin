@@ -14,9 +14,15 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     _rviews = _jclient->get_views();
     _rviews->set_callback(gana::Request::mf_callback(*this, &Home::on_views_receive));
 
-    _ctn_main.set_anchor(gana::Node::Anchor::FULL_RECT);
+    gana::ScrollView *vscroll = _ctn_main.make_managed<gana::ScrollView>();
+    vscroll->set_anchor(gana::Node::FULL_RECT);
+    vscroll->set_scroll_direction(gana::ScrollView::Y);
+    add_child(vscroll);
+
+    _ctn_main.set_hsizing(gana::Node::Sizing::FILL);
     _ctn_main.add_spacer(16);
-    add_child(&_ctn_main);
+    _ctn_main.set_expand();
+    vscroll->add_child(&_ctn_main);
 
     _lbl_continue_watching.set_text("Continue watching");
     _lbl_continue_watching.set_font_size(40);
@@ -44,6 +50,7 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     // rect->set_min_size(gana::Vector2f(500, 500));
     // rect->set_color(gana::Color(0, 0, 255));
     // _ctn_main.add_child(rect);
+    _ctn_resume_movie.set_expand();
     scroll->add_child(&_ctn_resume_movie);
 }
 
@@ -84,12 +91,11 @@ void Home::on_views_receive(gana::Request::RCode code, gana::Request &req)
     }
     for (auto &item: _rviews->get_items()) {
         gana::Logger::info("View: %s", item.get_name().c_str());
-        if (item.get_name() != "Movies")
-            continue;
         gana::Label *lbl = make_managed<gana::Label>();
         lbl->set_text("Latest " + item.get_name());
         lbl->set_font_size(40);
         _ctn_main.add_child(lbl);
         LatestView *view = make_managed<LatestView>(*_jclient.get(), item.get_id());
-        _ctn_main.add_child(view);    }
+        _ctn_main.add_child(view);
+    }
 }

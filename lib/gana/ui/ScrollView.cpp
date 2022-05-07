@@ -3,6 +3,9 @@
 #include "App.hpp"
 #include "ScrollView.hpp"
 
+#define X_SCROLL ((_direction & ScrollDirection::X) != 0)
+#define Y_SCROLL ((_direction & ScrollDirection::Y) != 0)
+
 namespace gana {
 
 ScrollView::ScrollView(): _direction(ScrollDirection::XY)
@@ -12,6 +15,15 @@ ScrollView::ScrollView(): _direction(ScrollDirection::XY)
 
 ScrollView::~ScrollView()
 {}
+
+void ScrollView::update_layout(const Vector2f &size)
+{
+    set_size(size);
+    for (auto &child: _childs) {
+        child->get_min_size();
+        child->update_layout(child->get_expand() ? size : child->get_size());
+    }
+}
 
 void ScrollView::add_child(Node *node)
 {
@@ -26,26 +38,30 @@ void ScrollView::add_child(Node *node)
     }
 }
 
+bool ScrollView::has_child(const Node *node)
+{
+    (void)node;
+    return (false);
+}
+
 Vector2f ScrollView::get_min_size()
 {
     Vector2f min_size = _min_size;
 
-    if ((_direction & ScrollDirection::X) == 0) { // No horizontal scroll
-        for (auto &child: _childs) {
-            Vector2f tmp = child->get_min_size();
-            min_size.x = std::max(min_size.x, _childs.front()->get_min_size().x);
-        }
-    }
-    if ((_direction & ScrollDirection::Y) == 0) { // No vertial scroll
+    if (!X_SCROLL) {
         if (_childs.size() > 0)
-            min_size.y = std::max(min_size.y, _childs.front()->get_min_size().y);
+            min_size.x = std::max(min_size.x, _childs.front()->get_min_size().x);
+    }
+    if (!Y_SCROLL) {
+        if (_childs.size() > 0)
+            min_size.y = std::max(min_size.x, _childs.front()->get_min_size().y);
     }
     return (min_size);
 }
 
 void ScrollView::draw(NVGcontext *ctx)
 {
-    nvgScissor(ctx, get_position().x, get_position().y, get_size().x, get_size().y);
+    nvgScissor(ctx, get_draw_positon().x, get_draw_positon().y, get_draw_size().x, get_draw_size().y);
     for (auto child: _childs)
         child->propagate_draw(ctx);
     nvgResetScissor(ctx);
@@ -60,15 +76,6 @@ void ScrollView::on_focus()
 {
     if (_childs.size() > 0)
         _app->set_focused_node(_childs[0]);
-}
-
-void ScrollView::on_node_focus(Node *node)
-{
-    if (has_child(node)) {
-        float x = node != nullptr ? node->get_position().x : 0;
-        gana::Logger::info("focus %f", x);
-        _childs.front()->set_position(Vector2f(-x, _childs.front()->get_position().y));
-    }
 }
 
 void ScrollView::set_scroll_direction(ScrollDirection direction)
@@ -102,6 +109,16 @@ void ScrollView::set_bottom_node(Node *node)
     Node::set_bottom_node(node);
     for (auto &child: _childs)
         child->set_bottom_node(node);
+}
+
+void ScrollView::on_node_focus(Node *node)
+{
+    if (Node::has_child(node)) {
+        float x = X_SCROLL ? node->get_position().x : 0;
+        float y = Y_SCROLL ? node->get_position().y : 0;
+        gana::Logger::info("focus %.3f %.3f", x, y);
+        _childs.front()->set_position(Vector2f(-x, -y));
+    }
 }
 
 }

@@ -63,7 +63,9 @@ class Node {
 
         virtual void add_child(Node *node);
         virtual void remove_child(Node *node);
-        bool has_child(const Node *node);
+        // Return true if the current node has the given node has a child, this call will be call recusively on all child
+        // A ScrollContainer will stop the propagation of the function
+        virtual bool has_child(const Node *node);
         virtual void draw(NVGcontext *ctx);
         virtual void process_event(Event &evt);
         virtual void update_layout(const Vector2f &size);

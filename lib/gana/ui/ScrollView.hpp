@@ -16,8 +16,16 @@ class ScrollView: public gana::Node {
             Y = 1 << 1,
             XY = X | Y,
         };
+        enum SizeMode {
+            // Use biggest child as current size
+            BiggestChild,
+            // Use size given by parent as size
+            LayoutSize,
+        };
 
+        void update_layout(const Vector2f &size) override;
         void add_child(Node *node) override;
+        bool has_child(const Node *node) override;
         Vector2f get_min_size() override;
         void draw(NVGcontext *ctx) override;
         void set_scroll_direction(ScrollDirection direction);
