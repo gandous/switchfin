@@ -47,6 +47,8 @@ Http::Http(): _multi_handle(nullptr)
     if (_multi_handle == nullptr) {
         gana::Logger::error("Failed to init curl");
     }
+    curl_multi_setopt(_multi_handle, CURLMOPT_PIPELINING, CURLPIPE_MULTIPLEX);
+    curl_multi_setopt(_multi_handle, CURLMOPT_MAX_TOTAL_CONNECTIONS, 5);
 }
 
 Http::~Http()
@@ -112,7 +114,7 @@ void Http::request(std::shared_ptr<Request> req, const std::string &url, const s
 #if DEBUG_HTTP
     req->_err_buffer[0] = '\0';
     curl_easy_setopt(handle, CURLOPT_ERRORBUFFER, req->_err_buffer);
-    gana::Logger::info("Request %s %s", Method::POST ? "POST" : "GET", url.c_str());
+    gana::Logger::info("Request %s %s (%d pending request)", Method::POST ? "POST" : "GET", url.c_str(), _pending_request.size());
 #endif
     req->_handle = handle;
     req->_parent = this;
