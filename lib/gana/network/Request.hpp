@@ -59,6 +59,9 @@ class Request {
         CURL *_handle;
         struct curl_slist *_headers;
         bool _completed;
+#if DEBUG_HTTP
+        char _err_buffer[CURL_ERROR_SIZE];
+#endif
 };
 
 }

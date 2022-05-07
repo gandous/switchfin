@@ -1,5 +1,6 @@
 
 #include "Image.hpp"
+#include "theme/color.hpp"
 #include "App.hpp"
 
 namespace gana {
@@ -12,14 +13,18 @@ Image::~Image()
 
 void Image::draw(NVGcontext *ctx)
 {
-    if (_image_id == AssetManager::FAILED_RCODE)
-        return;
     nvgSave(ctx);
     nvgBeginPath(ctx);
-    nvgRoundedRect(ctx, get_draw_positon().x, get_draw_positon().y, get_draw_size().x, get_draw_size().y, _corner_radius);
-    nvgTranslate(ctx, get_draw_positon().x, get_draw_positon().y);
-    nvgFillPaint(ctx, _paint);
-    nvgFill(ctx);
+    if (_image_id == AssetManager::FAILED_RCODE) {
+        nvgRoundedRect(ctx, get_draw_positon().x, get_draw_positon().y, get_draw_size().x, get_draw_size().y, _corner_radius);
+        nvgFillColor(ctx, theme::IMG_FAILED_BG_COLOR.nvg_color());
+        nvgFill(ctx);
+    } else {
+        nvgRoundedRect(ctx, get_draw_positon().x, get_draw_positon().y, get_draw_size().x, get_draw_size().y, _corner_radius);
+        nvgTranslate(ctx, get_draw_positon().x, get_draw_positon().y);
+        nvgFillPaint(ctx, _paint);
+        nvgFill(ctx);
+    }
     nvgRestore(ctx);
 }
 

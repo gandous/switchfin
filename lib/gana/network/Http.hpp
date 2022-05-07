@@ -12,8 +12,6 @@
 
 namespace gana {
 
-#define DEBUG_HTTP 1
-
 class Http {
     public:
         Http();

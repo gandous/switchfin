@@ -1,5 +1,7 @@
 
+#include <cstring>
 #include <sstream>
+#include <algorithm>
 #include "Logger.hpp"
 #include "Http.hpp"
 
@@ -107,12 +109,14 @@ void Http::request(std::shared_ptr<Request> req, const std::string &url, const s
             curl_easy_setopt(handle, CURLOPT_READFUNCTION, read_callback);
             break;
     }
+#if DEBUG_HTTP
+    req->_err_buffer[0] = '\0';
+    curl_easy_setopt(handle, CURLOPT_ERRORBUFFER, req->_err_buffer);
+    gana::Logger::info("Request %s %s", Method::POST ? "POST" : "GET", url.c_str());
+#endif
     req->_handle = handle;
     req->_parent = this;
     curl_multi_add_handle(_multi_handle, handle);
-#if DEBUG_HTTP
-    gana::Logger::info("Request %s %s", Method::POST ? "POST" : "GET", url.c_str());
-#endif
 }
 
 void Http::post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, const Headers &headers, const UrlParams &params)
@@ -158,12 +162,21 @@ void Http::on_response(CURLMsg *msg)
 {
     for (std::vector<std::weak_ptr<Request>>::iterator it = _pending_request.begin(); it != _pending_request.end(); it++) {
         if (it->expired())
-            return;
+            continue;
         std::shared_ptr<Request> req = it->lock();
         if (req->_handle == msg->easy_handle) {
             curl_easy_getinfo(req->_handle, CURLINFO_RESPONSE_CODE, &req->_http_code);
 #if DEBUG_HTTP
-            gana::Logger::info("Response (code: %d)", req->_http_code);
+            if (req->_http_code >= 200 && req->_http_code < 300) {
+                gana::Logger::info("Response (code: %d)", req->_http_code);
+            } else if (msg->data.result == CURLE_OK) {
+                gana::Logger::warning("Request failed (code: %d)", req->_http_code);
+            } else {
+                if (std::strlen(req->_err_buffer))
+                    gana::Logger::warning("Request failed %s (code: %d, curl code: %d)", req->_err_buffer, req->_http_code, msg->data.result);
+                else
+                    gana::Logger::warning("Request failed %s (code: %d, curl code: %d)", curl_easy_strerror(msg->data.result), req->_http_code, msg->data.result);
+            }
 #endif
             curl_multi_remove_handle(_multi_handle, req->_handle);
             curl_easy_reset(req->_handle);
@@ -178,9 +191,12 @@ void Http::on_response(CURLMsg *msg)
                 req->_headers = nullptr;
             }
             req->parse();
-            return;
+            break;
         }
     }
+    std::remove_if(_pending_request.begin(), _pending_request.end(), [](std::weak_ptr<Request> &req){
+        return (req.expired());
+    });
 }
 
 std::string Http::format_url_params(const std::string &url, const UrlParams &params)

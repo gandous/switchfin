@@ -6,6 +6,7 @@ include_directories(gana PRIVATE "${PROJECT_SOURCE_DIR}/lib/glad/include")
 
 file(GLOB_RECURSE GANA_SRC "*")
 
+add_compile_definitions(DEBUG_HTTP=1)
 add_library(gana STATIC ${GANA_SRC})
 
 target_compile_options(gana PRIVATE -Wall -Wextra)
