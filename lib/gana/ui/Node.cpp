@@ -7,11 +7,17 @@
 namespace gana {
 
 Node::Node():
+    _margin(0, 0, 0, 0),
     _app(nullptr),
     _parent(nullptr),
+    _size(0, 0),
+    _min_size(0, 0),
+    _real_min_size(0, 0),
     _layout(POSITION),
     _hsizing(SHRINK_BEGIN),
     _vsizing(SHRINK_BEGIN),
+    _hdirection(END),
+    _vdirection(END),
     _expand(false),
     _has_focus(false),
     _left_node(nullptr),
@@ -21,7 +27,9 @@ Node::Node():
     _visibility(true),
     _draw_propagation(true),
     _process(false)
-{}
+{
+    Logger::info("%f %f %f %f %f", _real_min_size.y, _size.y, _min_size.y, _margin.y, _margin.h);
+}
 
 Node::~Node()
 {}
@@ -441,6 +449,7 @@ void Node::update_min_size()
     _real_min_size.y = _min_size.y + _margin.y + _margin.h;
     if (_real_min_size.x > _size.x)
         _size.x = _real_min_size.x;
+    // Logger::info("%f %f %f %f %f", _real_min_size.y, _size.y, _min_size.y, _margin.y, _margin.h);
     if (_real_min_size.y > _size.y)
         _size.y = _real_min_size.y;
     update_draw_positon();

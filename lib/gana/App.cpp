@@ -23,14 +23,16 @@ App::App(const std::string& title):
     _window(_mode, title),
     _vg(nullptr),
     _focused_node(nullptr),
-    _update_layout(true)
+    _update_layout(true),
+    _frame_time(0)
 #else
 App::App(const std::string& title):
     _mode(1280, 720),
     _window(_mode, title),
     _vg(nullptr),
     _focused_node(nullptr),
-    _update_layout(true)
+    _update_layout(true),
+    _frame_time(0)
 #endif
 {
 #if SWITCH
@@ -83,13 +85,14 @@ void App::run()
         }
         for (auto &node: _process_node)
             node->process();
-        if (_update_layout) {
+        if (_update_layout && _root_node != nullptr) {
             Logger::info("Update layout");
             _root_node->update_layout(wsize);
             _update_layout = false;
         }
         nvgBeginFrame(_vg, _mode.width, _mode.height, ratio);
-        _root_node->propagate_draw(_vg);
+        if (_root_node != nullptr)
+            _root_node->propagate_draw(_vg);
         _debug.set("FPS", std::to_string(_fps_clock.get_fps()));
         _debug.set("frame time", std::to_string(_frame_time));
         _debug.draw(_vg);
