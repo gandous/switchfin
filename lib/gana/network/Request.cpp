@@ -50,13 +50,14 @@ const Request::WBody &Request::get_body() const
 
 void Request::parse()
 {
-    if (_curl_code != CURLE_OK && _error_str == "") {
-        _error_str = "Http default error (code: %d)";
-        _code = ERROR;
+    if (_curl_code != CURLE_OK) {
+        if (_error_str == "") {
+            _error_str = "Http default error (code: %d)";
+            _code = ERROR;
+        }
     } else if (_http_code < 200 || _http_code >= 300) {
         _error_str = "Server respond with a non 200 code (code: %d)";
         _code = ERROR;
-        return;
     } else {
         _code = OK;
     }

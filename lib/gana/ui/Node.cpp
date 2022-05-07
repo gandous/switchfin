@@ -27,9 +27,7 @@ Node::Node():
     _visibility(true),
     _draw_propagation(true),
     _process(false)
-{
-    Logger::info("%f %f %f %f %f", _real_min_size.y, _size.y, _min_size.y, _margin.y, _margin.h);
-}
+{}
 
 Node::~Node()
 {}
@@ -449,7 +447,6 @@ void Node::update_min_size()
     _real_min_size.y = _min_size.y + _margin.y + _margin.h;
     if (_real_min_size.x > _size.x)
         _size.x = _real_min_size.x;
-    // Logger::info("%f %f %f %f %f", _real_min_size.y, _size.y, _min_size.y, _margin.y, _margin.h);
     if (_real_min_size.y > _size.y)
         _size.y = _real_min_size.y;
     update_draw_positon();
