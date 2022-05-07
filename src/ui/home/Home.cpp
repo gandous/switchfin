@@ -20,7 +20,6 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     add_child(vscroll);
 
     _ctn_main.set_hsizing(gana::Node::Sizing::FILL);
-    _ctn_main.add_spacer(16);
     _ctn_main.set_expand();
     vscroll->add_child(&_ctn_main);
 
@@ -37,19 +36,6 @@ Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
     _lbl_next_up.set_font_size(40);
     _ctn_main.add_child(&_lbl_next_up);
 
-    // gana::ColorRect *rect;
-    // rect = make_managed<gana::ColorRect>();
-    // rect->set_min_size(gana::Vector2f(500, 500));
-    // rect->set_color(gana::Color(255, 0, 0));
-    // _ctn_main.add_child(rect);
-    // rect = make_managed<gana::ColorRect>();
-    // rect->set_min_size(gana::Vector2f(500, 500));
-    // rect->set_color(gana::Color(0, 255, 0));
-    // _ctn_main.add_child(rect);
-    // rect = make_managed<gana::ColorRect>();
-    // rect->set_min_size(gana::Vector2f(500, 500));
-    // rect->set_color(gana::Color(0, 0, 255));
-    // _ctn_main.add_child(rect);
     _ctn_resume_movie.set_expand();
     scroll->add_child(&_ctn_resume_movie);
 }
@@ -80,7 +66,7 @@ void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
         gana::Logger::info("Name: %s", item.get_name().c_str());
         _ctn_resume_movie.add_child(vign);
     }
-    // _app->set_focused_node(&_ctn_resume_movie);
+    _app->set_focused_node(&_ctn_resume_movie);
 }
 
 void Home::on_views_receive(gana::Request::RCode code, gana::Request &req)
