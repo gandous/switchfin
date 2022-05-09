@@ -22,6 +22,7 @@ App::App(const std::string& title):
     _mode(sf::VideoMode::getDesktopMode()),
     _window(_mode, title),
     _vg(nullptr),
+    _root_node(nullptr),
     _focused_node(nullptr),
     _update_layout(true),
     _frame_time(0)
@@ -30,6 +31,7 @@ App::App(const std::string& title):
     _mode(1280, 720),
     _window(_mode, title),
     _vg(nullptr),
+    _root_node(nullptr),
     _focused_node(nullptr),
     _update_layout(true),
     _frame_time(0)

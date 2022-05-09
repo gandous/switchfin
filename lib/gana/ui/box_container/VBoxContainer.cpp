@@ -5,7 +5,7 @@
 
 namespace gana {
 
-VBoxContainer::VBoxContainer()
+VBoxContainer::VBoxContainer(): _space(0)
 {
     set_size(gana::Vector2f(200, 200));
 }
@@ -65,6 +65,7 @@ Vector2f VBoxContainer::get_min_size()
             w = child->get_min_size().x;
     }
     h += (_childs.size() * _space);
+
     set_min_size(Vector2f(w, h));
     return (_min_size);
 }
