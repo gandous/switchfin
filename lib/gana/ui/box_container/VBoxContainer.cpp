@@ -26,7 +26,7 @@ void VBoxContainer::add_child(Node *node)
 
 void VBoxContainer::update_layout(const Vector2f &size)
 {
-    float y = _margin.h;
+    float y = _margin.y;
     std::size_t nb_expand = 0;
     float remaining_space = size.y - _min_size.y - (_childs.size() * _space) - _margin.y - _margin.h;
 
