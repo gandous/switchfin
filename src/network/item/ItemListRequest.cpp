@@ -19,7 +19,7 @@ void ItemListRequest::parse()
     if (_curl_code != CURLE_OK) {
         _code = ERROR;
     }
-    nlohmann::json parse_data = nlohmann::json::parse(_wdata.data);;
+    nlohmann::json parse_data = nlohmann::json::parse(_wdata.data);
     for (auto item: parse_data)
         _items.push_back(item);
     Request::parse();

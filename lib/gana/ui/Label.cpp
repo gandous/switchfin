@@ -32,7 +32,7 @@ void Label::draw(NVGcontext *ctx)
         y += get_draw_size().y / 2;
     else if (_valign == TextVAlign::BOTTOM)
         y += get_draw_size().y;
-    nvgText(ctx, x, y, _text.c_str(), NULL);
+    draw_text(ctx, x, y);
 }
 
 Vector2f Label::get_min_size()
@@ -43,7 +43,7 @@ Vector2f Label::get_min_size()
         apply_font(_app->get_nvg_context());
         float box[4] = {0, 0, 0, 0};
         nvgTextAlign(_app->get_nvg_context(), NVG_ALIGN_TOP);
-        nvgTextBounds(_app->get_nvg_context(), 0, 0, _text.c_str(), NULL, box);
+        get_bounds(box);
         _min_rect.x = std::max(box[2], Node::get_min_size().x);
         _min_rect.y = std::max(box[3], Node::get_min_size().y);
         _update_min_rect = false;
@@ -97,6 +97,16 @@ void Label::set_preset(Preset preset)
         default:
             break;
     }
+}
+
+void Label::draw_text(NVGcontext *ctx, float x, float y)
+{
+    nvgText(ctx, x, y, _text.c_str(), NULL);
+}
+
+void Label::get_bounds(float *box)
+{
+    nvgTextBounds(_app->get_nvg_context(), 0, 0, _text.c_str(), NULL, box);
 }
 
 void Label::apply_font(NVGcontext *ctx)

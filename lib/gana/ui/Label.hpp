@@ -36,7 +36,9 @@ class Label: public Node {
         void set_text_align(TextAlign align);
         void set_text_valign(TextVAlign align);
         void set_preset(Preset preset);
-    private:
+    protected:
+        virtual void draw_text(NVGcontext *ctx, float x, float y);
+        virtual void get_bounds(float *box);
         void apply_font(NVGcontext *ctx);
         void update_align_bitmask();
         std::string _text;

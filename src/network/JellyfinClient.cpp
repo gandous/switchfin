@@ -90,6 +90,16 @@ std::shared_ptr<ItemListRequest> JellyfinClient::get_latest(const std::string &p
     return (req);
 }
 
+std::shared_ptr<ItemRequest> JellyfinClient::get_info(const std::string &id)
+{
+    std::ostringstream url;
+
+    url << _url << "/Users/" << _user_id << "/Items/" << id;
+    std::shared_ptr<ItemRequest> req = std::make_shared<ItemRequest>();
+    _http.get(req, url.str(), _default_header);
+    return (req);
+}
+
 std::string JellyfinClient::get_img_url(const std::string &img_id, ImageType type) const
 {
     std::ostringstream str;
