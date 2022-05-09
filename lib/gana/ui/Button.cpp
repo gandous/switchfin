@@ -25,11 +25,9 @@ void Button::draw(NVGcontext *ctx)
 
 void Button::process_event(Event &evt)
 {
-    if (evt.type == sf::Event::TouchEnded && inside_node(Vector2f(evt.touch.x, evt.touch.y))) {
+    if (evt.is_touch() && inside_node(Vector2f(evt.touch.x, evt.touch.y))) {
         signal_pressed.emit();
-    } else if (has_focus() && evt.type == sf::Event::JoystickButtonReleased && evt.joystickButton.button == SwitchPadButton::A) {
-        signal_pressed.emit();
-    } else if (evt.type == sf::Event::MouseButtonReleased && evt.mouseButton.button == sf::Mouse::Left && inside_node(Vector2f(evt.mouseButton.x, evt.mouseButton.y))) {
+    } else if (has_focus() && evt.accept_pressed()) {
         signal_pressed.emit();
     }
 }

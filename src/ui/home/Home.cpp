@@ -3,12 +3,14 @@
 #include "ui/ColorRect.hpp"
 #include "LatestView.hpp"
 #include "App.hpp"
+#include "ui/movie_detail/MovieDetail.hpp"
 #include "Home.hpp"
 
-Home::Home(std::shared_ptr<JellyfinClient> client): _jclient(client)
+Home::Home(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client): _nav(nav), _jclient(client)
 {
     set_color(gana::Color(19, 19, 19));
     set_min_size(gana::Vector2f(500, 500));
+    set_anchor(gana::Node::Anchor::FULL_RECT);
     _rresume = _jclient->get_resume();
     _rresume->set_callback(gana::Request::mf_callback(*this, &Home::on_resume_receive));
     _rviews = _jclient->get_views();
@@ -63,6 +65,7 @@ void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
     for (auto &item: _rresume->get_items()) {
         BigMovieVignette *vign = _ctn_resume_movie.make_managed<BigMovieVignette>(_jclient->get_http(), _jclient->get_img_url(item.get_id(), JellyfinClient::BACKDROP), item);
         vign->set_vsizing(gana::Node::Sizing::SHRINK_CENTER);
+        vign->on_click.connect(*this, &Home::on_item_click);
         gana::Logger::info("Name: %s", item.get_name().c_str());
         _ctn_resume_movie.add_child(vign);
     }
@@ -84,4 +87,10 @@ void Home::on_views_receive(gana::Request::RCode code, gana::Request &req)
         LatestView *view = make_managed<LatestView>(*_jclient.get(), item.get_id());
         _ctn_main.add_child(view);
     }
+}
+
+void Home::on_item_click(const Item &item)
+{
+    gana::Logger::info("Item click %s", item.get_name().c_str());
+    _nav.navigate_down<MovieDetail>(_jclient, item);
 }

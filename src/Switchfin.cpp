@@ -4,6 +4,7 @@
 #include "network/JellyfinClient.hpp"
 #include "ui/login/ServerSelect.hpp"
 #include "ui/home/Home.hpp"
+#include "gana/ui/NavigationManager.hpp"
 #include "Switchfin.hpp"
 
 Switchfin::Switchfin(): _app("Switchfin")
@@ -19,7 +20,10 @@ Switchfin::Switchfin(): _app("Switchfin")
         std::shared_ptr<JellyfinClient> client = std::make_shared<JellyfinClient>(ini.GetValue("SERVER", "address", ""));
         client->set_token(ini.GetValue("SERVER", "token"));
         client->set_user_id(ini.GetValue("SERVER", "user_id"));
-        _current = std::make_shared<Home>(client);
+        std::shared_ptr<gana::NavigationManager> manager = std::make_shared<gana::NavigationManager>();
+        manager->navigate_down<Home>(client);
+        manager->set_anchor(gana::Node::Anchor::FULL_RECT);
+        _current = manager;
         fclose(f);
     }
     _app.set_root_node(_current);

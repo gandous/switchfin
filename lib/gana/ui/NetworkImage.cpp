@@ -19,7 +19,7 @@ void NetworkImage::set_image(Http &http, const std::string &url,  const Http::Ur
 
 void NetworkImage::enter_tree()
 {
-    if (_http != nullptr) {
+    if (_http != nullptr && _image_id == AssetManager::FAILED_RCODE) {
         _req = std::make_shared<Request>();
         _http->get(_req, _img_path, {}, _params);
         _req->set_callback(Request::mf_callback(*this, &NetworkImage::on_request_complete));
