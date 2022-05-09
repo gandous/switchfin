@@ -142,6 +142,12 @@ void App::set_focused_node(Node *node)
 
 void App::add_process_node(Node *node)
 {
+    for (std::vector<Node*>::iterator it = _process_node.begin(); it != _process_node.end(); it++) {
+        if (*it == node) {
+            Logger::error("add_process_node Node already exist in process list");
+            return;
+        }
+    }
     _process_node.push_back(node);
 }
 

@@ -352,13 +352,13 @@ Node *Node::get_bottom_node()
 
 void Node::set_process(bool process)
 {
+    _process = process;
     if (_app == nullptr)
         return;
     if (process)
         _app->add_process_node(this);
     else
         _app->remove_process_node(this);
-    _process = process;
 }
 
 void Node::show()
