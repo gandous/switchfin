@@ -12,8 +12,8 @@ BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, con
 
     _img_background.set_min_size(SIZE);
     _img_background.set_image(http, url, {
-        {"fillHeight", std::to_string((int)SIZE.x)},
-        {"fillWidth", std::to_string((int)SIZE.y)},
+        {"fillWidth", std::to_string((int)SIZE.x)},
+        {"fillHeight", std::to_string((int)SIZE.y)},
         {"quality", "90"},
     });
     _img_background.set_stretch_mode(gana::Image::StretchMode::KEEP_ASPECT_COVERED);
