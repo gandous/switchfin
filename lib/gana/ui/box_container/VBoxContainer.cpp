@@ -60,9 +60,10 @@ Vector2f VBoxContainer::get_min_size()
     float h = 0;
 
     for (auto &child: _childs) {
-        h += child->get_min_size().y;
-        if (child->get_min_size().x > w)
-            w = child->get_min_size().x;
+        Vector2f tmp = child->get_min_size();
+        h += tmp.y;
+        if (tmp.x > w)
+            w = tmp.x;
     }
     h += (_childs.size() * _space);
 

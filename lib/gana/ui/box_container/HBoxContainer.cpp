@@ -60,9 +60,10 @@ Vector2f HBoxContainer::get_min_size()
     float h = 0;
 
     for (auto &child: _childs) {
-        w += child->get_min_size().x;
-        if (child->get_min_size().y > h)
-            h = child->get_min_size().y;
+        Vector2f tmp = child->get_min_size();
+        w += tmp.x;
+        if (tmp.y > h)
+            h = tmp.y;
     }
     w += (_childs.size() - 1) * _space;
     set_min_size(Vector2f(w, h));
