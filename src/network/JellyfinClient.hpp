@@ -36,6 +36,7 @@ class JellyfinClient {
         std::shared_ptr<ItemListRequest> get_latest(const std::string &parent_id);
         std::shared_ptr<ItemRequest> get_info(const std::string &id);
         std::string get_img_url(const std::string &id, ImageType type = PRIMARY) const;
+        std::string get_stream_url(const std::string &id) const;
     private:
         void update_default_header();
         std::string _url;

@@ -15,6 +15,7 @@ class MPVPlayer: public Node {
         MPVPlayer();
         ~MPVPlayer();
 
+        void set_source(const std::string &src);
     protected:
         void process();
         void enter_tree();
@@ -28,6 +29,7 @@ class MPVPlayer: public Node {
         mpv_handle *_handle;
         mpv_render_context *_context = nullptr;
         bool _mpv_event;
+        std::string _src;
 };
 
 }

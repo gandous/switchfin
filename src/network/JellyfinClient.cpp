@@ -107,6 +107,13 @@ std::string JellyfinClient::get_img_url(const std::string &img_id, ImageType typ
     return (str.str());
 }
 
+std::string JellyfinClient::get_stream_url(const std::string &id) const
+{
+    std::ostringstream str;
+    str << _url << "/videos/" << id << "/stream?static=true&api_key=" << _token;
+    return (str.str());
+}
+
 void JellyfinClient::update_default_header()
 {
     std::ostringstream emby_auth;

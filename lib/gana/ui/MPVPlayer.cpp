@@ -55,6 +55,11 @@ MPVPlayer::~MPVPlayer()
     }
 }
 
+void MPVPlayer::set_source(const std::string &src)
+{
+    _src = src;
+}
+
 void MPVPlayer::enter_tree()
 {
     set_process(true);
@@ -69,8 +74,7 @@ void MPVPlayer::enter_tree()
         Logger::error("MPV render_context_create failed %s", mpv_error_string(err));
         return;
     }
-    const char *cmd[] = {"loadfile", "http://jellyfin.gama.ovh/videos/044d30e1c62993d8efdac0761a0e1b72/stream?static=true&DeviceId=TW96aWxsYS81LjAgKFgxMTsgRmVkb3JhOyBMaW51eCB4ODZfNjQ7IHJ2Ojk4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTguMHwxNjQ5MzQzMjk5NTE3&api_key=c0bda90ebdab46aab26fa61a6a3131f9", NULL};
-    // const char *cmd[] = {"loadfile", "http://jellyfin.gama.ovh/videos/044d30e1c62993d8efdac0761a0e1b72-yyy/stream?static=true&DeviceId=TW96aWxsYS81LjAgKFgxMTsgRmVkb3JhOyBMaW51eCB4ODZfNjQ7IHJ2Ojk4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvOTguMHwxNjQ5MzQzMjk5NTE3&api_key=c0bda90ebdab46aab26fa61a6a3131f9", NULL};
+    const char *cmd[] = {"loadfile", _src.c_str(), NULL};
     err = mpv_command_async(_handle, 0, cmd);
     if (err < 0) {
         Logger::error("MPV mpv_command_async failed %s", mpv_error_string(err));

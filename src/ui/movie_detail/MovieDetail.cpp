@@ -1,10 +1,11 @@
 
+#include "ui/player/Player.hpp"
 #include "MovieDetail.hpp"
 
 static const gana::Vector2f SIZE = gana::Vector2f(1280, 720);
 static const gana::Vector2f VIGNETTE_SIZE = gana::Vector2f(224, 336);
 
-MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item): _jclient(client), _item(item)
+MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item): _nav(nav), _jclient(client), _item(item)
 {
     set_anchor(gana::Node::Anchor::FULL_RECT);
 
@@ -38,6 +39,16 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _mlbl_overview.set_hsizing(gana::Node::Sizing::FILL);
     _ctn_overview.add_child(&_mlbl_overview);
 
+    _btn_resume.set_text("Resume");
+    _btn_resume.signal_pressed.connect(*this, &MovieDetail::on_resume_btn_pressed);
+    _ctn_play_button.add_child(&_btn_resume);
+
+    _btn_play.set_text("Play");
+    _btn_play.signal_pressed.connect(*this, &MovieDetail::on_play_btn_pressed);
+    _ctn_play_button.add_child(&_btn_play);
+
+    _ctn_overview.add_child(&_ctn_play_button);
+
     _ctn_overview.set_margin(0, 32, 0, 0);
     _ctn_overview.set_expand();
     _ctn_info.add_child(&_ctn_overview);
@@ -67,7 +78,18 @@ void MovieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
         return;
     }
     const Item &item = _rdata->get_item();
-    for (auto &c: _rdata->get_item().get_genres())
+    for (auto &c: item.get_genres())
         gana::Logger::info("%s", c.c_str());
     _mlbl_overview.set_text(item.get_overview());
+}
+
+void MovieDetail::on_play_btn_pressed()
+{
+    gana::Logger::info("Play");
+    _nav.navigate_down<Player>(_jclient, _rdata->get_item());
+}
+
+void MovieDetail::on_resume_btn_pressed()
+{
+    gana::Logger::info("Resume");
 }
