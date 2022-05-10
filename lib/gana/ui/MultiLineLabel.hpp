@@ -2,11 +2,11 @@
 #ifndef MULTILINELABEL_HPP_
 #define MULTILINELABEL_HPP_
 
-#include "Label.hpp"
+#include "BaseLabel.hpp"
 
 namespace gana {
 
-class MultiLineLabel: public Label {
+class MultiLineLabel: public BaseLabel {
     public:
         MultiLineLabel();
         ~MultiLineLabel();
