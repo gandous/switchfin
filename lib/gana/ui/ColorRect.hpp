@@ -14,8 +14,10 @@ class ColorRect: public Node {
 
         void draw(NVGcontext *ctx);
         void set_color(const Color &color);
+        void set_corner_radius(int radius);
     private:
         Color _color;
+        int _corner_radius;
 };
 
 }

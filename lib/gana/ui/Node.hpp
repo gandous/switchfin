@@ -13,6 +13,11 @@ namespace gana {
 
 class App;
 
+#define DRAW_DEBUG_RECT nvgBeginPath(ctx);\
+    nvgRect(ctx, get_draw_positon().x, get_draw_positon().y, get_draw_size().x, get_draw_size().y);\
+    nvgFillColor(ctx, Color(255, 0, 0, 200).nvg_color());\
+    nvgFill(ctx);\
+
 class Node {
     friend class HBoxContainer;
     friend class VBoxContainer;

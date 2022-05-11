@@ -65,7 +65,8 @@ Vector2f HBoxContainer::get_min_size()
         if (tmp.y > h)
             h = tmp.y;
     }
-    w += (_childs.size() - 1) * _space;
+    if (_childs.size() > 0)
+        w += (_childs.size() - 1) * _space;
     set_min_size(Vector2f(w, h));
     return (_min_size);
 }
@@ -73,9 +74,8 @@ Vector2f HBoxContainer::get_min_size()
 void HBoxContainer::add_spacer(float w, bool expand)
 {
     Node *spacer = make_managed<Node>();
-    spacer->set_min_size(Vector2f(0, w));
-    if (expand)
-        spacer->set_expand();
+    spacer->set_min_size(Vector2f(w, 0));
+    spacer->set_expand(expand);
     add_child(spacer);
 }
 

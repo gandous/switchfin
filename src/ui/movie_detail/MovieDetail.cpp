@@ -1,5 +1,7 @@
 
+#include "App.hpp"
 #include "ui/player/Player.hpp"
+#include "Genre.hpp"
 #include "MovieDetail.hpp"
 
 static const gana::Vector2f SIZE = gana::Vector2f(1280, 720);
@@ -36,6 +38,9 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _lbl_title.set_font_size(60);
     _ctn_overview.add_child(&_lbl_title);
 
+    _ctn_genres.set_space(8);
+    _ctn_overview.add_child(&_ctn_genres);
+
     _mlbl_overview.set_hsizing(gana::Node::Sizing::FILL);
     _ctn_overview.add_child(&_mlbl_overview);
 
@@ -51,6 +56,7 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
 
     _ctn_overview.set_margin(0, 32, 0, 0);
     _ctn_overview.set_expand();
+    _ctn_overview.set_space(12);
     _ctn_info.add_child(&_ctn_overview);
 
     _ctn_split_img_background.add_spacer(8, true);
@@ -78,9 +84,12 @@ void MovieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
         return;
     }
     const Item &item = _rdata->get_item();
-    for (auto &c: item.get_genres())
-        gana::Logger::info("%s", c.c_str());
+    for (auto &c: item.get_genres()) {
+        Genre *genre = _ctn_genres.make_managed<Genre>(c);
+        _ctn_genres.add_child(genre);
+    }
     _mlbl_overview.set_text(item.get_overview());
+    _app->set_focused_node(&_btn_play);
 }
 
 void MovieDetail::on_play_btn_pressed()

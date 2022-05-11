@@ -35,6 +35,7 @@ class MovieDetail: public gana::RectContainer {
         gana::GradientColorRect _gdt_background;
         gana::HBoxContainer _ctn_info;
         gana::HBoxContainer _ctn_play_button;
+        gana::HBoxContainer _ctn_genres;
         gana::VBoxContainer _ctn_split_img_background;
         gana::VBoxContainer _ctn_overview;
         gana::Button _btn_resume;

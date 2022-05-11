@@ -48,7 +48,7 @@ Home::~Home()
 void Home::enter_tree()
 {
     set_process(true);
-    _app->set_focused_node(&_lbl_continue_watching);
+    _app->set_focused_node(&_ctn_resume_movie);
 }
 
 void Home::process()
