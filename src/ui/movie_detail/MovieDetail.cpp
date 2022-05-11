@@ -32,6 +32,7 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
         {"quality", "90"},
     });
     _img_vignette.set_corner_radius(8);
+    _img_vignette.set_min_size(VIGNETTE_SIZE);
     _ctn_info.add_child(&_img_vignette);
 
     _lbl_title.set_text(item.get_name());

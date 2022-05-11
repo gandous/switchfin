@@ -15,6 +15,7 @@ void MultiLineLabel::update_layout(const Vector2f &size)
     if (_app != nullptr) {
         float bound[4];
 
+        apply_font(_app->get_nvg_context());
         nvgTextBoxBounds(_app->get_nvg_context(), 0, 0, size.x, _display_text.c_str(), NULL, bound);
         BaseLabel::update_layout(Vector2f(bound[2], bound[3]));
     } else {
