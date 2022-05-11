@@ -96,7 +96,7 @@ void BaseLabel::set_text_valign(TextVAlign align)
     update_align_bitmask();
 }
 
-void BaseLabel::set_max_length(int length)
+void BaseLabel::set_max_length(std::size_t length)
 {
     _max_length = length;
     set_text(_text);

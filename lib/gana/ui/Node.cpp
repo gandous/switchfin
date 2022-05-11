@@ -522,7 +522,7 @@ void Node::apply_anchor(const Vector2f &size)
 void Node::propagate_event(Event &evt)
 {
     process_event(evt);
-    if (_has_focus && (evt.type == sf::Event::JoystickButtonReleased || evt.type == sf::Event::KeyReleased))
+    if (_has_focus && (evt.type == sf::Event::JoystickButtonPressed || evt.type == sf::Event::KeyPressed))
         check_move_focus_event(evt);
     if (!evt.handle) {
         for (auto &child: _childs) {
@@ -549,27 +549,31 @@ void Node::check_move_focus_event(Event &evt)
 {
     int button;
 
-    if (evt.type == sf::Event::JoystickButtonReleased)
+    if (evt.type == sf::Event::JoystickButtonPressed)
         button = evt.joystickButton.button;
     else
         button = evt.key.code;
     switch (button) {
         case SwitchPadButton::LEFT:
+        case SwitchPadButton::STICKL_LEFT:
         case sf::Keyboard::Left:
             if (_left_node)
                 _app->set_focused_node(_left_node);
             break;
         case SwitchPadButton::UP:
+        case SwitchPadButton::STICKL_UP:
         case sf::Keyboard::Up:
             if (_top_node)
                 _app->set_focused_node(_top_node);
             break;
         case SwitchPadButton::RIGHT:
+        case SwitchPadButton::STICKL_RIGHT:
         case sf::Keyboard::Right:
             if (_right_node)
                 _app->set_focused_node(_right_node);
             break;
         case SwitchPadButton::DOWN:
+        case SwitchPadButton::STICKL_DOWN:
         case sf::Keyboard::Down:
             if (_bottom_node)
                 _app->set_focused_node(_bottom_node);
