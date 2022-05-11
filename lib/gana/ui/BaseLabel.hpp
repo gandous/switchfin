@@ -32,12 +32,15 @@ class BaseLabel: public Node {
         void set_font_size(unsigned int size);
         void set_text_align(TextAlign align);
         void set_text_valign(TextVAlign align);
+        // Maximun number of character display by the label (set to 0 to disable)
+        void set_max_length(int length);
     protected:
         virtual void draw_text(NVGcontext *ctx, float x, float y) = 0;
         virtual void get_bounds(float *box) = 0;
         void apply_font(NVGcontext *ctx);
         void update_align_bitmask();
         std::string _text;
+        std::string _display_text;
         Color _color;
         unsigned int _size;
         bool _update_min_rect;
@@ -45,6 +48,7 @@ class BaseLabel: public Node {
         int _text_align;
         TextAlign _align;
         TextVAlign _valign;
+        int _max_length;
 };
 
 }

@@ -50,7 +50,7 @@ void VBoxContainer::update_layout(const Vector2f &size)
             new_size.y += remaining_space;
         child->set_position(Vector2f(x, y));
         child->update_layout(new_size);
-        y += new_size.y + _space;
+        y += child->get_size().y + _space;
     }
 }
 

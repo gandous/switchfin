@@ -3,6 +3,7 @@
 #define SMALLMOVIEVIGNETTE_HPP_
 
 #include <string>
+#include "gana/type/Signal.hpp"
 #include "gana/ui/RectContainer.hpp"
 #include "gana/ui/NetworkImage.hpp"
 #include "gana/ui/Label.hpp"
@@ -13,7 +14,11 @@ class SmallMovieVignette: public gana::RectContainer {
         SmallMovieVignette(gana::Http &http, const std::string &url, const Item &item);
         ~SmallMovieVignette();
 
+        gana::Signal<const Item&> on_click;
+    protected:
+        void process_event(gana::Event &evt);
     private:
+        const Item &_item;
         gana::NetworkImage _img_background;
 };
 

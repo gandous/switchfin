@@ -23,7 +23,6 @@ class Label: public BaseLabel {
     protected:
         virtual void draw_text(NVGcontext *ctx, float x, float y);
         virtual void get_bounds(float *box);
-
 };
 
 }

@@ -36,6 +36,7 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
 
     _lbl_title.set_text(item.get_name());
     _lbl_title.set_font_size(60);
+    _lbl_title.set_max_length(30);
     _ctn_overview.add_child(&_lbl_title);
 
     _ctn_genres.set_space(8);

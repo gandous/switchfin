@@ -32,12 +32,12 @@ void Label::set_preset(Preset preset)
 
 void Label::draw_text(NVGcontext *ctx, float x, float y)
 {
-    nvgText(ctx, x, y, _text.c_str(), NULL);
+    nvgText(ctx, x, y, _display_text.c_str(), NULL);
 }
 
 void Label::get_bounds(float *box)
 {
-    nvgTextBounds(_app->get_nvg_context(), 0, 0, _text.c_str(), NULL, box);
+    nvgTextBounds(_app->get_nvg_context(), 0, 0, _display_text.c_str(), NULL, box);
 }
 
 }

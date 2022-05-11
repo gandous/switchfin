@@ -29,6 +29,7 @@ BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, con
     _lbl_title.set_text(item.get_name());
     _lbl_title.set_anchor(gana::Node::Anchor::BOTTOM_LEFT);
     _lbl_title.set_text_valign(gana::Label::BOTTOM);
+    _lbl_title.set_max_length(35);
     _node.add_child(&_lbl_title);
 
     _node.set_anchor(gana::Node::Anchor::FULL_RECT);

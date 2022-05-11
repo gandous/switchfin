@@ -4,7 +4,7 @@
 static const gana::Vector2f SIZE = gana::Vector2f(150, 225);
 static const int CORNER_RADIUS = 8;
 
-SmallMovieVignette::SmallMovieVignette(gana::Http &http, const std::string &url, const Item &item)
+SmallMovieVignette::SmallMovieVignette(gana::Http &http, const std::string &url, const Item &item): _item(item)
 {
     set_min_size(SIZE);
     set_margin(8);
@@ -22,3 +22,12 @@ SmallMovieVignette::SmallMovieVignette(gana::Http &http, const std::string &url,
 
 SmallMovieVignette::~SmallMovieVignette()
 {}
+
+void SmallMovieVignette::process_event(gana::Event &evt)
+{
+    if (evt.is_touch() && inside_node(gana::Vector2f(evt.touch.x, evt.touch.y))) {
+        on_click.emit(_item);
+    } else if (has_focus() && evt.accept_pressed()) {
+        on_click.emit(_item);
+    }
+}

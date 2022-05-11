@@ -11,7 +11,8 @@ BaseLabel::BaseLabel():
     _update_min_rect(true),
     _text_align(NVG_ALIGN_TOP | NVG_ALIGN_LEFT),
     _align(LEFT),
-    _valign(TOP)
+    _valign(TOP),
+    _max_length(0)
 {}
 
 BaseLabel::~BaseLabel()
@@ -53,7 +54,13 @@ Vector2f BaseLabel::get_min_size()
 
 void BaseLabel::set_text(const std::string &text)
 {
+    _display_text = text;
     _text = text;
+    if (_max_length != 0 && text.size() > _max_length) {
+        _display_text.resize(_max_length);
+        for (std::string::iterator it = _display_text.end() - 3; it != _display_text.end(); it++)
+            *it = '.';
+    }
     _update_min_rect = true;
     if (_app != nullptr)
         _app->update_layout();
@@ -87,6 +94,12 @@ void BaseLabel::set_text_valign(TextVAlign align)
 {
     _valign = align;
     update_align_bitmask();
+}
+
+void BaseLabel::set_max_length(int length)
+{
+    _max_length = length;
+    set_text(_text);
 }
 
 void BaseLabel::apply_font(NVGcontext *ctx)

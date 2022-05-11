@@ -24,7 +24,13 @@ void LatestView::on_latest_receive(gana::Request::RCode code, gana::Request &req
     for (auto &item: _rlatest->get_items()) {
         SmallMovieVignette *vign = _ctn_vignette.make_managed<SmallMovieVignette>(_jclient.get_http(), _jclient.get_img_url(item.get_id(), JellyfinClient::PRIMARY), item);
         vign->set_vsizing(gana::Node::Sizing::SHRINK_CENTER);
+        vign->on_click.connect(*this, &LatestView::on_subitem_click);
         gana::Logger::info("Movie: %s", item.get_name().c_str());
         _ctn_vignette.add_child(vign);
     }
+}
+
+void LatestView::on_subitem_click(const Item &item)
+{
+    on_item_selected.emit(item);
 }

@@ -85,6 +85,7 @@ void Home::on_views_receive(gana::Request::RCode code, gana::Request &req)
         lbl->set_font_size(40);
         _ctn_main.add_child(lbl);
         LatestView *view = make_managed<LatestView>(*_jclient.get(), item.get_id());
+        view->on_item_selected.connect(*this, &Home::on_item_click);
         _ctn_main.add_child(view);
     }
 }
