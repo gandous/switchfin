@@ -71,6 +71,7 @@ void App::run()
     float ratio = _mode.width / _mode.height;
     Vector2f wsize = Vector2f(_mode.width, _mode.height);
 
+    _debug.set("Size", wsize.to_string());
     while (_window.isOpen()) {
         _cl_frame_time.restart();
         Event evt;
