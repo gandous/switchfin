@@ -110,7 +110,20 @@ std::string JellyfinClient::get_img_url(const std::string &img_id, ImageType typ
 std::string JellyfinClient::get_stream_url(const std::string &id) const
 {
     std::ostringstream str;
-    str << _url << "/videos/" << id << "/stream?static=true&api_key=" << _token;
+
+#if SWITCH
+    std::size_t pos = _url.find("https");
+    if (pos != std::string::npos) {
+        std::string tmp = _url;
+        tmp.replace(pos, pos + 5, "http");
+        str << tmp;
+    } else {
+        str << _url;
+    }
+#else
+    str << _url;
+#endif
+    str << "/videos/" << id << "/stream?static=true&api_key=" << _token;
     return (str.str());
 }
 
