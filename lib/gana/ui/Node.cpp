@@ -489,30 +489,30 @@ void Node::apply_anchor(const Vector2f &size)
     Vector2f new_size = bottom_right - top_left;
 
 
-    if (new_size.x < _min_size.x) {
+    if (new_size.x < _real_min_size.x) {
         if (_hdirection == BEGIN) {
-            float diff = _min_size.x - new_size.x;
-            new_size.x = _min_size.x;
+            float diff = _real_min_size.x - new_size.x;
+            new_size.x = _real_min_size.x;
             top_left.x -= diff;
         } else if (_hdirection == END) {
-            new_size.x = _min_size.x;
+            new_size.x = _real_min_size.x;
         } else {
-            float diff = (_min_size.x - new_size.x) / 2;
+            float diff = (_real_min_size.x - new_size.x) / 2;
             top_left.x -= diff;
-            new_size.x = _min_size.x;
+            new_size.x = _real_min_size.x;
         }
     }
-    if (new_size.y < _min_size.y) {
+    if (new_size.y < _real_min_size.y) {
         if (_vdirection == BEGIN) {
-            float diff = _min_size.y - new_size.y;
-            new_size.y = _min_size.y;
+            float diff = _real_min_size.y - new_size.y;
+            new_size.y = _real_min_size.y;
             top_left.y -= diff;
         } else if (_vdirection == END) {
-            new_size.y = _min_size.y;
+            new_size.y = _real_min_size.y;
         } else {
-            float diff = (_min_size.y - new_size.y) / 2;
+            float diff = (_real_min_size.y - new_size.y) / 2;
             top_left.y -= diff;
-            new_size.y = _min_size.y;
+            new_size.y = _real_min_size.y;
         }
     }
     set_position(top_left);

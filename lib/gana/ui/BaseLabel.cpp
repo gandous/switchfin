@@ -45,9 +45,10 @@ Vector2f BaseLabel::get_min_size()
         float box[4] = {0, 0, 0, 0};
         nvgTextAlign(_app->get_nvg_context(), NVG_ALIGN_TOP);
         get_bounds(box);
-        _min_rect.x = std::max(box[2], Node::get_min_size().x);
-        _min_rect.y = std::max(box[3], Node::get_min_size().y);
+        _min_rect.x = std::max(box[2], Node::get_draw_size().x);
+        _min_rect.y = std::max(box[3], Node::get_draw_size().y);
         _update_min_rect = false;
+        set_min_size(_min_rect);
     }
     return (_min_rect);
 }
