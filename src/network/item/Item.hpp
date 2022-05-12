@@ -15,6 +15,7 @@ class Item {
         enum Type {
             MOVIE,
             SERIE,
+            EPISODE,
             UNKNOW,
         };
 
@@ -35,7 +36,10 @@ class Item {
         bool get_is_folder() const;
         const std::string &get_parent_id() const;
         Type get_type() const;
+        const std::string &get_parent_backdrop_item_id() const;
         const UserData &get_user_data() const;
+        const std::string &get_serie_name() const;
+        const std::string &get_season_name() const;
     private:
         static Type parse_type(const std::string &type);
         std::string _name;
@@ -55,7 +59,10 @@ class Item {
         bool _is_folder;
         std::string _parent_id;
         Type _type;
+        std::string _parent_backdrop_item_id;
         UserData _userdata;
+        std::string _serie_name;
+        std::string _season_name;
 };
 
 using Items = std::vector<Item>;

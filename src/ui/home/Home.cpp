@@ -63,7 +63,8 @@ void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
         return;
     }
     for (auto &item: _rresume->get_items()) {
-        BigMovieVignette *vign = _ctn_resume_movie.make_managed<BigMovieVignette>(_jclient->get_http(), _jclient->get_img_url(item.get_id(), JellyfinClient::BACKDROP), item);
+        std::string url = _jclient->get_img_url(item.get_parent_backdrop_item_id() != "" ? item.get_parent_backdrop_item_id() : item.get_id(), JellyfinClient::BACKDROP);
+        BigMovieVignette *vign = _ctn_resume_movie.make_managed<BigMovieVignette>(_jclient->get_http(), url, item);
         vign->set_vsizing(gana::Node::Sizing::SHRINK_CENTER);
         vign->on_click.connect(*this, &Home::on_item_click);
         gana::Logger::info("Name: %s", item.get_name().c_str());

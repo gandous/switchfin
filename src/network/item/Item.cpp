@@ -22,7 +22,10 @@ Item::Item(nlohmann::json &json):
     _is_folder(json["IsFolder"].is_boolean() ? json["IsFolder"].get<bool>() : false),
     _parent_id(get_string(json, "ParentId")),
     _type(parse_type(get_string(json, "Type"))),
-    _userdata(json["UserData"])
+    _parent_backdrop_item_id(get_string(json, "ParentBackdropItemId")),
+    _userdata(json["UserData"]),
+    _serie_name(get_string(json, "SerieName")),
+    _season_name(get_string(json, "SeasonName"))
 {
     if (json["Genres"].is_array())
         _genres = json["Genres"].get<std::vector<std::string>>();
@@ -118,9 +121,24 @@ Item::Type Item::get_type() const
     return (_type);
 }
 
+const std::string &Item::get_parent_backdrop_item_id() const
+{
+    return (_parent_backdrop_item_id);
+}
+
 const UserData &Item::get_user_data() const
 {
     return (_userdata);
+}
+
+const std::string &Item::get_serie_name() const
+{
+    return (_serie_name);
+}
+
+const std::string &Item::get_season_name() const
+{
+    return (_season_name);
 }
 
 Item::Type Item::parse_type(const std::string &type)
@@ -129,6 +147,8 @@ Item::Type Item::parse_type(const std::string &type)
         return (Type::MOVIE);
     else if (type == "Serie")
         return (Type::SERIE);
+    else if (type == "Episode")
+        return (Type::EPISODE);
     else
         return (Type::UNKNOW);
 }
