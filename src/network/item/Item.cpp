@@ -21,7 +21,8 @@ Item::Item(nlohmann::json &json):
     _is_hd(json["IsHD"].is_boolean() ? json["IsHD"].get<bool>() : false),
     _is_folder(json["IsFolder"].is_boolean() ? json["IsFolder"].get<bool>() : false),
     _parent_id(get_string(json, "ParentId")),
-    _type(parse_type(get_string(json, "Type")))
+    _type(parse_type(get_string(json, "Type"))),
+    _userdata(json["UserData"])
 {
     if (json["Genres"].is_array())
         _genres = json["Genres"].get<std::vector<std::string>>();
@@ -115,6 +116,11 @@ const std::string &Item::get_parent_id() const
 Item::Type Item::get_type() const
 {
     return (_type);
+}
+
+const UserData &Item::get_user_data() const
+{
+    return (_userdata);
 }
 
 Item::Type Item::parse_type(const std::string &type)

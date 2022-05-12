@@ -1,9 +1,11 @@
 
+#include "gana/theme/color.hpp"
 #include "BigMovieVignette.hpp"
 
 static const gana::Vector2f SIZE = gana::Vector2f(368, 215);
 static const int CORNER_RADIUS = 16;
 static const int OUTLINE_CORNER_RADIUS = 16;
+static const int PROGRESS_BAR_MARGIN = 16;
 
 BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, const Item &item): _item(item)
 {
@@ -30,7 +32,15 @@ BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, con
     _lbl_title.set_anchor(gana::Node::Anchor::BOTTOM_LEFT);
     _lbl_title.set_text_valign(gana::Label::BOTTOM);
     _lbl_title.set_max_length(35);
+    _lbl_title.set_margin(PROGRESS_BAR_MARGIN, 0, 0, 20);
     _node.add_child(&_lbl_title);
+
+    _pgsb_time_watch.set_anchor(gana::Node::Anchor::BOTTOM_WIDE);
+    _pgsb_time_watch.set_color(gana::theme::PRIMARY);
+    _pgsb_time_watch.set_progress(item.get_user_data().get_played_percentage());
+    _pgsb_time_watch.set_min_size(gana::Vector2f(SIZE.x - PROGRESS_BAR_MARGIN * 2, 10));
+    _pgsb_time_watch.set_margin(PROGRESS_BAR_MARGIN, 0, PROGRESS_BAR_MARGIN, 0);
+    _node.add_child(&_pgsb_time_watch);
 
     _node.set_anchor(gana::Node::Anchor::FULL_RECT);
     add_child(&_node);

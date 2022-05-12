@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include "UserData.hpp"
 #include "json/json.hpp"
 
 class Item {
@@ -34,6 +35,7 @@ class Item {
         bool get_is_folder() const;
         const std::string &get_parent_id() const;
         Type get_type() const;
+        const UserData &get_user_data() const;
     private:
         static Type parse_type(const std::string &type);
         std::string _name;
@@ -53,6 +55,7 @@ class Item {
         bool _is_folder;
         std::string _parent_id;
         Type _type;
+        UserData _userdata;
 };
 
 using Items = std::vector<Item>;

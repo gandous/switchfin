@@ -7,6 +7,7 @@
 #include "gana/ui/Label.hpp"
 #include "gana/ui/GradientColorRect.hpp"
 #include "network/item/Item.hpp"
+#include "ProgressBar.hpp"
 #include "type/Signal.hpp"
 
 class BigMovieVignette: public gana::RectContainer {
@@ -23,6 +24,7 @@ class BigMovieVignette: public gana::RectContainer {
         gana::Label _lbl_title;
         gana::Node _node;
         gana::GradientColorRect _gdt_background;
+        ProgressBar _pgsb_time_watch;
 };
 
 #endif /* BIGMOVIEVIGNETTE_HPP_ */
