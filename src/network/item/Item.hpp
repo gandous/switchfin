@@ -6,6 +6,7 @@
 #include <vector>
 #include "UserData.hpp"
 #include "json/json.hpp"
+#include "item_type.hpp"
 
 class Item {
     public:
@@ -30,8 +31,10 @@ class Item {
         const std::vector<std::string> &get_taglines() const;
         const std::vector<std::string> &get_genres() const;
         float get_community_rating() const;
-        int get_runtime_tick() const;
+        Tick get_runtime_tick() const;
         int get_prod_year() const;
+        int get_index_number() const;
+        int get_parent_index_number() const;
         bool get_is_hd() const;
         bool get_is_folder() const;
         const std::string &get_parent_id() const;
@@ -53,8 +56,10 @@ class Item {
         std::vector<std::string> _taglines;
         std::vector<std::string> _genres;
         float _community_rating;
-        int _runtime_tick;
+        Tick _runtime_tick;
         int _prod_year;
+        int _index_number;
+        int _parent_index_number;
         bool _is_hd;
         bool _is_folder;
         std::string _parent_id;

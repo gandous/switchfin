@@ -1,6 +1,6 @@
 
-#ifndef MOVIE_DETAIL_HPP_
-#define MOVIE_DETAIL_HPP_
+#ifndef SERIE_DETAIL_HPP_
+#define SERIE_DETAIL_HPP_
 
 #include "gana/ui/NavigationManager.hpp"
 #include "gana/ui/NetworkImage.hpp"
@@ -12,12 +12,11 @@
 #include "gana/ui/box_container/HBoxContainer.hpp"
 #include "gana/ui/box_container/VBoxContainer.hpp"
 #include "network/JellyfinClient.hpp"
-#include "PlayButtonContainer.hpp"
 
-class MovieDetail: public gana::RectContainer {
+class SerieDetail: public gana::RectContainer {
     public:
-        MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item);
-        ~MovieDetail();
+        SerieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item);
+        ~SerieDetail();
 
     protected:
         void process() override;
@@ -35,10 +34,12 @@ class MovieDetail: public gana::RectContainer {
         gana::MultiLineLabel _mlbl_overview;
         gana::GradientColorRect _gdt_background;
         gana::HBoxContainer _ctn_info;
+        gana::HBoxContainer _ctn_play_button;
         gana::HBoxContainer _ctn_genres;
         gana::VBoxContainer _ctn_split_img_background;
         gana::VBoxContainer _ctn_overview;
-        PlayButtonContainer _ctn_play_button;
+        gana::Button _btn_resume;
+        gana::Button _btn_play;
 };
 
-#endif /* MOVIE_DETAIL_HPP_ */
+#endif /* SERIE_DETAIL_HPP_ */

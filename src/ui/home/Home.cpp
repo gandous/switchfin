@@ -4,7 +4,10 @@
 #include "LatestView.hpp"
 #include "App.hpp"
 #include "ui/movie_detail/MovieDetail.hpp"
+#include "ui/movie_detail/SerieDetail.hpp"
+#include "ui/movie_detail/EpisodeDetail.hpp"
 #include "Home.hpp"
+
 
 Home::Home(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client): _nav(nav), _jclient(client)
 {
@@ -94,5 +97,17 @@ void Home::on_views_receive(gana::Request::RCode code, gana::Request &req)
 void Home::on_item_click(const Item &item)
 {
     gana::Logger::info("Item click %s", item.get_name().c_str());
-    _nav.navigate_down<MovieDetail>(_jclient, item);
+    switch (item.get_type()) {
+        case Item::MOVIE:
+            _nav.navigate_down<MovieDetail>(_jclient, item);
+            break;
+        case Item::SERIE:
+            _nav.navigate_down<SerieDetail>(_jclient, item);
+            break;
+        case Item::EPISODE:
+            _nav.navigate_down<EpisodeDetail>(_jclient, item);
+            break;
+        default:
+            gana::Logger::error("failed to navigate down. Unknow item type");
+    }
 }

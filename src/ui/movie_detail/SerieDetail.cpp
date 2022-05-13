@@ -2,19 +2,19 @@
 #include "App.hpp"
 #include "ui/player/Player.hpp"
 #include "Genre.hpp"
-#include "MovieDetail.hpp"
+#include "SerieDetail.hpp"
 
 static const gana::Vector2f SIZE = gana::Vector2f(1280, 720);
 static const gana::Vector2f VIGNETTE_SIZE = gana::Vector2f(224, 336);
 
-MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item): _nav(nav), _jclient(client), _item(item)
+SerieDetail::SerieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item): _nav(nav), _jclient(client), _item(item)
 {
     set_anchor(gana::Node::Anchor::FULL_RECT);
 
     _rdata = client->get_info(item.get_id());
-    _rdata->set_callback(_rdata->mf_callback(*this, &MovieDetail::on_data_receive));
+    _rdata->set_callback(_rdata->mf_callback(*this, &SerieDetail::on_data_receive));
 
-    _img_background.set_image(client->get_http(), client->get_img_url(item.get_id(), JellyfinClient::BACKDROP), {
+    _img_background.set_image(client->get_http(), client->get_img_url(item.get_id(), item.get_type() == Item::EPISODE ? JellyfinClient::PRIMARY : JellyfinClient::BACKDROP), {
         {"fillWidth", std::to_string((int)SIZE.x)},
         {"fillHeight", std::to_string((int)SIZE.y)},
         {"quality", "90"},
@@ -26,7 +26,7 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _gdt_background.set_anchor(gana::Node::FULL_RECT);
     add_child(&_gdt_background);
 
-    _img_vignette.set_image(client->get_http(), client->get_img_url(item.get_id(), JellyfinClient::PRIMARY), {
+    _img_vignette.set_image(client->get_http(), client->get_img_url(item.get_id(), item.get_type() == Item::EPISODE ? JellyfinClient::BACKDROP : JellyfinClient::PRIMARY), {
         {"fillWidth", std::to_string((int)VIGNETTE_SIZE.x)},
         {"fillHeight", std::to_string((int)VIGNETTE_SIZE.y)},
         {"quality", "90"},
@@ -46,7 +46,14 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _mlbl_overview.set_hsizing(gana::Node::Sizing::FILL);
     _ctn_overview.add_child(&_mlbl_overview);
 
-    _ctn_play_button.signal_play_pressed.connect(*this, &MovieDetail::on_play_btn_pressed);
+    _btn_resume.set_text("Resume");
+    _btn_resume.signal_pressed.connect(*this, &SerieDetail::on_resume_btn_pressed);
+    _ctn_play_button.add_child(&_btn_resume);
+
+    _btn_play.set_text("Play");
+    _btn_play.signal_pressed.connect(*this, &SerieDetail::on_play_btn_pressed);
+    _ctn_play_button.add_child(&_btn_play);
+
     _ctn_overview.add_child(&_ctn_play_button);
 
     _ctn_overview.set_margin(0, 32, 0, 0);
@@ -65,15 +72,15 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     set_process();
 }
 
-MovieDetail::~MovieDetail()
+SerieDetail::~SerieDetail()
 {}
 
-void MovieDetail::process()
+void SerieDetail::process()
 {
     _jclient->process();
 }
 
-void MovieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
+void SerieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
 {
     if (code != gana::Request::OK) {
         return;
@@ -84,16 +91,16 @@ void MovieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
         _ctn_genres.add_child(genre);
     }
     _mlbl_overview.set_text(item.get_overview());
-    _app->set_focused_node(&_ctn_play_button);
+    _app->set_focused_node(&_btn_play);
 }
 
-void MovieDetail::on_play_btn_pressed()
+void SerieDetail::on_play_btn_pressed()
 {
     gana::Logger::info("Play");
     _nav.navigate_down<Player>(_jclient, _rdata->get_item());
 }
 
-void MovieDetail::on_resume_btn_pressed()
+void SerieDetail::on_resume_btn_pressed()
 {
     gana::Logger::info("Resume");
 }

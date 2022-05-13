@@ -25,6 +25,10 @@ void Label::set_preset(Preset preset)
     switch (preset) {
         case Preset::ERROR:
             set_color(theme::TEXT_COLOR_ERROR);
+            break;
+        case Preset::SECONDARY:
+            set_color(theme::TEXT_COLOR_SECONDARY);
+            break;
         default:
             break;
     }

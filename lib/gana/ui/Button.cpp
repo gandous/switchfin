@@ -2,7 +2,6 @@
 #include "Button.hpp"
 #include "theme/color.hpp"
 #include "type/SwitchPadButton.hpp"
-#include <iostream>
 
 namespace gana {
 

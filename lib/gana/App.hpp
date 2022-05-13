@@ -47,6 +47,7 @@ class App {
         DebugScreen _debug;
         int _frame_time;
         sf::Clock _cl_frame_time;
+        bool _show_debug;
 };
 
 }

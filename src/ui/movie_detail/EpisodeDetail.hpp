@@ -1,6 +1,6 @@
 
-#ifndef MOVIE_DETAIL_HPP_
-#define MOVIE_DETAIL_HPP_
+#ifndef EPISODE_DETAIL_HPP_
+#define EPISODE_DETAIL_HPP_
 
 #include "gana/ui/NavigationManager.hpp"
 #include "gana/ui/NetworkImage.hpp"
@@ -14,10 +14,10 @@
 #include "network/JellyfinClient.hpp"
 #include "PlayButtonContainer.hpp"
 
-class MovieDetail: public gana::RectContainer {
+class EpisodeDetail: public gana::RectContainer {
     public:
-        MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item);
-        ~MovieDetail();
+        EpisodeDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item);
+        ~EpisodeDetail();
 
     protected:
         void process() override;
@@ -30,15 +30,16 @@ class MovieDetail: public gana::RectContainer {
         std::shared_ptr<ItemRequest> _rdata;
         const Item &_item;
         gana::NetworkImage _img_background;
-        gana::NetworkImage _img_vignette;
         gana::Label _lbl_title;
+        gana::Label _lbl_serie_name;
+        gana::Label _lbl_episode_number;
+        gana::Label _lbl_duration;
         gana::MultiLineLabel _mlbl_overview;
         gana::GradientColorRect _gdt_background;
-        gana::HBoxContainer _ctn_info;
-        gana::HBoxContainer _ctn_genres;
+        gana::VBoxContainer _ctn_info;
+        gana::HBoxContainer _ctn_name_duration;
         gana::VBoxContainer _ctn_split_img_background;
-        gana::VBoxContainer _ctn_overview;
         PlayButtonContainer _ctn_play_button;
 };
 
-#endif /* MOVIE_DETAIL_HPP_ */
+#endif /* EPISODE_DETAIL_HPP_ */

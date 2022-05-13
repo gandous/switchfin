@@ -25,7 +25,8 @@ App::App(const std::string& title):
     _root_node(nullptr),
     _focused_node(nullptr),
     _update_layout(true),
-    _frame_time(0)
+    _frame_time(0),
+    _show_debug(false)
 #else
 App::App(const std::string& title):
     _mode(1280, 720),
@@ -34,7 +35,8 @@ App::App(const std::string& title):
     _root_node(nullptr),
     _focused_node(nullptr),
     _update_layout(true),
-    _frame_time(0)
+    _frame_time(0),
+    _show_debug(false)
 #endif
 {
 #if SWITCH
@@ -82,6 +84,9 @@ void App::run()
             } else if (evt.type == sf::Event::EventType::JoystickButtonPressed && evt.joystickButton.button == SwitchPadButton::PLUS) {
                 _window.close();
                 return;
+            } else if ((evt.type == sf::Event::EventType::JoystickButtonPressed && evt.joystickButton.button == SwitchPadButton::MINUS)
+                || (evt.type == sf::Event::EventType::KeyReleased && evt.key.code == sf::Keyboard::F1)) {
+                _show_debug = !_show_debug;
             } else {
                 _root_node->propagate_event(evt);
             }
@@ -96,9 +101,11 @@ void App::run()
         nvgBeginFrame(_vg, _mode.width, _mode.height, ratio);
         if (_root_node != nullptr)
             _root_node->propagate_draw(_vg);
-        _debug.set("FPS", std::to_string(_fps_clock.get_fps()));
-        _debug.set("frame time", std::to_string(_frame_time));
-        _debug.draw(_vg);
+        if (_show_debug) {
+            _debug.set("FPS", std::to_string(_fps_clock.get_fps()));
+            _debug.set("frame time", std::to_string(_frame_time));
+            _debug.draw(_vg);
+        }
         nvgEndFrame(_vg);
         _frame_time = _cl_frame_time.getElapsedTime().asMilliseconds();
         _window.display();

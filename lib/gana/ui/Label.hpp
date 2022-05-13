@@ -16,6 +16,7 @@ class Label: public BaseLabel {
 
         enum Preset {
             ERROR,
+            SECONDARY,
         };
 
         void set_text_valign(TextVAlign align);

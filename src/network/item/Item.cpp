@@ -16,15 +16,17 @@ Item::Item(nlohmann::json &json):
     _official_rating(get_string(json, "OfficialRating")),
     _overview(get_string(json, "Overview")),
     _community_rating(json["CommunityRating"].is_number_float() ? json["CommunityRating"].get<float>() : 0),
-    _runtime_tick(json["ProductionYear"].is_number_integer() ? json["RunTimeTicks"].get<int>() : 0),
+    _runtime_tick(json["RunTimeTicks"].is_number() ? json["RunTimeTicks"].get<Tick>() : 0),
     _prod_year(json["ProductionYear"].is_number_integer() ? json["ProductionYear"].get<int>() : 0),
+    _index_number(json["IndexNumber"].is_number_integer() ? json["IndexNumber"].get<int>() : 0),
+    _parent_index_number(json["ParentIndexNumber"].is_number_integer() ? json["ParentIndexNumber"].get<int>() : 0),
     _is_hd(json["IsHD"].is_boolean() ? json["IsHD"].get<bool>() : false),
     _is_folder(json["IsFolder"].is_boolean() ? json["IsFolder"].get<bool>() : false),
     _parent_id(get_string(json, "ParentId")),
     _type(parse_type(get_string(json, "Type"))),
     _parent_backdrop_item_id(get_string(json, "ParentBackdropItemId")),
     _userdata(json["UserData"]),
-    _serie_name(get_string(json, "SerieName")),
+    _serie_name(get_string(json, "SeriesName")),
     _season_name(get_string(json, "SeasonName"))
 {
     if (json["Genres"].is_array())
@@ -91,7 +93,7 @@ float Item::get_community_rating() const
     return (_community_rating);
 }
 
-int Item::get_runtime_tick() const
+Tick Item::get_runtime_tick() const
 {
     return (_runtime_tick);
 }
@@ -99,6 +101,16 @@ int Item::get_runtime_tick() const
 int Item::get_prod_year() const
 {
     return (_prod_year);
+}
+
+int Item::get_index_number() const
+{
+    return (_index_number);
+}
+
+int Item::get_parent_index_number() const
+{
+    return (_parent_index_number);
 }
 
 bool Item::get_is_hd() const
@@ -145,7 +157,7 @@ Item::Type Item::parse_type(const std::string &type)
 {
     if (type == "Movie")
         return (Type::MOVIE);
-    else if (type == "Serie")
+    else if (type == "Series")
         return (Type::SERIE);
     else if (type == "Episode")
         return (Type::EPISODE);
