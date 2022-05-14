@@ -16,6 +16,7 @@ class VBoxContainer: public Node {
         Vector2f get_min_size() override;
         void add_spacer(float h = 16, bool expand = false);
         void set_space(float space);
+        bool is_focusable() const override;
         virtual void set_left_node(Node *node) override;
         virtual void set_right_node(Node *node) override;
     protected:

@@ -84,6 +84,11 @@ void HBoxContainer::set_space(float space)
     _space = space;
 }
 
+bool HBoxContainer::is_focusable() const
+{
+    return (!_childs.empty());
+}
+
 void HBoxContainer::on_focus()
 {
     if (_childs.size() > 0)

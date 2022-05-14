@@ -84,6 +84,10 @@ void VBoxContainer::set_space(float space)
     _space = space;
 }
 
+bool VBoxContainer::is_focusable() const
+{
+    return (!_childs.empty());
+}
 
 void VBoxContainer::on_focus()
 {
