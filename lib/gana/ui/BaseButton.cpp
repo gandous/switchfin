@@ -7,6 +7,7 @@ namespace gana {
 BaseButton::BaseButton()
 {
     set_corner_radius(7);
+    set_focusable(true);
 }
 
 BaseButton::~BaseButton()

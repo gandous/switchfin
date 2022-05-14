@@ -101,6 +101,10 @@ class Node {
         bool inside_node(const Vector2f &pos) const;
         bool has_focus() const;
         void set_focus(bool focus = true);
+        bool is_focusable() const;
+        // If you want the left/top/right/bottom node to be set automaticaly you need to set
+        // focusable to true before adding the node to his parent
+        void set_focusable(bool focus);
         virtual void set_left_node(Node *node);
         virtual void set_top_node(Node *node);
         virtual void set_right_node(Node *node);
@@ -169,6 +173,7 @@ class Node {
         bool _process;
         Vector2f _draw_position;
         Vector2f _draw_size;
+        bool _focusable;
 };
 
 #include "Node.inl"

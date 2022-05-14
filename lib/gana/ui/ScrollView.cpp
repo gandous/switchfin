@@ -10,6 +10,7 @@ namespace gana {
 
 ScrollView::ScrollView(): _direction(ScrollDirection::XY)
 {
+    set_focusable(true);
     set_draw_propagation(false);
 }
 

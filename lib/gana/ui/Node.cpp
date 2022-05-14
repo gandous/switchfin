@@ -26,7 +26,8 @@ Node::Node():
     _bottom_node(nullptr),
     _visibility(true),
     _draw_propagation(true),
-    _process(false)
+    _process(false),
+    _focusable(false)
 {}
 
 Node::~Node()
@@ -311,6 +312,16 @@ void Node::set_focus(bool focus)
     _has_focus = focus;
 }
 
+bool Node::is_focusable() const
+{
+    return (_focusable);
+}
+
+void Node::set_focusable(bool focus)
+{
+    _focusable = focus;
+}
+
 void Node::set_left_node(Node *node)
 {
     _left_node = node;
@@ -556,28 +567,40 @@ void Node::check_move_focus_event(Event &evt)
     switch (button) {
         case SwitchPadButton::LEFT:
         case SwitchPadButton::STICKL_LEFT:
-        case sf::Keyboard::Left:
-            if (_left_node)
-                _app->set_focused_node(_left_node);
-            break;
+        case sf::Keyboard::Left: {
+            gana::Node *next_focus = _left_node;
+            while (next_focus != nullptr && !next_focus->is_focusable())
+                next_focus = next_focus->get_left_node();
+            if (next_focus)
+                _app->set_focused_node(next_focus);
+            } break;
         case SwitchPadButton::UP:
         case SwitchPadButton::STICKL_UP:
-        case sf::Keyboard::Up:
-            if (_top_node)
-                _app->set_focused_node(_top_node);
-            break;
+        case sf::Keyboard::Up: {
+            gana::Node *next_focus = _top_node;
+            while (next_focus != nullptr && !next_focus->is_focusable())
+                next_focus = next_focus->get_top_node();
+            if (next_focus)
+                _app->set_focused_node(next_focus);
+            } break;
         case SwitchPadButton::RIGHT:
         case SwitchPadButton::STICKL_RIGHT:
-        case sf::Keyboard::Right:
-            if (_right_node)
-                _app->set_focused_node(_right_node);
-            break;
+        case sf::Keyboard::Right: {
+            gana::Node *next_focus = _right_node;
+            while (next_focus != nullptr && !next_focus->is_focusable())
+                next_focus = next_focus->get_right_node();
+            if (next_focus)
+                _app->set_focused_node(next_focus);
+            } break;
         case SwitchPadButton::DOWN:
         case SwitchPadButton::STICKL_DOWN:
-        case sf::Keyboard::Down:
-            if (_bottom_node)
-                _app->set_focused_node(_bottom_node);
-            break;
+        case sf::Keyboard::Down: {
+            gana::Node *next_focus = _bottom_node;
+            while (next_focus != nullptr && !next_focus->is_focusable())
+                next_focus = next_focus->get_bottom_node();
+            if (next_focus)
+                _app->set_focused_node(next_focus);
+            } break;
         default:
             return;
     }

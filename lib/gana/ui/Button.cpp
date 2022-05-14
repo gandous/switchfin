@@ -8,6 +8,7 @@ namespace gana {
 Button::Button(): _color(128, 128, 128)
 {
     set_text_align(Label::TextAlign::CENTER);
+    set_focusable(true);
 }
 
 Button::~Button()

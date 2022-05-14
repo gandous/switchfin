@@ -7,6 +7,7 @@ static const int CORNER_RADIUS = 8;
 SmallMovieVignette::SmallMovieVignette(gana::Http &http, const std::string &url, const Item &item): _item(item)
 {
     set_min_size(SIZE);
+    set_focusable(true);
     set_margin(8);
 
     _img_background.set_min_size(SIZE);

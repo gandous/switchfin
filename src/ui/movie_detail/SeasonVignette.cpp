@@ -20,6 +20,7 @@ SeasonVignette::SeasonVignette(JellyfinClient &client, const Item &item)
 
     _ctn.set_space(4);
     add_child(&_ctn);
+    set_focusable(true);
     set_margin(15);
 }
 

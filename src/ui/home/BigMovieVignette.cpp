@@ -10,6 +10,7 @@ static const int PROGRESS_BAR_MARGIN = 16;
 BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, const Item &item): _item(item)
 {
     set_min_size(SIZE);
+    set_focusable(true);
     set_margin(16);
 
     _img_background.set_min_size(SIZE);

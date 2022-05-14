@@ -11,6 +11,7 @@ namespace gana {
 LineEdit::LineEdit(): _color(theme::GREY)
 {
     set_min_size(Vector2f(50, 20));
+    set_focusable(true);
 }
 
 LineEdit::~LineEdit()
