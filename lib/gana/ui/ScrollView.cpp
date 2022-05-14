@@ -122,7 +122,6 @@ void ScrollView::on_node_focus(Node *node)
     if (Node::has_child(node)) {
         float x = X_SCROLL ? node->get_position().x : 0;
         float y = Y_SCROLL ? node->get_position().y : 0;
-        gana::Logger::info("focus %.3f %.3f", x, y);
         _childs.front()->set_position(Vector2f(-x, -y));
     }
 }
