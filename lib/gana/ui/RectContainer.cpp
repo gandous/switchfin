@@ -29,8 +29,8 @@ Vector2f RectContainer::get_min_size()
 
     for (auto &child: _childs) {
         Vector2f tmp = child->get_min_size();
-        x = std::max(x, tmp.x + _content_margin.x + _content_margin.w);
-        y = std::max(y, tmp.y + _content_margin.y + _content_margin.h);
+        x = std::max(x, tmp.x + _content_margin.x + _content_margin.w + _margin.x + _margin.w);
+        y = std::max(y, tmp.y + _content_margin.y + _content_margin.h + _margin.y + _margin.h);
     }
     set_min_size(Vector2f(x - _margin.x - _margin.w, y - _margin.y - _margin.h));
     return (_real_min_size);

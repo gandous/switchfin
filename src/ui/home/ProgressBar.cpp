@@ -11,7 +11,7 @@ void ProgressBar::draw(NVGcontext *ctx)
 {
     nvgBeginPath(ctx);
     nvgRoundedRect(ctx, get_draw_positon().x, get_draw_positon().y, get_draw_size().x, get_draw_size().y, 5);
-    nvgFillColor(ctx, gana::Color(32, 32, 32, 225).nvg_color());
+    nvgFillColor(ctx, gana::Color(40, 40, 40, 225).nvg_color());
     nvgFill(ctx);
     nvgBeginPath(ctx);
     nvgRoundedRect(ctx, get_draw_positon().x, get_draw_positon().y, get_draw_size().x * _percentage, get_draw_size().y, 5);

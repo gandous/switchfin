@@ -100,6 +100,16 @@ std::shared_ptr<ItemRequest> JellyfinClient::get_info(const std::string &id)
     return (req);
 }
 
+std::shared_ptr<ItemsRequest> JellyfinClient::get_seasons(const std::string &show_id)
+{
+    std::ostringstream url;
+
+    url << _url << "/Shows/" << show_id << "/Seasons";
+    std::shared_ptr<ItemsRequest> req = std::make_shared<ItemsRequest>();
+    _http.get(req, url.str(), _default_header);
+    return (req);
+}
+
 std::string JellyfinClient::get_img_url(const std::string &img_id, ImageType type) const
 {
     std::ostringstream str;
