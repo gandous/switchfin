@@ -34,7 +34,8 @@ class ScrollView: public gana::Node {
         virtual void set_right_node(Node *node) override;
         virtual void set_bottom_node(Node *node) override;
     protected:
-        void enter_tree();
+        void enter_tree() override;
+        void exit_tree() override;
         void on_focus();
     private:
         void on_node_focus(Node *node);

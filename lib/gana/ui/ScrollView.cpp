@@ -72,6 +72,11 @@ void ScrollView::enter_tree()
     _app->signal_node_focus.connect(*this, &ScrollView::on_node_focus);
 }
 
+void ScrollView::exit_tree()
+{
+    _app->signal_node_focus.disconnect(*this);
+}
+
 void ScrollView::on_focus()
 {
     if (_childs.size() > 0)
