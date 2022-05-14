@@ -23,7 +23,8 @@ void NavigationManager::navigate_up()
         Logger::error("NavigationManager Failed to navigate up, no parent");
         return;
     }
-    remove_child(_stack.top().get());
+    std::shared_ptr<gana::Node> _old = _stack.top();
+    remove_child(_old.get());
     _stack.pop();
     add_child(_stack.top().get());
 }

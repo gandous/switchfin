@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <functional>
+#include <utility>
 
 namespace gana {
 
@@ -16,8 +17,10 @@ class Signal {
         template<typename T>
         void connect(T &obj, void(T::*func)(ARG...));
         void emit(ARG ...arg);
+        template<typename T>
+        void disconnect(T &obj);
     private:
-        std::vector<std::function<void(ARG...)>> _functions;
+        std::vector<std::pair<void*, std::function<void(ARG...)>>> _functions;
 };
 
 #include "Signal.inl"
