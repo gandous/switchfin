@@ -16,6 +16,8 @@ Home::Home(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client)
     set_anchor(gana::Node::Anchor::FULL_RECT);
     _rresume = _jclient->get_resume();
     _rresume->set_callback(gana::Request::mf_callback(*this, &Home::on_resume_receive));
+    _rnext_up = _jclient->get_next_up();
+    _rnext_up->set_callback(gana::Request::mf_callback(*this, &Home::on_next_up_receive));
     _rviews = _jclient->get_views();
     _rviews->set_callback(gana::Request::mf_callback(*this, &Home::on_views_receive));
 
@@ -40,6 +42,14 @@ Home::Home(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client)
     _lbl_next_up.set_text("Next up");
     _lbl_next_up.set_font_size(40);
     _ctn_main.add_child(&_lbl_next_up);
+
+    gana::ScrollView *scroll_next_up = _ctn_main.make_managed<gana::ScrollView>();
+    scroll_next_up->set_hsizing(gana::Node::Sizing::FILL);
+    scroll_next_up->set_scroll_direction(gana::ScrollView::X);
+    _ctn_main.add_child(scroll_next_up);
+
+    _ctn_next_up.set_expand();
+    scroll_next_up->add_child(&_ctn_next_up);
 
     _ctn_resume_movie.set_expand();
     scroll->add_child(&_ctn_resume_movie);
@@ -70,10 +80,24 @@ void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
         BigMovieVignette *vign = _ctn_resume_movie.make_managed<BigMovieVignette>(_jclient->get_http(), url, item);
         vign->set_vsizing(gana::Node::Sizing::SHRINK_CENTER);
         vign->on_click.connect(*this, &Home::on_item_click);
-        gana::Logger::info("Name: %s", item.get_name().c_str());
         _ctn_resume_movie.add_child(vign);
     }
     _app->set_focused_node(&_ctn_resume_movie);
+}
+
+void Home::on_next_up_receive(gana::Request::RCode code, gana::Request &req)
+{
+    if (code != gana::Request::OK) {
+        gana::Logger::error("%s", _rnext_up->get_error_str().c_str());
+        return;
+    }
+    for (auto &item: _rnext_up->get_items()) {
+        std::string url = _jclient->get_img_url(item.get_parent_backdrop_item_id() != "" ? item.get_parent_backdrop_item_id() : item.get_id(), JellyfinClient::BACKDROP);
+        BigMovieVignette *vign = _ctn_next_up.make_managed<BigMovieVignette>(_jclient->get_http(), url, item);
+        vign->set_vsizing(gana::Node::Sizing::SHRINK_CENTER);
+        vign->on_click.connect(*this, &Home::on_item_click);
+        _ctn_next_up.add_child(vign);
+    }
 }
 
 void Home::on_views_receive(gana::Request::RCode code, gana::Request &req)

@@ -110,6 +110,21 @@ std::shared_ptr<ItemsRequest> JellyfinClient::get_seasons(const std::string &sho
     return (req);
 }
 
+std::shared_ptr<ItemsRequest> JellyfinClient::get_next_up()
+{
+    std::ostringstream url;
+    gana::Http::UrlParams params = {
+        {"UserId", _user_id},
+        {"Limit", "16"},
+        {"DisableFirstEpisode", "true"}
+    };
+
+    url << _url << "/Shows/NextUp";
+    std::shared_ptr<ItemsRequest> req = std::make_shared<ItemsRequest>();
+    _http.get(req, url.str(), _default_header, params);
+    return (req);
+}
+
 std::string JellyfinClient::get_img_url(const std::string &img_id, ImageType type) const
 {
     std::ostringstream str;

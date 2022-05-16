@@ -21,14 +21,17 @@ class Home: public gana::ColorRect {
         void process() override;
     private:
         void on_resume_receive(gana::Request::RCode code, gana::Request &req);
+        void on_next_up_receive(gana::Request::RCode code, gana::Request &req);
         void on_views_receive(gana::Request::RCode code, gana::Request &req);
         void on_item_click(const Item &item);
         gana::NavigationManager &_nav;
         std::shared_ptr<JellyfinClient> _jclient;
         std::shared_ptr<ItemsRequest> _rresume;
+        std::shared_ptr<ItemsRequest> _rnext_up;
         std::shared_ptr<ItemsRequest> _rviews;
         gana::VBoxContainer _ctn_main;
         gana::HBoxContainer _ctn_resume_movie;
+        gana::HBoxContainer _ctn_next_up;
         gana::Label _lbl_continue_watching;
         gana::Label _lbl_next_up;
 };
