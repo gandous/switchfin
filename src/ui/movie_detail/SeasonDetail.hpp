@@ -21,6 +21,8 @@ class SeasonDetail: public gana::RectContainer {
     protected:
         void process() override;
     private:
+        void on_episodes_receive(gana::Request::RCode code, gana::Request &req);
+        std::shared_ptr<ItemsRequest> _repisodes;
         gana::NavigationManager &_nav;
         std::shared_ptr<JellyfinClient> _jclient;
         const Item &_item;

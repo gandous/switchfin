@@ -27,7 +27,8 @@ Item::Item(nlohmann::json &json):
     _parent_backdrop_item_id(get_string(json, "ParentBackdropItemId")),
     _userdata(json["UserData"]),
     _serie_name(get_string(json, "SeriesName")),
-    _season_name(get_string(json, "SeasonName"))
+    _season_name(get_string(json, "SeasonName")),
+    _serie_id(get_string(json, "SeriesId"))
 {
     if (json["Genres"].is_array())
         _genres = json["Genres"].get<std::vector<std::string>>();
@@ -151,6 +152,11 @@ const std::string &Item::get_serie_name() const
 const std::string &Item::get_season_name() const
 {
     return (_season_name);
+}
+
+const std::string &Item::get_serie_id() const
+{
+    return (_serie_id);
 }
 
 Item::Type Item::parse_type(const std::string &type)

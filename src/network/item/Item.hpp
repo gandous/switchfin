@@ -43,6 +43,7 @@ class Item {
         const UserData &get_user_data() const;
         const std::string &get_serie_name() const;
         const std::string &get_season_name() const;
+        const std::string &get_serie_id() const;
     private:
         static Type parse_type(const std::string &type);
         std::string _name;
@@ -68,6 +69,7 @@ class Item {
         UserData _userdata;
         std::string _serie_name;
         std::string _season_name;
+        std::string _serie_id;
 };
 
 using Items = std::vector<Item>;

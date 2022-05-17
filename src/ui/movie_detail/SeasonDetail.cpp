@@ -1,12 +1,17 @@
 
+#include "EpisodeVignette.hpp"
+#include "App.hpp"
 #include "SeasonDetail.hpp"
 
 static const gana::Vector2f SIZE = gana::Vector2f(1280, 720);
-
+static const int CTN_MARGIN = 16;
 
 SeasonDetail::SeasonDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item): _nav(nav), _jclient(client), _item(item)
 {
     set_anchor(gana::Node::Anchor::FULL_RECT);
+
+    _repisodes = client->get_episodes(item.get_serie_id(), item.get_id());
+    _repisodes->set_callback(gana::Request::mf_callback(*this, &SeasonDetail::on_episodes_receive));
 
     _img_background.set_image(client->get_http(), client->get_img_url(item.get_parent_backdrop_item_id(), JellyfinClient::BACKDROP), {
         {"fillWidth", std::to_string((int)SIZE.x)},
@@ -30,7 +35,9 @@ SeasonDetail::SeasonDetail(gana::NavigationManager &nav, std::shared_ptr<Jellyfi
     _lbl_season_nb.set_max_length(30);
     _ctn_episode.add_child(&_lbl_season_nb);
 
-    _ctn_episode.set_margin(16);
+    _ctn_episode.set_margin(CTN_MARGIN);
+    _ctn_episode.set_space(8);
+    _ctn_episode.set_min_size(gana::Vector2f(SIZE.x - CTN_MARGIN * 2, SIZE.y));
     _scr_episode.add_child(&_ctn_episode);
 
     _scr_episode.set_anchor(gana::Node::Anchor::FULL_RECT);
@@ -46,4 +53,17 @@ SeasonDetail::~SeasonDetail()
 void SeasonDetail::process()
 {
     _jclient->process();
+}
+
+void SeasonDetail::on_episodes_receive(gana::Request::RCode code, gana::Request &req)
+{
+    if (code != gana::Request::OK) {
+        return;
+    }
+    for (auto &c: _repisodes->get_items()) {
+        EpisodeVignette *vign = _ctn_episode.make_managed<EpisodeVignette>(*_jclient.get(), c);
+        vign->set_hsizing(gana::Node::Sizing::FILL);
+        _ctn_episode.add_child(vign);
+    }
+    _app->set_focused_node(&_ctn_episode);
 }
