@@ -3,6 +3,7 @@
 #include "ui/player/Player.hpp"
 #include "Genre.hpp"
 #include "SeasonVignette.hpp"
+#include "SeasonDetail.hpp"
 #include "SerieDetail.hpp"
 
 static const gana::Vector2f SIZE = gana::Vector2f(1280, 720);
@@ -103,6 +104,7 @@ void SerieDetail::on_seasons_receive(gana::Request::RCode code, gana::Request &r
     }
     for (auto &item: _seasonsdata->get_items()) {
         SeasonVignette *vign = _ctn_seasons.make_managed<SeasonVignette>(*_jclient.get(), item);
+        vign->signal_pressed.connect(*this, &SerieDetail::on_season_click);
         _ctn_seasons.add_child(vign);
     }
 }
@@ -116,4 +118,9 @@ void SerieDetail::on_play_btn_pressed()
 void SerieDetail::on_resume_btn_pressed()
 {
     gana::Logger::info("Resume");
+}
+
+void SerieDetail::on_season_click(const Item &item)
+{
+    _nav.navigate_down<SeasonDetail>(_jclient, item);
 }

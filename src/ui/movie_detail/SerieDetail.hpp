@@ -27,6 +27,7 @@ class SerieDetail: public gana::RectContainer {
         void on_seasons_receive(gana::Request::RCode code, gana::Request &req);
         void on_play_btn_pressed();
         void on_resume_btn_pressed();
+        void on_season_click(const Item &item);
         gana::NavigationManager &_nav;
         std::shared_ptr<JellyfinClient> _jclient;
         std::shared_ptr<ItemRequest> _rdata;

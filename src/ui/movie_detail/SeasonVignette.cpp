@@ -4,7 +4,7 @@
 static const gana::Vector2f SIZE = gana::Vector2f(162, 243);
 static const int OUTLINE_CORNER_RADIUS = 7;
 
-SeasonVignette::SeasonVignette(JellyfinClient &client, const Item &item)
+SeasonVignette::SeasonVignette(JellyfinClient &client, const Item &item): _item(item)
 {
     _img.set_image(client.get_http(), client.get_img_url(item.get_id()), {
         {"fillWidth", std::to_string((int)SIZE.x)},
@@ -31,3 +31,13 @@ int SeasonVignette::get_outline_corner_radius() const
 {
     return (OUTLINE_CORNER_RADIUS);
 }
+
+void SeasonVignette::process_event(gana::Event &evt)
+{
+    if (evt.is_touch() && inside_node(gana::Vector2f(evt.touch.x, evt.touch.y))) {
+        signal_pressed.emit(_item);
+    } else if (has_focus() && evt.accept_pressed()) {
+        signal_pressed.emit(_item);
+    }
+}
+
