@@ -39,6 +39,8 @@ class ScrollView: public gana::Node {
         void on_focus();
     private:
         void on_node_focus(Node *node);
+        bool is_top_selectable(Node *node);
+        bool is_bottom_selectable(Node *node);
         ScrollDirection _direction;
 };
 

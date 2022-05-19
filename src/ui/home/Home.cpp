@@ -1,5 +1,4 @@
 
-#include "ui/ScrollView.hpp"
 #include "ui/ColorRect.hpp"
 #include "LatestView.hpp"
 #include "App.hpp"
@@ -34,10 +33,9 @@ Home::Home(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client)
     _lbl_continue_watching.set_font_size(40);
     _ctn_main.add_child(&_lbl_continue_watching);
 
-    gana::ScrollView *scroll = _ctn_main.make_managed<gana::ScrollView>();
-    scroll->set_hsizing(gana::Node::Sizing::FILL);
-    scroll->set_scroll_direction(gana::ScrollView::X);
-    _ctn_main.add_child(scroll);
+    _scr_resume.set_hsizing(gana::Node::Sizing::FILL);
+    _scr_resume.set_scroll_direction(gana::ScrollView::X);
+    _ctn_main.add_child(&_scr_resume);
 
     _lbl_next_up.set_text("Next up");
     _lbl_next_up.set_font_size(40);
@@ -52,7 +50,7 @@ Home::Home(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client)
     scroll_next_up->add_child(&_ctn_next_up);
 
     _ctn_resume_movie.set_expand();
-    scroll->add_child(&_ctn_resume_movie);
+    _scr_resume.add_child(&_ctn_resume_movie);
 }
 
 Home::~Home()
@@ -82,7 +80,7 @@ void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
         vign->on_click.connect(*this, &Home::on_item_click);
         _ctn_resume_movie.add_child(vign);
     }
-    _app->set_focused_node(&_ctn_resume_movie);
+    _app->set_focused_node(&_scr_resume);
 }
 
 void Home::on_next_up_receive(gana::Request::RCode code, gana::Request &req)

@@ -4,6 +4,7 @@
 
 #include <memory>
 #include "ui/box_container/HBoxContainer.hpp"
+#include "ui/ScrollView.hpp"
 #include "ui/box_container/VBoxContainer.hpp"
 #include "network/JellyfinClient.hpp"
 #include "ui/Label.hpp"
@@ -34,6 +35,7 @@ class Home: public gana::ColorRect {
         gana::HBoxContainer _ctn_next_up;
         gana::Label _lbl_continue_watching;
         gana::Label _lbl_next_up;
+        gana::ScrollView _scr_resume;
 };
 
 #endif /* HOME_HPP_ */

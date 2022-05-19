@@ -80,8 +80,10 @@ void ScrollView::exit_tree()
 
 void ScrollView::on_focus()
 {
-    if (_childs.size() > 0)
+    if (_childs.size() > 0) {
         _app->set_focused_node(_childs[0]);
+        _childs[0]->set_position(Vector2f(0, 0));
+    }
 }
 
 void ScrollView::set_scroll_direction(ScrollDirection direction)
@@ -120,10 +122,49 @@ void ScrollView::set_bottom_node(Node *node)
 void ScrollView::on_node_focus(Node *node)
 {
     if (Node::has_child(node)) {
-        float x = X_SCROLL ? node->get_position().x : 0;
-        float y = Y_SCROLL ? node->get_position().y : 0;
-        _childs.front()->set_position(Vector2f(-x, -y));
+        Vector2f new_pos = _childs.front()->get_position();
+
+        if (X_SCROLL) {
+            float node_right = node->get_draw_positon().x + node->get_draw_size().x;
+            float right = get_draw_positon().x + get_draw_size().x;
+
+            if (get_draw_positon().x > node->get_draw_positon().x) {
+                new_pos.x = -node->get_position().x;
+            } else if (right < node_right) {
+                new_pos.x = -(node_right - right - _childs.front()->get_position().x);
+            }
+        }
+        if (Y_SCROLL) {
+            float node_bottom = node->get_draw_positon().y + node->get_draw_size().y;
+            float bottom = get_draw_positon().y + get_draw_size().y;
+
+            if (get_draw_positon().y > node->get_draw_positon().y) {
+                if (is_top_selectable(node))
+                    new_pos.y = 0;
+                else
+                    new_pos.y = -node->get_position().y;
+            } else if (bottom < node_bottom) {
+                new_pos.y = -(node_bottom - bottom - _childs.front()->get_position().y);
+            }
+        }
+        _childs.front()->set_position(new_pos);
     }
+}
+
+bool ScrollView::is_top_selectable(Node *node)
+{
+    node = node->get_top_node();
+    while (node != nullptr && !node->is_focusable())
+        node = node->get_top_node();
+    return (node == nullptr);
+}
+
+bool ScrollView::is_bottom_selectable(Node *node)
+{
+    node = node->get_bottom_node();
+    while (node != nullptr && !node->is_focusable())
+        node = node->get_bottom_node();
+    return (node != nullptr);
 }
 
 }
