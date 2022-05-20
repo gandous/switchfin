@@ -29,6 +29,7 @@ class App {
         AssetManager &get_asset_manager();
         void set_focused_node(std::shared_ptr<Node> node);
         void set_focused_node(Node *node);
+        Node *get_focused_node();
         void add_process_node(Node *node);
         void remove_process_node(Node *node);
         void update_layout();

@@ -150,6 +150,11 @@ void App::set_focused_node(Node *node)
     node->on_focus();
 }
 
+Node *App::get_focused_node()
+{
+    return (_focused_node);
+}
+
 void App::add_process_node(Node *node)
 {
     for (std::vector<Node*>::iterator it = _process_node.begin(); it != _process_node.end(); it++) {

@@ -5,6 +5,7 @@
 #include <stack>
 #include <memory>
 #include "ui/Node.hpp"
+#include "App.hpp"
 
 namespace gana {
 
@@ -20,12 +21,16 @@ class NavigationManager: public Node {
         {
             std::shared_ptr<Node> node = std::make_shared<T>(*this, args...);
             if (_stack.size() > 0)
-                remove_child(_stack.top().get());
+                remove_child(_stack.top().node.get());
+            _stack.push({_app != nullptr ? _app->get_focused_node() : nullptr, node});
             add_child(node.get());
-            _stack.push(node);
         }
     private:
-        std::stack<std::shared_ptr<Node>> _stack;
+        struct NavPage {
+            Node *focus_node;
+            std::shared_ptr<Node> node;
+        };
+        std::stack<NavPage> _stack;
 };
 
 }
