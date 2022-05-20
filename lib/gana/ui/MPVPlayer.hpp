@@ -16,6 +16,9 @@ class MPVPlayer: public Node {
         ~MPVPlayer();
 
         void set_source(const std::string &src);
+        bool is_seeking();
+        int64_t get_time_pos();
+        int64_t get_duration();
     protected:
         void process();
         void enter_tree();

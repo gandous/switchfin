@@ -60,6 +60,28 @@ void MPVPlayer::set_source(const std::string &src)
     _src = src;
 }
 
+bool MPVPlayer::is_seeking()
+{
+    int64_t seeking;
+    mpv_get_property(_handle, "seeking", MPV_FORMAT_INT64, &seeking);
+    return (seeking == 1);
+}
+
+
+int64_t MPVPlayer::get_time_pos()
+{
+    int64_t data;
+    mpv_get_property(_handle, "time-pos", MPV_FORMAT_INT64, &data);
+    return (data);
+}
+
+int64_t MPVPlayer::get_duration()
+{
+    int64_t data;
+    mpv_get_property(_handle, "duration", MPV_FORMAT_INT64, &data);
+    return (data);
+}
+
 void MPVPlayer::enter_tree()
 {
     set_process(true);
