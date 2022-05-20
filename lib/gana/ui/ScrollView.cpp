@@ -91,6 +91,11 @@ void ScrollView::set_scroll_direction(ScrollDirection direction)
     _direction = direction;
 }
 
+bool ScrollView::is_focusable() const
+{
+    return (_childs.size() > 0 && _childs[0]->is_focusable());
+}
+
 void ScrollView::set_left_node(Node *node)
 {
     Node::set_left_node(node);
