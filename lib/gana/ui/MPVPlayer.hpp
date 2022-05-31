@@ -5,6 +5,7 @@
 #include <mpv/client.h>
 #include <mpv/render.h>
 #include "ui/Node.hpp"
+#include "type/Signal.hpp"
 
 #define DEBUG_MPV 0
 
@@ -17,8 +18,12 @@ class MPVPlayer: public Node {
 
         void set_source(const std::string &src);
         bool is_seeking();
+        bool is_core_idle();
         int64_t get_time_pos();
+        void set_time_pos(int64_t pos);
         int64_t get_duration();
+
+        Signal<> signal_file_loaded;
     protected:
         void process();
         void enter_tree();

@@ -67,12 +67,23 @@ bool MPVPlayer::is_seeking()
     return (seeking == 1);
 }
 
+bool MPVPlayer::is_core_idle()
+{
+    int64_t core_idle;
+    mpv_get_property(_handle, "core-idle", MPV_FORMAT_INT64, &core_idle);
+    return (core_idle == 1);
+}
 
 int64_t MPVPlayer::get_time_pos()
 {
     int64_t data;
     mpv_get_property(_handle, "time-pos", MPV_FORMAT_INT64, &data);
     return (data);
+}
+
+void MPVPlayer::set_time_pos(int64_t pos)
+{
+    mpv_set_property(_handle, "time-pos", MPV_FORMAT_INT64, &pos);
 }
 
 int64_t MPVPlayer::get_duration()
@@ -156,6 +167,8 @@ void MPVPlayer::event()
             }
         } else {
             Logger::info("MPV event: %s", mpv_event_name(mp_event->event_id));
+            if (mp_event->event_id == MPV_EVENT_FILE_LOADED)
+                signal_file_loaded.emit();
         }
     }
     _mpv_event = false;

@@ -27,17 +27,23 @@ inline Vector2<T> Vector2<T>::normalize()
 }
 
 template<typename T>
+inline float Vector2<T>::length()
+{
+    return (std::sqrt(this->x * this->x + this->y * this->y));
+}
+
+template<typename T>
+inline float Vector2<T>::distance(const Vector2<T> &point)
+{
+    return (std::sqrt(std::pow(this->x - point.x, 2) + std::pow(this->y - point.y, 2)));
+}
+
+template<typename T>
 inline std::string Vector2<T>::to_string() const
 {
     std::ostringstream str;
     str << "Vector2(" << x << ", " << y << ")";
     return (str.str());
-}
-
-template<typename T>
-inline float Vector2<T>::length()
-{
-    return (std::sqrt(this->x * this->x + this->y * this->y));
 }
 
 template<typename T>

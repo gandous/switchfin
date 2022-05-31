@@ -147,7 +147,8 @@ void App::set_focused_node(Node *node)
         node->set_focus(true);
     _focused_node = node;
     signal_node_focus.emit(_focused_node);
-    node->on_focus();
+    if (node != nullptr)
+        node->on_focus();
 }
 
 Node *App::get_focused_node()

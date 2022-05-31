@@ -12,7 +12,20 @@ Event::~Event()
 
 bool Event::is_touch() const
 {
+    return (is_touch_up());
+}
+
+bool Event::is_touch_up() const
+{
     if ((type == sf::Event::MouseButtonReleased && mouseButton.button == sf::Mouse::Left) || type == sf::Event::TouchEnded)
+        return (true);
+    else
+        return (false);
+}
+
+bool Event::is_touch_down() const
+{
+    if ((type == sf::Event::MouseButtonPressed && mouseButton.button == sf::Mouse::Left) || type == sf::Event::TouchBegan)
         return (true);
     else
         return (false);
@@ -32,6 +45,18 @@ bool Event::cancel_pressed() const
         return (true);
     else
         return (false);
+}
+
+Vector2f Event::get_position() const
+{
+    if (type == sf::Event::MouseButtonPressed || type == sf::Event::MouseButtonReleased) {
+        return (Vector2f(mouseButton.x, mouseButton.y));
+    } else if (type == sf::Event::MouseMoved) {
+        return (Vector2f(mouseMove.x, mouseMove.y));
+    } else if (type == sf::Event::TouchBegan || type == sf::Event::TouchEnded || type == sf::Event::TouchMoved) {
+        return (Vector2f(touch.x, touch.y));
+    }
+    return (Vector2f());
 }
 
 }

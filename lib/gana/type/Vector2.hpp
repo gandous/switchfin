@@ -19,6 +19,7 @@ class Vector2 {
 
         Vector2 normalize();
         float length();
+        float distance(const Vector2<T> &point);
         std::string to_string() const;
         Vector2<T> &operator*(T nb);
         Vector2<T> operator*(const Vector2<T> &vec) const;
