@@ -39,6 +39,8 @@ class BaseLabel: public Node {
         virtual void get_bounds(float *box) = 0;
         void apply_font(NVGcontext *ctx);
         void update_align_bitmask();
+        // Return true if the min rect has changed
+        bool update_min_rect();
         std::string _text;
         std::string _display_text;
         Color _color;

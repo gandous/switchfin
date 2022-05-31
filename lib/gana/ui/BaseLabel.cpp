@@ -40,16 +40,8 @@ Vector2f BaseLabel::get_min_size()
 {
     if (_app == nullptr)
         return (Vector2f());
-    if (_update_min_rect) {
-        apply_font(_app->get_nvg_context());
-        float box[4] = {0, 0, 0, 0};
-        nvgTextAlign(_app->get_nvg_context(), NVG_ALIGN_TOP);
-        get_bounds(box);
-        _min_rect.x = std::max(box[2], Node::get_draw_size().x);
-        _min_rect.y = std::max(box[3], Node::get_draw_size().y);
-        _update_min_rect = false;
-        set_min_size(_min_rect);
-    }
+    if (_update_min_rect)
+        update_min_rect();
     return (_min_rect);
 }
 
@@ -63,7 +55,7 @@ void BaseLabel::set_text(const std::string &text)
             *it = '.';
     }
     _update_min_rect = true;
-    if (_app != nullptr)
+    if (_app != nullptr && update_min_rect())
         _app->update_layout();
 }
 
@@ -138,6 +130,23 @@ void BaseLabel::update_align_bitmask()
             _text_align |= NVG_ALIGN_MIDDLE;
             break;
     };
+}
+
+bool BaseLabel::update_min_rect()
+{
+    gana::Vector2f old_rect = _min_rect;
+
+    apply_font(_app->get_nvg_context());
+    float box[4] = {0, 0, 0, 0};
+    nvgTextAlign(_app->get_nvg_context(), NVG_ALIGN_TOP);
+    get_bounds(box);
+    _min_rect.x = std::max(box[2], Node::get_draw_size().x);
+    _min_rect.y = std::max(box[3], Node::get_draw_size().y);
+    _update_min_rect = false;
+    if (old_rect.x == _min_rect.x && old_rect.y == _min_rect.y)
+        return (false);
+    set_min_size(_min_rect);
+    return (true);
 }
 
 }
