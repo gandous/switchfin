@@ -12,6 +12,7 @@ std::string tick_to_duration(Tick tick)
 {
     std::ostringstream str;
     int hour = tick / TICK_PER_HOUR;
+    tick = tick % TICK_PER_HOUR;
     int minute = tick / TICK_PER_MINUTE;
 
     if (hour > 0) {
@@ -25,6 +26,7 @@ std::string mpv_tick_to_duration(uint64_t tick)
 {
     std::ostringstream str;
     int hour = tick / MPV_TICK_PER_HOUR;
+    tick = tick % MPV_TICK_PER_HOUR;
     int minute = tick / MPV_TICK_PER_MINUTE;
 
     if (hour > 0) {
