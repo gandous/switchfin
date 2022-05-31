@@ -9,6 +9,7 @@
 #include "gana/ui/Label.hpp"
 #include "gana/ui/box_container/VBoxContainer.hpp"
 #include "gana/ui/box_container/HBoxContainer.hpp"
+#include "gana/ui/TextureButton.hpp"
 #include "network/JellyfinClient.hpp"
 #include "Slider.hpp"
 
@@ -22,11 +23,13 @@ class Player: public gana::Node {
     private:
         void on_file_loaded();
         void on_slider_value_changed(uint value);
+        void on_pause_btn_pressed();
         gana::MPVPlayer _player;
         gana::VBoxContainer _ctn;
         gana::HBoxContainer _ctn_duration_bar;
         gana::Label _lbl_current_time;
         gana::Label _lbl_duration;
+        gana::TextureButton _btn_pause;
         Slider _slider_bar;
 };
 

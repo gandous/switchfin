@@ -93,6 +93,19 @@ int64_t MPVPlayer::get_duration()
     return (data);
 }
 
+void MPVPlayer::set_pause(bool pause)
+{
+    mpv_set_option_string(_handle, "pause", pause ? "yes" : "no");
+}
+
+bool MPVPlayer::is_pause()
+{
+    char *pause = mpv_get_property_string(_handle, "pause");
+    bool res = std::string(pause) == "yes";
+    mpv_free(pause);
+    return (res);
+}
+
 void MPVPlayer::enter_tree()
 {
     set_process(true);

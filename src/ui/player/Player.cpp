@@ -6,6 +6,7 @@ static const float MIN_TIME_WIDTH = 100;
 
 Player::Player(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item)
 {
+    (void)nav;
     _player.set_source(client->get_stream_url(item.get_id()));
     _player.signal_file_loaded.connect(*this, &Player::on_file_loaded);
     add_child(&_player);
@@ -29,6 +30,15 @@ Player::Player(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> cli
     _ctn_duration_bar.set_hsizing(gana::Node::Sizing::FILL);
     _ctn_duration_bar.set_margin(16, 0, 16, 0);
     _ctn.add_child(&_ctn_duration_bar);
+
+    gana::HBoxContainer *ctn_player_control = make_managed<gana::HBoxContainer>();
+
+    _btn_pause.set_image("icon/pause-48.png");
+    _btn_pause.signal_pressed.connect(*this, &Player::on_pause_btn_pressed);
+    ctn_player_control->add_child(&_btn_pause);
+
+    ctn_player_control->set_hsizing(gana::Node::Sizing::SHRINK_CENTER);
+    _ctn.add_child(ctn_player_control);
 
     _ctn.set_anchor(gana::Node::Anchor::FULL_RECT);
     add_child(&_ctn);
@@ -59,4 +69,11 @@ void Player::on_file_loaded()
 void Player::on_slider_value_changed(uint value)
 {
     _player.set_time_pos(value);
+}
+
+void Player::on_pause_btn_pressed()
+{
+    bool is_pause = _player.is_pause();
+    _player.set_pause(!is_pause);
+    _btn_pause.set_image((!is_pause) ? "icon/play-48.png" : "icon/pause-48.png");
 }

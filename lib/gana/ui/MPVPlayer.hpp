@@ -22,6 +22,8 @@ class MPVPlayer: public Node {
         int64_t get_time_pos();
         void set_time_pos(int64_t pos);
         int64_t get_duration();
+        void set_pause(bool pause = true);
+        bool is_pause();
 
         Signal<> signal_file_loaded;
     protected:
