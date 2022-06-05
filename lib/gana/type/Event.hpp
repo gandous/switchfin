@@ -24,6 +24,7 @@ class Event: public sf::Event {
         // Switch button B is pressed or Escape key pressed
         bool cancel_pressed() const;
         Vector2f get_position() const;
+        void clear();
     private:
 };
 

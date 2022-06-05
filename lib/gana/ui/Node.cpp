@@ -556,45 +556,73 @@ void Node::propagate_draw(NVGcontext *ctx)
             child->propagate_draw(ctx);
 }
 
-void Node::check_move_focus_event(Event &evt)
+Node::Dir Node::switch_key_to_dir(const sf::Event::JoystickButtonEvent &button)
 {
-    int button;
-
-    if (evt.type == sf::Event::JoystickButtonPressed)
-        button = evt.joystickButton.button;
-    else
-        button = evt.key.code;
-    switch (button) {
+    switch (button.button) {
         case SwitchPadButton::LEFT:
         case SwitchPadButton::STICKL_LEFT:
-        case sf::Keyboard::Left: {
+            return (Dir::LEFT);
+        case SwitchPadButton::UP:
+        case SwitchPadButton::STICKL_UP:
+            return (Dir::UP);
+        case SwitchPadButton::RIGHT:
+        case SwitchPadButton::STICKL_RIGHT:
+            return (Dir::RIGHT);
+        case SwitchPadButton::DOWN:
+        case SwitchPadButton::STICKL_DOWN:
+            return (Dir::DOWN);
+        default:
+            return (Dir::NONE);
+    }
+}
+
+Node::Dir Node::keyboard_key_to_dir(const sf::Event::KeyEvent &key)
+{
+ switch (key.code) {
+        case sf::Keyboard::Left:
+            return (Dir::LEFT);
+        case sf::Keyboard::Up:
+            return (Dir::UP);
+        case sf::Keyboard::Right:
+            return (Dir::RIGHT);
+        case sf::Keyboard::Down:
+            return (Dir::DOWN);
+        default:
+            return (Dir::NONE);
+    }
+}
+
+void Node::check_move_focus_event(Event &evt)
+{
+    Dir dir;
+
+    if (evt.type == sf::Event::JoystickButtonPressed)
+        dir = switch_key_to_dir(evt.joystickButton);
+    else
+        dir = keyboard_key_to_dir(evt.key);
+    switch (dir) {
+        case Dir::LEFT: {
             gana::Node *next_focus = _left_node;
             while (next_focus != nullptr && !next_focus->is_focusable())
                 next_focus = next_focus->get_left_node();
             if (next_focus)
                 _app->set_focused_node(next_focus);
             } break;
-        case SwitchPadButton::UP:
-        case SwitchPadButton::STICKL_UP:
-        case sf::Keyboard::Up: {
+        case Dir::UP: {
             gana::Node *next_focus = _top_node;
             while (next_focus != nullptr && !next_focus->is_focusable())
                 next_focus = next_focus->get_top_node();
             if (next_focus)
                 _app->set_focused_node(next_focus);
             } break;
-        case SwitchPadButton::RIGHT:
-        case SwitchPadButton::STICKL_RIGHT:
-        case sf::Keyboard::Right: {
+        case Dir::RIGHT: {
             gana::Node *next_focus = _right_node;
             while (next_focus != nullptr && !next_focus->is_focusable())
                 next_focus = next_focus->get_right_node();
             if (next_focus)
                 _app->set_focused_node(next_focus);
             } break;
-        case SwitchPadButton::DOWN:
-        case SwitchPadButton::STICKL_DOWN:
-        case sf::Keyboard::Down: {
+        case Dir::DOWN: {
             gana::Node *next_focus = _bottom_node;
             while (next_focus != nullptr && !next_focus->is_focusable())
                 next_focus = next_focus->get_bottom_node();

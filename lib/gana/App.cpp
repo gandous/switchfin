@@ -90,6 +90,7 @@ void App::run()
             } else {
                 _root_node->propagate_event(evt);
             }
+            evt.clear();
         }
         for (auto &node: _process_node)
             node->process();

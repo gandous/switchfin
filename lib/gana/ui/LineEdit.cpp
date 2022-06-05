@@ -51,7 +51,7 @@ void LineEdit::process_event(Event &evt)
                 _value.erase(_value.end() - 1);
                 set_value(_value);
             }
-        } else {
+        } else if ((char)evt.text.unicode >= 32 && (char)evt.text.unicode <= 126) {
             set_value(_value + (char)evt.text.unicode);
         }
         evt.handle = true;

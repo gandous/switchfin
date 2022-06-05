@@ -142,11 +142,20 @@ class Node {
         // Give the size minus the margin
         const Vector2f &get_draw_size() const;
     private:
+        enum Dir {
+            LEFT,
+            UP,
+            RIGHT,
+            DOWN,
+            NONE
+        };
         void propagate_enter_tree(App *app);
         void propagate_exit_tree();
         void apply_anchor(const Vector2f &size);
         void propagate_event(Event &evt);
         void propagate_draw(NVGcontext *ctx);
+        Dir switch_key_to_dir(const sf::Event::JoystickButtonEvent &button);
+        Dir keyboard_key_to_dir(const sf::Event::KeyEvent &key);
         void check_move_focus_event(Event &evt);
         void update_draw_positon();
         Node *_parent;

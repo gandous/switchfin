@@ -59,4 +59,9 @@ Vector2f Event::get_position() const
     return (Vector2f());
 }
 
+void Event::clear()
+{
+    handle = false;
+}
+
 }
