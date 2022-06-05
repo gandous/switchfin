@@ -15,6 +15,7 @@ class Login: public gana::BGRectContainer {
         Login();
         ~Login();
 
+        gana::Signal<> signal_login_success;
         void set_client(std::shared_ptr<JellyfinClient> client);
     protected:
         void enter_tree() override;
@@ -22,7 +23,7 @@ class Login: public gana::BGRectContainer {
     private:
         void on_login_pressed();
         void on_login(gana::Request::RCode code, gana::Request &req);
-        void save_data(const std::string &server, const std::string &user, const std::string &password, const std::string &device_id, const std::string &token, const std::string &user_id);
+        void save_data(const std::string &server, const std::string &user, const std::string &device_id, const std::string &token, const std::string &user_id);
         void show_connecting(bool visibility);
         std::shared_ptr<JellyfinClient> _client;
         std::shared_ptr<LoginRequest> _rlogin;

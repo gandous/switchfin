@@ -95,20 +95,22 @@ void Login::on_login(gana::Request::RCode code, gana::Request &req)
 {
     if (code == gana::Request::OK) {
         gana::Logger::info("Login success");
-        save_data(_client->get_url(), _le_name.get_text(), _le_password.get_text(), "id", _rlogin->get_token(), _rlogin->get_user_id());
+        save_data(_client->get_url(), _le_name.get_text(), "id", _rlogin->get_token(), _rlogin->get_user_id());
+        _client->set_user_id(_rlogin->get_user_id());
+        _client->set_token(_rlogin->get_token());
+        signal_login_success.emit();
     } else {
         gana::Logger::error("Login failed (code: %d)", code);
         show_connecting(false);
     }
 }
 
-void Login::save_data(const std::string &server, const std::string &user, const std::string &password, const std::string &device_id, const std::string &token, const std::string &user_id)
+void Login::save_data(const std::string &server, const std::string &user, const std::string &device_id, const std::string &token, const std::string &user_id)
 {
     CSimpleIni ini;
 
     ini.SetValue("SERVER", "address", server.c_str());
     ini.SetValue("SERVER", "user", user.c_str());
-    ini.SetValue("SERVER", "password", password.c_str());
     ini.SetValue("SERVER", "device_id", device_id.c_str());
     ini.SetValue("SERVER", "token", token.c_str());
     ini.SetValue("SERVER", "user_id", user_id.c_str());

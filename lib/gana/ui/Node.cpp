@@ -363,12 +363,13 @@ Node *Node::get_bottom_node()
 
 void Node::set_process(bool process)
 {
+    bool old_process = _process;
     _process = process;
     if (_app == nullptr)
         return;
     if (process)
         _app->add_process_node(this);
-    else
+    else if (old_process) // If the node was process and not now remove it from process list
         _app->remove_process_node(this);
 }
 

@@ -12,11 +12,13 @@ class ServerSelect: public gana::Node {
         ServerSelect();
         ~ServerSelect();
 
+        gana::Signal<std::shared_ptr<JellyfinClient>> signal_go_to_home;
     protected:
     private:
+        void on_go_to_login();
+        void on_login_success();
         ServerAddress _server_address;
         Login _login;
-        void on_go_to_login();
 };
 
 #endif /* SERVERSELECT_HPP_ */

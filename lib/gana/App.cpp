@@ -176,6 +176,7 @@ void App::remove_process_node(Node *node)
             return;
         }
     }
+    gana::Logger::error("Failed to remove process node");
 }
 
 void App::update_layout()
