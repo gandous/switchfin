@@ -76,8 +76,13 @@ int Http::process()
 {
     int still_running;
     CURLMcode mc = curl_multi_perform(_multi_handle, &still_running);
-    if(!mc && still_running)
+    if(mc == CURLM_OK && still_running) {
         mc = curl_multi_poll(_multi_handle, NULL, 0, 0, NULL);
+        if (mc != CURLM_OK)
+            gana::Logger::error("Curl multi error curl_multi_poll (code: %d) %s", mc, curl_multi_strerror(mc));
+    } else if (mc != CURLM_OK) {
+        gana::Logger::error("Curl multi error curl_multi_perform (code: %d) %s", mc, curl_multi_strerror(mc));
+    }
     check_response();
     return (still_running);
 }
