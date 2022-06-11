@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "Logger.hpp"
 #include "Http.hpp"
+#include "DebugScreen.hpp"
 
 namespace gana {
 
@@ -117,6 +118,7 @@ void Http::request(std::shared_ptr<Request> req, const std::string &url, const s
             break;
     }
 #if DEBUG_HTTP
+    req->_url = url;
     req->_err_buffer[0] = '\0';
     curl_easy_setopt(handle, CURLOPT_ERRORBUFFER, req->_err_buffer);
     gana::Logger::info("Request %s %s (%d pending request)", Method::POST ? "POST" : "GET", url.c_str(), _pending_request.size());
@@ -163,6 +165,9 @@ void Http::check_response()
             on_response(msg);
         }
     } while (msg != nullptr);
+    _pending_request.erase(std::remove_if(_pending_request.begin(), _pending_request.end(), [](std::weak_ptr<Request> &req){
+        return (req.expired());
+    }), _pending_request.end());
 }
 
 void Http::on_response(CURLMsg *msg)
@@ -175,7 +180,7 @@ void Http::on_response(CURLMsg *msg)
             curl_easy_getinfo(req->_handle, CURLINFO_RESPONSE_CODE, &req->_http_code);
 #if DEBUG_HTTP
             if (req->_http_code >= 200 && req->_http_code < 300) {
-                gana::Logger::info("Response (code: %d)", req->_http_code);
+                gana::Logger::info("Response %s (code: %d)", req->_url.c_str(), req->_http_code);
             } else if (msg->data.result == CURLE_OK) {
                 gana::Logger::warning("Request failed (code: %d)", req->_http_code);
             } else {
@@ -201,9 +206,6 @@ void Http::on_response(CURLMsg *msg)
             break;
         }
     }
-    std::remove_if(_pending_request.begin(), _pending_request.end(), [](std::weak_ptr<Request> &req){
-        return (req.expired());
-    });
 }
 
 std::string Http::format_url_params(const std::string &url, const UrlParams &params)
@@ -220,6 +222,17 @@ std::string Http::format_url_params(const std::string &url, const UrlParams &par
         param << p->first << "=" << p->second;
     }
     return (param.str());
+}
+
+void Http::stop(Request &req)
+{
+#if DEBUG_HTTP
+    gana::Logger::info("Cancel request %s", req._url.c_str());
+#endif
+    curl_multi_remove_handle(_multi_handle, req._handle);
+    curl_easy_reset(req._handle);
+    _handles.push_front(req._handle);
+    req._handle = nullptr;
 }
 
 }

@@ -22,7 +22,7 @@ if(SWITCH)
 endif()
 
 add_subdirectory("lib")
-
+add_compile_definitions(DEBUG_HTTP=1)
 include_directories("src")
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/lib/")

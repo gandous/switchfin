@@ -28,6 +28,7 @@ class Http {
         void request(std::shared_ptr<Request> req, const std::string &url, const std::string &body, Method method, const Headers &headers);
         void post(std::shared_ptr<Request> req, const std::string &url, const std::string &body, const Headers &headers = {}, const UrlParams &url_params = {});
         void get(std::shared_ptr<Request> req, const std::string &url, const Headers &headers = {}, const UrlParams &url_params = {});
+        void stop(Request &req);
     private:
         CURL *get_avai_handle();
         void check_response();

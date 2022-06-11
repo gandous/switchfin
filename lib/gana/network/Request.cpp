@@ -1,4 +1,6 @@
 
+#include "Logger.hpp"
+#include "Http.hpp"
 #include "Request.hpp"
 
 namespace gana {
@@ -11,7 +13,10 @@ Request::Request():
 {}
 
 Request::~Request()
-{}
+{
+    if (_handle != nullptr)
+        _parent->stop(*this);
+}
 
 bool Request::is_completed() const
 {

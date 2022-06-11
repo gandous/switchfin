@@ -61,6 +61,7 @@ class Request {
         bool _completed;
 #if DEBUG_HTTP
         char _err_buffer[CURL_ERROR_SIZE];
+        std::string _url;
 #endif
 };
 

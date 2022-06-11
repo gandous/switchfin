@@ -35,6 +35,7 @@ class App {
         void update_layout();
         sf::Window &get_window();
         Signal<Node*> signal_node_focus;
+        DebugScreen &get_debug();
     private:
         sf::VideoMode _mode;
         sf::Window _window;

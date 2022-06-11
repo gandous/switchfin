@@ -189,4 +189,9 @@ sf::Window &App::get_window()
     return (_window);
 }
 
+DebugScreen &App::get_debug()
+{
+    return (_debug);
+}
+
 }
