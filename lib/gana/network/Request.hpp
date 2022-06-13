@@ -29,12 +29,12 @@ class Request {
         struct WriteStruct {
             WBody data;
         };
-        using callback_func = std::function<void(RCode code, Request &req)>;
+        using callback_func = std::function<void(RCode code)>;
         template<typename T>
-        static callback_func mf_callback(T &obj, void(T::*func)(RCode code, Request &req))
+        static callback_func mf_callback(T &obj, void(T::*func)(RCode code))
         {
-            return ([&obj, func](RCode code, Request &req){
-                (obj.*func)(code, req);
+            return ([&obj, func](RCode code){
+                (obj.*func)(code);
             });
         };
 

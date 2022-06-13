@@ -15,7 +15,7 @@ class LatestView: public gana::ScrollView {
 
         gana::Signal<const Item&> on_item_selected;
     private:
-        void on_latest_receive(gana::Request::RCode code, gana::Request &req);
+        void on_latest_receive(gana::Request::RCode code);
         void on_subitem_click(const Item &item);
         JellyfinClient &_jclient;
         std::shared_ptr<ItemListRequest> _rlatest;

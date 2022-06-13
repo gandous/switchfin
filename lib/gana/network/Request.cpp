@@ -66,7 +66,7 @@ void Request::parse()
     } else {
         _code = OK;
     }
-    _func(_code, *this);
+    _func(_code);
 }
 
 }

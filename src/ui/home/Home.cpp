@@ -67,7 +67,7 @@ void Home::process()
     _jclient->process();
 }
 
-void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
+void Home::on_resume_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         gana::Logger::error("%s", _rresume->get_error_str().c_str());
@@ -83,7 +83,7 @@ void Home::on_resume_receive(gana::Request::RCode code, gana::Request &req)
     _app->set_focused_node(&_scr_resume);
 }
 
-void Home::on_next_up_receive(gana::Request::RCode code, gana::Request &req)
+void Home::on_next_up_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         gana::Logger::error("%s", _rnext_up->get_error_str().c_str());
@@ -98,10 +98,10 @@ void Home::on_next_up_receive(gana::Request::RCode code, gana::Request &req)
     }
 }
 
-void Home::on_views_receive(gana::Request::RCode code, gana::Request &req)
+void Home::on_views_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
-        gana::Logger::error("%s", req.get_error_str().c_str());
+        gana::Logger::error("%s", _rviews->get_error_str().c_str());
         return;
     }
     for (auto &item: _rviews->get_items()) {

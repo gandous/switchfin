@@ -55,7 +55,7 @@ void SeasonDetail::process()
     _jclient->process();
 }
 
-void SeasonDetail::on_episodes_receive(gana::Request::RCode code, gana::Request &req)
+void SeasonDetail::on_episodes_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         return;

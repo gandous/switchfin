@@ -22,7 +22,7 @@ class MovieDetail: public gana::RectContainer {
     protected:
         void process() override;
     private:
-        void on_data_receive(gana::Request::RCode code, gana::Request &req);
+        void on_data_receive(gana::Request::RCode code);
         void on_play_btn_pressed();
         void on_resume_btn_pressed();
         gana::NavigationManager &_nav;

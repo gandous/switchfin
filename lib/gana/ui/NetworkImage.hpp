@@ -18,7 +18,7 @@ class NetworkImage: public Image {
     protected:
         void enter_tree();
     private:
-        void on_request_complete(Request::RCode code, Request &req);
+        void on_request_complete(Request::RCode code);
         Http *_http;
         Http::UrlParams _params;
         std::shared_ptr<Request> _req;

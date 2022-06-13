@@ -71,9 +71,9 @@ void ServerAddress::connect_pressed()
     _ping_req->set_callback(gana::Request::mf_callback(*this, &ServerAddress::on_ping_response));
 }
 
-void ServerAddress::on_ping_response(gana::Request::RCode code, gana::Request &req)
+void ServerAddress::on_ping_response(gana::Request::RCode code)
 {
-    gana::Logger::info("%d %s", code, req.get_body_as_string().c_str());
+    gana::Logger::info("%d %s", code, _ping_req->get_body_as_string().c_str());
     if (code != gana::Request::OK) {
         _lbl_error.set_text(_ping_req->get_error_str());
         show_connecting(false);

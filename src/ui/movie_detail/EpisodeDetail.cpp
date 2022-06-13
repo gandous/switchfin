@@ -74,7 +74,7 @@ void EpisodeDetail::process()
     _jclient->process();
 }
 
-void EpisodeDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
+void EpisodeDetail::on_data_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         return;

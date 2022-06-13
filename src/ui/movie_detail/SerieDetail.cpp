@@ -85,7 +85,7 @@ void SerieDetail::process()
     _jclient->process();
 }
 
-void SerieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
+void SerieDetail::on_data_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         return;
@@ -99,7 +99,7 @@ void SerieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
     _app->set_focused_node(&_play_button);
 }
 
-void SerieDetail::on_seasons_receive(gana::Request::RCode code, gana::Request &req)
+void SerieDetail::on_seasons_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         return;
@@ -111,7 +111,7 @@ void SerieDetail::on_seasons_receive(gana::Request::RCode code, gana::Request &r
     }
 }
 
-void SerieDetail::on_nextup_receive(gana::Request::RCode code, gana::Request &req)
+void SerieDetail::on_nextup_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         return;

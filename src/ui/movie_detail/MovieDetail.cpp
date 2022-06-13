@@ -73,7 +73,7 @@ void MovieDetail::process()
     _jclient->process();
 }
 
-void MovieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
+void MovieDetail::on_data_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         return;

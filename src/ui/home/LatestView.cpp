@@ -15,7 +15,7 @@ LatestView::LatestView(JellyfinClient &client, const std::string &id): _jclient(
 LatestView::~LatestView()
 {}
 
-void LatestView::on_latest_receive(gana::Request::RCode code, gana::Request &req)
+void LatestView::on_latest_receive(gana::Request::RCode code)
 {
     if (code != gana::Request::OK) {
         gana::Logger::error("%s", _rlatest->get_error_str().c_str());

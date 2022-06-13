@@ -26,11 +26,11 @@ void NetworkImage::enter_tree()
     }
 }
 
-void NetworkImage::on_request_complete(Request::RCode code, Request &req)
+void NetworkImage::on_request_complete(Request::RCode code)
 {
     if (code != Request::RCode::OK)
         return;
-    _image_id = _app->get_asset_manager().load_image(_img_path, req.get_body());
+    _image_id = _app->get_asset_manager().load_image(_img_path, _req->get_body());
     if (_image_id != AssetManager::FAILED_RCODE)
         apply_strectch_mode();
 }

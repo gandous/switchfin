@@ -21,9 +21,9 @@ class Home: public gana::ColorRect {
         void enter_tree() override;
         void process() override;
     private:
-        void on_resume_receive(gana::Request::RCode code, gana::Request &req);
-        void on_next_up_receive(gana::Request::RCode code, gana::Request &req);
-        void on_views_receive(gana::Request::RCode code, gana::Request &req);
+        void on_resume_receive(gana::Request::RCode code);
+        void on_next_up_receive(gana::Request::RCode code);
+        void on_views_receive(gana::Request::RCode code);
         void on_item_click(const Item &item);
         gana::NavigationManager &_nav;
         std::shared_ptr<JellyfinClient> _jclient;
