@@ -17,6 +17,7 @@ EpisodeVignette::EpisodeVignette(JellyfinClient &client, const Item &item): _ite
     });
     _img.set_min_size(SIZE);
     _img.set_corner_radius(7);
+    _img.set_stretch_mode(gana::Image::StretchMode::KEEP_ASPECT_COVERED);
     _ctn.add_child(&_img);
 
     _lbl_title.set_text(item.get_name());

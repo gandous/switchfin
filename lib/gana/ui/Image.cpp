@@ -87,12 +87,10 @@ void Image::apply_strectch_mode()
         //     } break;
         case KEEP_ASPECT_COVERED: {
             float ratio = std::max(get_size().x / w, get_size().y / h);
-            set_min_size(Vector2f(0, 0));
             _paint = nvgImagePattern(_app->get_nvg_context(), get_size().x / 2 - (w * ratio) / 2, get_size().y / 2 - (h * ratio) / 2, w * ratio, h * ratio, 0, _image_id, 1);
             } break;
         case KEEP_ASPECT_FIT: {
             float ratio = std::min(get_size().x / w, get_size().y / h);
-            set_min_size(Vector2f(0, 0));
             _paint = nvgImagePattern(_app->get_nvg_context(), 0, 0, w * ratio, h * ratio, 0, _image_id, 1);
             } break;
     }

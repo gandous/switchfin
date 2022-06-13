@@ -116,7 +116,6 @@ void SerieDetail::on_nextup_receive(gana::Request::RCode code, gana::Request &re
     if (code != gana::Request::OK) {
         return;
     }
-    gana::Logger::info("%s", _nextupdata->get_body_as_string().c_str());
     for (auto &item: _nextupdata->get_items()) {
         _play_button.set_label(item.get_parent_index_number(), item.get_index_number());
         break;
