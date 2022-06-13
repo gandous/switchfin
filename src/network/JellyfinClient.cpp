@@ -123,15 +123,17 @@ std::shared_ptr<ItemsRequest> JellyfinClient::get_episodes(const std::string &sh
     return (req);
 }
 
-std::shared_ptr<ItemsRequest> JellyfinClient::get_next_up()
+std::shared_ptr<ItemsRequest> JellyfinClient::get_next_up(const std::string &series_id)
 {
     std::ostringstream url;
     gana::Http::UrlParams params = {
         {"UserId", _user_id},
         {"Limit", "16"},
-        {"DisableFirstEpisode", "true"}
     };
-
+    if (series_id != "")
+        params["SeriesId"] = series_id;
+    else
+        params["DisableFirstEpisode"] = "true";
     url << _url << "/Shows/NextUp";
     std::shared_ptr<ItemsRequest> req = std::make_shared<ItemsRequest>();
     _http.get(req, url.str(), _default_header, params);

@@ -3,7 +3,7 @@
 #define PLAYBUTTONCONTAINER_HPP_
 
 #include "type/Signal.hpp"
-#include "gana/ui/BaseButton.hpp"
+#include "PlayButton.hpp"
 #include "gana/ui/box_container/HBoxContainer.hpp"
 
 class PlayButtonContainer: public gana::HBoxContainer {
@@ -14,7 +14,8 @@ class PlayButtonContainer: public gana::HBoxContainer {
         gana::Signal<> signal_play_pressed;
     private:
         void on_play_btn_pressed();
-        gana::BaseButton _btn_play;
+        gana::HBoxContainer _ctn_button;
+        PlayButton _btn_play;
 };
 
 #endif /* PLAYBUTTONCONTAINER_HPP_ */

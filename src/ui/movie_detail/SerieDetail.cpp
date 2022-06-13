@@ -18,6 +18,8 @@ SerieDetail::SerieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _rdata->set_callback(_rdata->mf_callback(*this, &SerieDetail::on_data_receive));
     _seasonsdata = client->get_seasons(item.get_id());
     _seasonsdata->set_callback(_seasonsdata->mf_callback(*this, &SerieDetail::on_seasons_receive));
+    _nextupdata = client->get_next_up(item.get_id());
+    _nextupdata->set_callback(_nextupdata->mf_callback(*this, &SerieDetail::on_nextup_receive));
 
     _img_background.set_image(client->get_http(), client->get_img_url(item.get_id(), item.get_type() == Item::EPISODE ? JellyfinClient::PRIMARY : JellyfinClient::BACKDROP), {
         {"fillWidth", std::to_string((int)SIZE.x)},
@@ -53,8 +55,8 @@ SerieDetail::SerieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _mlbl_overview.set_min_size(gana::Vector2f(50, OVERVIEW_MIN_H));
     _ctn_overview.add_child(&_mlbl_overview);
 
-    _ctn_play_button.signal_play_pressed.connect(*this, &SerieDetail::on_play_btn_pressed);
-    _ctn_overview.add_child(&_ctn_play_button);
+    _play_button.signal_pressed.connect(*this, &SerieDetail::on_play_btn_pressed);
+    _ctn_overview.add_child(&_play_button);
 
     _scr_seasons.add_child(&_ctn_seasons);
 
@@ -94,7 +96,7 @@ void SerieDetail::on_data_receive(gana::Request::RCode code, gana::Request &req)
         _ctn_genres.add_child(genre);
     }
     _mlbl_overview.set_text(item.get_overview());
-    _app->set_focused_node(&_ctn_play_button);
+    _app->set_focused_node(&_play_button);
 }
 
 void SerieDetail::on_seasons_receive(gana::Request::RCode code, gana::Request &req)
@@ -109,10 +111,22 @@ void SerieDetail::on_seasons_receive(gana::Request::RCode code, gana::Request &r
     }
 }
 
+void SerieDetail::on_nextup_receive(gana::Request::RCode code, gana::Request &req)
+{
+    if (code != gana::Request::OK) {
+        return;
+    }
+    gana::Logger::info("%s", _nextupdata->get_body_as_string().c_str());
+    for (auto &item: _nextupdata->get_items()) {
+        _play_button.set_label(item.get_parent_index_number(), item.get_index_number());
+        break;
+    }
+}
+
 void SerieDetail::on_play_btn_pressed()
 {
     gana::Logger::info("Play");
-    _nav.navigate_down<Player>(_jclient, _rdata->get_item());
+    _nav.navigate_down<Player>(_jclient, _nextupdata->get_items()[0]);
 }
 
 void SerieDetail::on_resume_btn_pressed()
