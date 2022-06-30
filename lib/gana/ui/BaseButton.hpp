@@ -16,6 +16,7 @@ class BaseButton: public BGRectContainer {
 
         void process_event(Event &evt) override;
     private:
+        bool _down;
 };
 
 }
