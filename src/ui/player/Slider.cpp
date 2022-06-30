@@ -16,6 +16,7 @@ Slider::~Slider()
 
 void Slider::draw(NVGcontext *ctx)
 {
+    update_percentage();
     float y = get_draw_positon().y + (get_draw_size().y - BAR_HEIGTH) / 2;
     nvgBeginPath(ctx);
     nvgRoundedRect(ctx, get_draw_positon().x, y, get_draw_size().x, BAR_HEIGTH, BAR_HEIGTH / 2);
@@ -43,6 +44,7 @@ void Slider::process_event(gana::Event &evt)
             _value = _max_value * _percentage;
             update_percentage();
         }
+        evt.handle = true;
     } else if (has_focus()) {
         signal_value_changed.emit(_value);
         _app->set_focused_node(nullptr);

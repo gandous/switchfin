@@ -533,15 +533,11 @@ void Node::apply_anchor(const Vector2f &size)
 
 void Node::propagate_event(Event &evt)
 {
-    process_event(evt);
-    if (_has_focus && (evt.type == sf::Event::JoystickButtonPressed || evt.type == sf::Event::KeyPressed))
-        check_move_focus_event(evt);
-    if (!evt.handle) {
-        for (auto &child: _childs) {
-            child->propagate_event(evt);
-            if (evt.handle)
-                return;
-        }
+    for (auto &child: _childs) {
+        child->propagate_event(evt);
+        if (evt.handle)
+            return;
+    }
     }
 }
 

@@ -9,6 +9,7 @@
 #include "gana/ui/Label.hpp"
 #include "gana/ui/box_container/VBoxContainer.hpp"
 #include "gana/ui/box_container/HBoxContainer.hpp"
+#include "gana/ui/BGRectContainer.hpp"
 #include "gana/ui/TextureButton.hpp"
 #include "gana/ui/Timer.hpp"
 #include "network/JellyfinClient.hpp"
@@ -30,6 +31,7 @@ class Player: public gana::Node {
         gana::MPVPlayer _player;
         gana::VBoxContainer _ctn;
         gana::HBoxContainer _ctn_duration_bar;
+        gana::BGRectContainer _ctn_background;
         gana::Label _lbl_current_time;
         gana::Label _lbl_duration;
         gana::TextureButton _btn_pause;
