@@ -6,15 +6,15 @@
 static const float MIN_TIME_WIDTH = 100;
 static const float HIDE_UI_TIMER = 5;
 
-Player::Player(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item)
+Player::Player(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item): _nav(nav)
 {
-    (void)nav;
     _player.set_source(client->get_stream_url(item.get_id()));
     _player.signal_file_loaded.connect(*this, &Player::on_file_loaded);
     add_child(&_player);
 
     BackButton *btn_go_back = _ctn.make_managed<BackButton>();
     btn_go_back->set_text(item.get_name());
+    btn_go_back->signal_pressed.connect(*this, &Player::on_go_back_pressed);
     _ctn.add_child(btn_go_back);
 
     _ctn.add_spacer(8, true);
@@ -38,9 +38,21 @@ Player::Player(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> cli
 
     gana::HBoxContainer *ctn_player_control = make_managed<gana::HBoxContainer>();
 
+    _btn_prev_episode.set_image("icon/prev_episode-48.png");
+    ctn_player_control->add_child(&_btn_prev_episode);
+
+    _btn_fast_backward.set_image("icon/fast_backward-48.png");
+    ctn_player_control->add_child(&_btn_fast_backward);
+
     _btn_pause.set_image("icon/pause-48.png");
     _btn_pause.signal_pressed.connect(*this, &Player::on_pause_btn_pressed);
     ctn_player_control->add_child(&_btn_pause);
+
+    _btn_fast_forward.set_image("icon/fast_forward-48.png");
+    ctn_player_control->add_child(&_btn_fast_forward);
+
+    _btn_next_episode.set_image("icon/next_episode-48.png");
+    ctn_player_control->add_child(&_btn_next_episode);
 
     ctn_player_control->set_hsizing(gana::Node::Sizing::SHRINK_CENTER);
     _ctn.add_child(ctn_player_control);
@@ -67,8 +79,14 @@ Player::~Player()
 
 void Player::process_event(gana::Event &evt)
 {
-    _ctn.show();
-    _timer_hide_ui.start();
+    if (_ctn_background.is_visible() && evt.type == sf::Event::TouchBegan) {
+        _ctn_background.hide();
+        evt.handle = true;
+    } else if (evt.type != sf::Event::TouchMoved && evt.type != sf::Event::TouchEnded && !evt.cancel_pressed()) {
+        _ctn_background.show();
+        _timer_hide_ui.start();
+        evt.handle = true;
+    }
 }
 
 void Player::process()
@@ -105,4 +123,9 @@ void Player::on_pause_btn_pressed()
 void Player::on_hide_timer_timeout()
 {
     _ctn_background.hide();
+}
+
+void Player::on_go_back_pressed()
+{
+    _nav.navigate_up();
 }

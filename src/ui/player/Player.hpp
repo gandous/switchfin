@@ -28,6 +28,8 @@ class Player: public gana::Node {
         void on_slider_value_changed(uint value);
         void on_pause_btn_pressed();
         void on_hide_timer_timeout();
+        void on_go_back_pressed();
+        gana::NavigationManager &_nav;
         gana::MPVPlayer _player;
         gana::VBoxContainer _ctn;
         gana::HBoxContainer _ctn_duration_bar;
@@ -35,6 +37,10 @@ class Player: public gana::Node {
         gana::Label _lbl_current_time;
         gana::Label _lbl_duration;
         gana::TextureButton _btn_pause;
+        gana::TextureButton _btn_next_episode;
+        gana::TextureButton _btn_prev_episode;
+        gana::TextureButton _btn_fast_forward;
+        gana::TextureButton _btn_fast_backward;
         gana::Timer _timer_hide_ui;
         Slider _slider_bar;
         bool _playback_started = false;

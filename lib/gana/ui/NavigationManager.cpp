@@ -12,8 +12,8 @@ NavigationManager::~NavigationManager()
 void NavigationManager::process_event(Event &evt)
 {
     if (evt.cancel_pressed() && _stack.size() > 1) {
-        evt.handle = true;
         navigate_up();
+        evt.handle = true;
     }
 }
 
