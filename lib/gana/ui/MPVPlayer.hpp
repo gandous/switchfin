@@ -16,6 +16,19 @@ class MPVPlayer: public Node {
         MPVPlayer();
         ~MPVPlayer();
 
+        enum TrackType {
+            AUDIO,
+            VIDEO,
+            SUB,
+        };
+        struct Track {
+            TrackType type;
+            int64_t id;
+            std::string title;
+            std::string lang;
+            bool selected;
+        };
+
         void set_source(const std::string &src);
         bool is_seeking();
         bool is_core_idle();
@@ -24,6 +37,8 @@ class MPVPlayer: public Node {
         int64_t get_duration();
         void set_pause(bool pause = true);
         bool is_pause();
+        int64_t get_track_count();
+        Track get_track(int id);
 
         Signal<> signal_file_loaded;
     protected:
@@ -32,6 +47,8 @@ class MPVPlayer: public Node {
     private:
         void set_option_string(const std::string &option, const std::string &value);
         void event();
+        std::string get_track_str_prop(int id, const std::string &prop);
+        int64_t get_track_int_prop(int id, const std::string &prop);
 #if DEBUG_MPV
         static const int OUTPUT_BUFFER_SIZE = 256;
         char output_buffer[OUTPUT_BUFFER_SIZE];

@@ -1,4 +1,5 @@
 
+#include <sstream>
 #include <SFML/Window/Context.hpp>
 // #include <mpv/render.h>
 #include <mpv/render_gl.h>
@@ -41,6 +42,7 @@ MPVPlayer::MPVPlayer(): _mpv_event(false)
     set_option_string("vd-lavc-threads", "4");
     set_option_string("fbo-format", "rgba8");
     set_option_string("opengl-pbo", "yes");
+    set_option_string("audio-channels", "stereo");
     // mpv_set_option_string(_handle, "msg-level", "all=v");
 }
 
@@ -105,6 +107,32 @@ bool MPVPlayer::is_pause()
     mpv_free(pause);
     return (res);
 }
+
+int64_t MPVPlayer::get_track_count()
+{
+    int64_t data;
+    mpv_get_property(_handle, "track-list/count", MPV_FORMAT_INT64, &data);
+    return (data);
+}
+
+MPVPlayer::Track MPVPlayer::get_track(int id)
+{
+    Track track;
+    track.id = get_track_int_prop(id, "id");
+    std::string type = get_track_str_prop(id, "type");
+    if (type == "audio") {
+        track.type = TrackType::AUDIO;
+    } else if (type == "video") {
+        track.type = TrackType::VIDEO;
+    } else {
+        track.type = TrackType::SUB;
+    }
+    track.title = get_track_str_prop(id, "title");
+    track.lang = get_track_str_prop(id, "lang");
+    track.selected = get_track_str_prop(id, "selected") == "yes";
+    return (track);
+}
+
 
 void MPVPlayer::enter_tree()
 {
@@ -186,5 +214,29 @@ void MPVPlayer::event()
     }
     _mpv_event = false;
 }
+
+std::string MPVPlayer::get_track_str_prop(int id, const std::string &prop)
+{
+    std::ostringstream str;
+    str << "track-list/" << id << "/" << prop;
+    std::string tmp = str.str();
+    char *data = mpv_get_property_string(_handle, tmp.c_str());
+    if (data == nullptr)
+        return ("");
+    std::string out(data);
+    mpv_free(data);
+    return (out);
+}
+
+int64_t MPVPlayer::get_track_int_prop(int id, const std::string &prop)
+{
+    std::ostringstream str;
+    str << "track-list/" << id << "/" << prop;
+    std::string tmp = str.str();
+    int64_t data;
+    mpv_get_property(_handle, tmp.c_str(), MPV_FORMAT_INT64, &data);
+    return (data);
+}
+
 
 }
