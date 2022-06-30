@@ -4,7 +4,7 @@
 #include "Player.hpp"
 
 static const float MIN_TIME_WIDTH = 100;
-static const float HIDE_UI_TIMER = 5;
+static const float HIDE_UI_TIMER = 3;
 
 Player::Player(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client, const Item &item): _nav(nav)
 {
@@ -89,11 +89,18 @@ void Player::process_event(gana::Event &evt)
     }
 }
 
+void Player::enter_tree()
+{
+    _app->set_focused_node(&_btn_pause);
+}
+
 void Player::process()
 {
     if (!_playback_started)
         return;
-    uint64_t time = _player.get_time_pos();
+    if (_slider_bar.has_focus())
+        _timer_hide_ui.restart();
+    uint64_t time = _slider_bar.has_focus() ? _slider_bar.get_value() : _player.get_time_pos();
     _slider_bar.set_value(time);
     _lbl_current_time.set_text(mpv_tick_to_duration(time));
 }
@@ -106,6 +113,10 @@ void Player::on_file_loaded()
     _slider_bar.set_value(time);
     _lbl_current_time.set_text(mpv_tick_to_duration(time));
     _lbl_duration.set_text(mpv_tick_to_duration(_player.get_duration()));
+    for (int i = 0; i < _player.get_track_count(); i++) {
+        gana::MPVPlayer::Track track = _player.get_track(i);
+        gana::Logger::info("%s %s %ld %d %d", track.title.c_str(), track.lang.c_str(), track.id, track.type, (int)track.selected);
+    }
 }
 
 void Player::on_slider_value_changed(uint value)

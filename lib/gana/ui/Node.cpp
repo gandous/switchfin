@@ -376,11 +376,15 @@ void Node::set_process(bool process)
 void Node::show()
 {
     _visibility = true;
+    for (auto child: _childs)
+        child->show();
 }
 
 void Node::hide()
 {
     _visibility = false;
+    for (auto child: _childs)
+        child->hide();
 }
 
 void Node::set_visible(bool visibility)
@@ -538,9 +542,11 @@ void Node::propagate_event(Event &evt)
         if (evt.handle)
             return;
     }
-    process_event(evt);
-    if (_has_focus && (evt.type == sf::Event::JoystickButtonPressed || evt.type == sf::Event::KeyPressed))
-        check_move_focus_event(evt);
+    if (is_visible()) {
+        process_event(evt);
+        if (_has_focus && (evt.type == sf::Event::JoystickButtonPressed || evt.type == sf::Event::KeyPressed))
+            check_move_focus_event(evt);
+    }
 }
 
 void Node::propagate_draw(NVGcontext *ctx)

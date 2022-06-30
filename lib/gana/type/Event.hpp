@@ -23,6 +23,10 @@ class Event: public sf::Event {
         bool accept_pressed() const;
         // Switch button B is pressed or Escape key pressed
         bool cancel_pressed() const;
+        // Switch left or left arrow
+        bool left_pressed() const;
+        // Switch right or right arrow
+        bool right_pressed() const;
         Vector2f get_position() const;
         void clear();
     private:

@@ -94,8 +94,12 @@ bool VBoxContainer::is_focusable() const
 
 void VBoxContainer::on_focus()
 {
-    if (_childs.size() > 0)
-        _app->set_focused_node(_childs.front());
+    for (auto child: _childs) {
+        if (child->is_focusable()) {
+            _app->set_focused_node(child);
+            return;
+        }
+    }
 }
 
 void VBoxContainer::set_left_node(Node *node)

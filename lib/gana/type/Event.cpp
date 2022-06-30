@@ -47,6 +47,22 @@ bool Event::cancel_pressed() const
         return (false);
 }
 
+bool Event::left_pressed() const
+{
+    if ((type == sf::Event::KeyPressed && key.code == sf::Keyboard::Left) || (type == sf::Event::JoystickButtonReleased && (joystickButton.button == SwitchPadButton::LEFT || joystickButton.button == SwitchPadButton::STICKL_LEFT)))
+        return (true);
+    else
+        return (false);
+}
+
+bool Event::right_pressed() const
+{
+    if ((type == sf::Event::KeyPressed && key.code == sf::Keyboard::Right) || (type == sf::Event::JoystickButtonReleased && (joystickButton.button == SwitchPadButton::RIGHT || joystickButton.button == SwitchPadButton::STICKL_RIGHT)))
+        return (true);
+    else
+        return (false);
+}
+
 Vector2f Event::get_position() const
 {
     if (type == sf::Event::MouseButtonPressed || type == sf::Event::MouseButtonReleased) {

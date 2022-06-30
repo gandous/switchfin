@@ -94,8 +94,12 @@ bool HBoxContainer::is_focusable() const
 
 void HBoxContainer::on_focus()
 {
-    if (_childs.size() > 0)
-        _app->set_focused_node(_childs.front());
+    for (auto child: _childs) {
+        if (child->is_focusable()) {
+            _app->set_focused_node(child);
+            return;
+        }
+    }
 }
 
 void HBoxContainer::set_top_node(Node *node)

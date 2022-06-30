@@ -16,11 +16,15 @@ class Slider: public gana::Node {
         void process_event(gana::Event &evt) override;
         void set_max_value(uint value);
         void set_value(uint value);
+        uint get_value() const;
+    protected:
+        void draw_outline(NVGcontext *ctx) override;
     private:
         void update_percentage();
         uint _value;
         uint _max_value;
         float _percentage;
+        bool _touch_focus;
         gana::Vector2f _center_sliding_point;
 };
 

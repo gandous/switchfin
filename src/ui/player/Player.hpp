@@ -22,7 +22,8 @@ class Player: public gana::Node {
 
         void process_event(gana::Event &evt) override;
     protected:
-        void process();
+        void enter_tree() override;
+        void process() override;
     private:
         void on_file_loaded();
         void on_slider_value_changed(uint value);
