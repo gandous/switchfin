@@ -12,6 +12,7 @@ BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, con
     set_min_size(SIZE);
     set_focusable(true);
     set_margin(16);
+    set_color(gana::Color(0, 0, 0, 0));
 
     _img_background.set_min_size(SIZE);
     _img_background.set_image(http, url, {
@@ -44,6 +45,7 @@ BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, con
     _node.add_child(&_pgsb_time_watch);
 
     _node.set_anchor(gana::Node::Anchor::FULL_RECT);
+    signal_pressed.connect(*this, &BigMovieVignette::on_item_pressed);
     add_child(&_node);
 }
 
@@ -55,11 +57,7 @@ int BigMovieVignette::get_outline_corner_radius() const
     return (OUTLINE_CORNER_RADIUS);
 }
 
-void BigMovieVignette::process_event(gana::Event &evt)
+void BigMovieVignette::on_item_pressed()
 {
-    if (evt.is_touch() && inside_node(gana::Vector2f(evt.touch.x, evt.touch.y))) {
-        on_click.emit(_item);
-    } else if (has_focus() && evt.accept_pressed()) {
-        on_click.emit(_item);
-    }
+    on_click.emit(_item);
 }

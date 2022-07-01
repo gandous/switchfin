@@ -8,6 +8,7 @@ SmallMovieVignette::SmallMovieVignette(gana::Http &http, const std::string &url,
 {
     set_min_size(SIZE);
     set_focusable(true);
+    set_color(gana::Color(0, 0, 0, 0));
     set_margin(8);
 
     _img_background.set_min_size(SIZE);
@@ -18,17 +19,15 @@ SmallMovieVignette::SmallMovieVignette(gana::Http &http, const std::string &url,
     });
     _img_background.set_stretch_mode(gana::Image::StretchMode::KEEP_ASPECT_COVERED);
     _img_background.set_corner_radius(CORNER_RADIUS);
+
+    signal_pressed.connect(*this, &SmallMovieVignette::on_item_pressed);
     add_child(&_img_background);
 }
 
 SmallMovieVignette::~SmallMovieVignette()
 {}
 
-void SmallMovieVignette::process_event(gana::Event &evt)
+void SmallMovieVignette::on_item_pressed()
 {
-    if (evt.is_touch() && inside_node(gana::Vector2f(evt.touch.x, evt.touch.y))) {
-        on_click.emit(_item);
-    } else if (has_focus() && evt.accept_pressed()) {
-        on_click.emit(_item);
-    }
+    on_click.emit(_item);
 }

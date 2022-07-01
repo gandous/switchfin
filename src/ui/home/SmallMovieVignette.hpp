@@ -4,20 +4,19 @@
 
 #include <string>
 #include "gana/type/Signal.hpp"
-#include "gana/ui/RectContainer.hpp"
+#include "gana/ui/BaseButton.hpp"
 #include "gana/ui/NetworkImage.hpp"
 #include "gana/ui/Label.hpp"
 #include "network/item/Item.hpp"
 
-class SmallMovieVignette: public gana::RectContainer {
+class SmallMovieVignette: public gana::BaseButton {
     public:
         SmallMovieVignette(gana::Http &http, const std::string &url, const Item &item);
         ~SmallMovieVignette();
 
         gana::Signal<const Item&> on_click;
-    protected:
-        void process_event(gana::Event &evt);
     private:
+        void on_item_pressed();
         const Item &_item;
         gana::NetworkImage _img_background;
 };
