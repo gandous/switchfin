@@ -201,9 +201,16 @@ void App::run_event()
             down = true;
             _prev_mouse_pos = evt.get_position();
         } else if (evt.is_touch_up()) {
+            gana::Logger::info("touch up");
             down = false;
             if (_scrolling != ScrollDir::NONE) {
                 _scrolling = ScrollDir::NONE;
+                Event sevent;
+                sevent.type = sf::Event::EventType::MouseButtonReleased;
+                sevent.mouseButton.button = sf::Mouse::Button::Left;
+                sevent.mouseButton.x = -10000;
+                sevent.mouseButton.y = -10000;
+                _root_node->propagate_event(sevent);
                 goto clear;
             }
         } else if (down && _scrolling == ScrollDir::NONE && (evt.type == sf::Event::MouseMoved || evt.type == sf::Event::TouchMoved)) {
