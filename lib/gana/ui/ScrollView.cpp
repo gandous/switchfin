@@ -98,15 +98,22 @@ bool ScrollView::is_focusable() const
 
 void ScrollView::preprocess_event(Event &evt)
 {
-if (evt.type == sf::Event::MouseWheelScrolled && inside_node(evt.get_position())) {
+    if (evt.type == sf::Event::MouseWheelScrolled && inside_node(evt.get_position())) {
         Vector2f new_pos = _childs.front()->get_position();
+        Vector2f size = _childs.front()->get_draw_size();
         if (X_SCROLL && evt.mouseWheelScroll.wheel == sf::Mouse::Wheel::HorizontalWheel) {
-            new_pos.x += evt.mouseWheelScroll.delta;
+            float x = new_pos.x + evt.mouseWheelScroll.delta;
             evt.handle = true;
+            if (x <= 0 && x >= get_draw_size().x - size.x) {
+                new_pos.x = x;
+            }
         }
         if (Y_SCROLL && evt.mouseWheelScroll.wheel == sf::Mouse::Wheel::VerticalWheel) {
-            new_pos.y += evt.mouseWheelScroll.delta;
+            float y = new_pos.y + evt.mouseWheelScroll.delta;
             evt.handle = true;
+            if (y <= 0 && y >= get_draw_size().y - size.y) {
+                new_pos.y = y;
+            }
         }
         _childs.front()->set_position(new_pos);
     }

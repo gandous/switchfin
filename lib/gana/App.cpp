@@ -201,7 +201,6 @@ void App::run_event()
             down = true;
             _prev_mouse_pos = evt.get_position();
         } else if (evt.is_touch_up()) {
-            gana::Logger::info("touch up");
             down = false;
             if (_scrolling != ScrollDir::NONE) {
                 _scrolling = ScrollDir::NONE;
@@ -215,7 +214,6 @@ void App::run_event()
             }
         } else if (down && _scrolling == ScrollDir::NONE && (evt.type == sf::Event::MouseMoved || evt.type == sf::Event::TouchMoved)) {
             Vector2f diff = evt.get_position() - _prev_mouse_pos;
-            gana::Logger::info("%f %f", diff.x, diff.y);
             if (std::abs(diff.x) > MIN_SCROLL_DIST) {
                 _scrolling = ScrollDir::X;
             } else if (std::abs(diff.y) > MIN_SCROLL_DIST) {
