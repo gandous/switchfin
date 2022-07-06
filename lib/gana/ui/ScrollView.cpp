@@ -159,7 +159,7 @@ void ScrollView::on_node_focus(Node *node)
             if (get_draw_positon().x > node->get_draw_positon().x) {
                 new_pos.x = -node->get_position().x;
             } else if (right < node_right) {
-                new_pos.x = -(node_right - right - _childs.front()->get_position().x);
+                new_pos.x = -(node_right - right - _childs.front()->get_position().x + _childs.front()->get_margin().w + node->get_margin().w);
             }
         }
         if (Y_SCROLL) {
@@ -172,7 +172,7 @@ void ScrollView::on_node_focus(Node *node)
                 else
                     new_pos.y = -node->get_position().y;
             } else if (bottom < node_bottom) {
-                new_pos.y = -(node_bottom - bottom - _childs.front()->get_position().y);
+                new_pos.y = -(node_bottom - bottom - _childs.front()->get_position().y + _childs.front()->get_margin().h + node->get_margin().h);
             }
         }
         _childs.front()->set_position(new_pos);

@@ -4,7 +4,7 @@
 
 static const gana::Vector2f SIZE = gana::Vector2f(368, 215);
 static const int CORNER_RADIUS = 16;
-static const int OUTLINE_CORNER_RADIUS = 16;
+static const int OUTLINE_CORNER_RADIUS = 18;
 static const int PROGRESS_BAR_MARGIN = 16;
 
 BigMovieVignette::BigMovieVignette(gana::Http &http, const std::string &url, const Item &item): _item(item)
