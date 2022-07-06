@@ -78,6 +78,11 @@ void Node::draw(NVGcontext *ctx)
     (void)ctx;
 }
 
+void Node::preprocess_event(Event &evt)
+{
+    (void)evt;
+}
+
 void Node::process_event(Event &evt)
 {
     (void)evt;
@@ -537,12 +542,15 @@ void Node::apply_anchor(const Vector2f &size)
 
 void Node::propagate_event(Event &evt)
 {
-    for (auto &child: _childs) {
-        child->propagate_event(evt);
+    if (is_visible()) {
+        preprocess_event(evt);
         if (evt.handle)
             return;
-    }
-    if (is_visible()) {
+        for (auto &child: _childs) {
+            child->propagate_event(evt);
+            if (evt.handle)
+                return;
+        }
         process_event(evt);
         if (_has_focus && (evt.type == sf::Event::JoystickButtonPressed || evt.type == sf::Event::KeyPressed))
             check_move_focus_event(evt);

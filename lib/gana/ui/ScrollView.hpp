@@ -30,6 +30,7 @@ class ScrollView: public gana::Node {
         void draw(NVGcontext *ctx) override;
         void set_scroll_direction(ScrollDirection direction);
         bool is_focusable() const;
+        void preprocess_event(Event &evt) override;
         virtual void set_left_node(Node *node) override;
         virtual void set_top_node(Node *node) override;
         virtual void set_right_node(Node *node) override;

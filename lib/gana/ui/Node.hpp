@@ -72,6 +72,9 @@ class Node {
         // A ScrollContainer will stop the propagation of the function
         virtual bool has_child(const Node *node);
         virtual void draw(NVGcontext *ctx);
+        // Process event before childs
+        virtual void preprocess_event(Event &evt);
+        // Process event after after childs (not called if the event is handle by one of the child)
         virtual void process_event(Event &evt);
         virtual void update_layout(const Vector2f &size);
         virtual const Vector2f &get_position() const;

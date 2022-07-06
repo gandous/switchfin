@@ -96,6 +96,22 @@ bool ScrollView::is_focusable() const
     return (_childs.size() > 0 && _childs[0]->is_focusable());
 }
 
+void ScrollView::preprocess_event(Event &evt)
+{
+if (evt.type == sf::Event::MouseWheelScrolled && inside_node(evt.get_position())) {
+        Vector2f new_pos = _childs.front()->get_position();
+        if (X_SCROLL && evt.mouseWheelScroll.wheel == sf::Mouse::Wheel::HorizontalWheel) {
+            new_pos.x += evt.mouseWheelScroll.delta;
+            evt.handle = true;
+        }
+        if (Y_SCROLL && evt.mouseWheelScroll.wheel == sf::Mouse::Wheel::VerticalWheel) {
+            new_pos.y += evt.mouseWheelScroll.delta;
+            evt.handle = true;
+        }
+        _childs.front()->set_position(new_pos);
+    }
+}
+
 void ScrollView::set_left_node(Node *node)
 {
     Node::set_left_node(node);

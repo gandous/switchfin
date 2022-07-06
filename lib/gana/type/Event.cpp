@@ -1,6 +1,7 @@
 
 #include "SwitchPadButton.hpp"
 #include "Event.hpp"
+#include "Logger.hpp"
 
 namespace gana {
 
@@ -71,7 +72,10 @@ Vector2f Event::get_position() const
         return (Vector2f(mouseMove.x, mouseMove.y));
     } else if (type == sf::Event::TouchBegan || type == sf::Event::TouchEnded || type == sf::Event::TouchMoved) {
         return (Vector2f(touch.x, touch.y));
+    } else if (type == sf::Event::MouseWheelScrolled) {
+        return (Vector2f(mouseWheelScroll.x, mouseWheelScroll.y));
     }
+    gana::Logger::error("Cannot get event position (evt type: %d)", type);
     return (Vector2f());
 }
 

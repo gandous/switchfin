@@ -37,6 +37,12 @@ class App {
         Signal<Node*> signal_node_focus;
         DebugScreen &get_debug();
     private:
+        enum ScrollDir {
+            X,
+            Y,
+            NONE,
+        };
+        void run_event();
         sf::VideoMode _mode;
         sf::Window _window;
         NVGcontext* _vg;
@@ -50,6 +56,8 @@ class App {
         int _frame_time;
         sf::Clock _cl_frame_time;
         bool _show_debug;
+        ScrollDir _scrolling;
+        Vector2f _prev_mouse_pos;
 };
 
 }
