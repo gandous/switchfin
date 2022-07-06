@@ -32,6 +32,7 @@ class MovieDetail: public gana::RectContainer {
         gana::NetworkImage _img_background;
         gana::NetworkImage _img_vignette;
         gana::Label _lbl_title;
+        gana::Label _lbl_duration;
         gana::MultiLineLabel _mlbl_overview;
         gana::GradientColorRect _gdt_background;
         gana::HBoxContainer _ctn_info;

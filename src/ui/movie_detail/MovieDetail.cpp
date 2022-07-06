@@ -1,7 +1,10 @@
 
+#include <sstream>
 #include "App.hpp"
 #include "ui/player/Player.hpp"
 #include "Genre.hpp"
+#include "network/item/duration.hpp"
+#include "gana/theme/color.hpp"
 #include "MovieDetail.hpp"
 
 static const gana::Vector2f SIZE = gana::Vector2f(1280, 720);
@@ -40,6 +43,12 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _lbl_title.set_max_length(30);
     _ctn_overview.add_child(&_lbl_title);
 
+    std::ostringstream str;
+    str << tick_to_duration(item.get_runtime_tick()) << " " << item.get_prod_year();
+    _lbl_duration.set_text(str.str());
+    _lbl_duration.set_color(gana::theme::TEXT_COLOR_SECONDARY);
+    _ctn_overview.add_child(&_lbl_duration);
+
     _ctn_genres.set_space(8);
     _ctn_overview.add_child(&_ctn_genres);
 
@@ -49,7 +58,7 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _ctn_play_button.signal_play_pressed.connect(*this, &MovieDetail::on_play_btn_pressed);
     _ctn_overview.add_child(&_ctn_play_button);
 
-    _ctn_overview.set_margin(0, 32, 0, 0);
+    _ctn_overview.set_margin(0, 24, 0, 0);
     _ctn_overview.set_expand();
     _ctn_overview.set_space(12);
     _ctn_info.add_child(&_ctn_overview);
