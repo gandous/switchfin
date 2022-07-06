@@ -7,6 +7,7 @@
 #include "gana/ui/Label.hpp"
 #include "gana/ui/MultiLineLabel.hpp"
 #include "gana/ui/GradientColorRect.hpp"
+#include "gana/ui/TextureButton.hpp"
 #include "gana/ui/RectContainer.hpp"
 #include "gana/ui/box_container/VBoxContainer.hpp"
 #include "gana/ui/ScrollView.hpp"
@@ -22,6 +23,7 @@ class SeasonDetail: public gana::RectContainer {
         void process() override;
     private:
         void on_episodes_receive(gana::Request::RCode code);
+        void on_back_btn_pressed();
         std::shared_ptr<ItemsRequest> _repisodes;
         gana::NavigationManager &_nav;
         std::shared_ptr<JellyfinClient> _jclient;
@@ -29,7 +31,8 @@ class SeasonDetail: public gana::RectContainer {
         gana::NetworkImage _img_background;
         gana::Label _lbl_title;
         gana::Label _lbl_season_nb;
-        gana::GradientColorRect _gdt_background;
+         gana::TextureButton _btn_back;
+       gana::GradientColorRect _gdt_background;
         gana::VBoxContainer _ctn_episode;
         gana::ScrollView _scr_episode;
 };

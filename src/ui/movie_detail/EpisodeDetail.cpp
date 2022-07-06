@@ -50,6 +50,11 @@ EpisodeDetail::EpisodeDetail(gana::NavigationManager &nav, std::shared_ptr<Jelly
     _ctn_play_button.signal_play_pressed.connect(*this, &EpisodeDetail::on_play_btn_pressed);
     _ctn_info.add_child(&_ctn_play_button);
 
+    _btn_back.set_image("icon/back-48.png");
+    _btn_back.set_color(gana::Color(0, 0, 0, 70));
+    _btn_back.signal_pressed.connect(*this, &EpisodeDetail::on_back_btn_pressed);
+    _ctn_split_img_background.add_child(&_btn_back);
+
     _ctn_split_img_background.add_spacer(8, true);
     _ctn_split_img_background.set_margin(32);
     add_child(&_ctn_split_img_background);
@@ -93,4 +98,9 @@ void EpisodeDetail::on_play_btn_pressed()
 void EpisodeDetail::on_resume_btn_pressed()
 {
     gana::Logger::info("Resume");
+}
+
+void EpisodeDetail::on_back_btn_pressed()
+{
+    _nav.navigate_up();
 }

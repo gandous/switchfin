@@ -1,4 +1,5 @@
 
+#include "gana/ui/box_container/HBoxContainer.hpp"
 #include "EpisodeVignette.hpp"
 #include "App.hpp"
 #include "SeasonDetail.hpp"
@@ -25,10 +26,18 @@ SeasonDetail::SeasonDetail(gana::NavigationManager &nav, std::shared_ptr<Jellyfi
     _gdt_background.set_anchor(gana::Node::FULL_RECT);
     add_child(&_gdt_background);
 
+    gana::HBoxContainer *ctn = make_managed<gana::HBoxContainer>();
+    _btn_back.set_image("icon/back-48.png");
+    _btn_back.set_color(gana::Color(0, 0, 0, 70));
+    _btn_back.signal_pressed.connect(*this, &SeasonDetail::on_back_btn_pressed);
+    ctn->add_child(&_btn_back);
+
+    ctn->set_space(16);
     _lbl_title.set_text(item.get_serie_name());
     _lbl_title.set_font_size(60);
     _lbl_title.set_max_length(30);
-    _ctn_episode.add_child(&_lbl_title);
+    ctn->add_child(&_lbl_title);
+    _ctn_episode.add_child(ctn);
 
     _lbl_season_nb.set_text(item.get_name());
     _lbl_season_nb.set_font_size(24);
@@ -66,4 +75,9 @@ void SeasonDetail::on_episodes_receive(gana::Request::RCode code)
         _ctn_episode.add_child(vign);
     }
     _app->set_focused_node(&_ctn_episode);
+}
+
+void SeasonDetail::on_back_btn_pressed()
+{
+    _nav.navigate_up();
 }

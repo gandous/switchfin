@@ -63,6 +63,11 @@ MovieDetail::MovieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _ctn_overview.set_space(12);
     _ctn_info.add_child(&_ctn_overview);
 
+    _btn_back.set_image("icon/back-48.png");
+    _btn_back.set_color(gana::Color(0, 0, 0, 70));
+    _btn_back.signal_pressed.connect(*this, &MovieDetail::on_back_btn_pressed);
+    _ctn_split_img_background.add_child(&_btn_back);
+
     _ctn_split_img_background.add_spacer(8, true);
     _ctn_split_img_background.set_margin(32);
     add_child(&_ctn_split_img_background);
@@ -105,4 +110,9 @@ void MovieDetail::on_play_btn_pressed()
 void MovieDetail::on_resume_btn_pressed()
 {
     gana::Logger::info("Resume");
+}
+
+void MovieDetail::on_back_btn_pressed()
+{
+    _nav.navigate_up();
 }

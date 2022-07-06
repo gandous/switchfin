@@ -33,6 +33,14 @@ SerieDetail::SerieDetail(gana::NavigationManager &nav, std::shared_ptr<JellyfinC
     _gdt_background.set_anchor(gana::Node::FULL_RECT);
     add_child(&_gdt_background);
 
+    gana::Node *node = make_managed<gana::Node>();
+    add_child(node);
+    _btn_back.set_margin(16, 16, 0, 0);
+    _btn_back.set_image("icon/back-48.png");
+    _btn_back.set_color(gana::Color(0, 0, 0, 70));
+    _btn_back.signal_pressed.connect(*this, &SerieDetail::on_back_btn_pressed);
+    node->add_child(&_btn_back);
+
     _img_vignette.set_image(client->get_http(), client->get_img_url(item.get_id(), item.get_type() == Item::EPISODE ? JellyfinClient::BACKDROP : JellyfinClient::PRIMARY), {
         {"fillWidth", std::to_string((int)VIGNETTE_SIZE.x)},
         {"fillHeight", std::to_string((int)VIGNETTE_SIZE.y)},
@@ -136,4 +144,9 @@ void SerieDetail::on_resume_btn_pressed()
 void SerieDetail::on_season_click(const Item &item)
 {
     _nav.navigate_down<SeasonDetail>(_jclient, item);
+}
+
+void SerieDetail::on_back_btn_pressed()
+{
+    _nav.navigate_up();
 }

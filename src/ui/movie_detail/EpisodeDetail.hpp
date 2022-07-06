@@ -8,6 +8,7 @@
 #include "gana/ui/MultiLineLabel.hpp"
 #include "gana/ui/GradientColorRect.hpp"
 #include "gana/ui/RectContainer.hpp"
+#include "gana/ui/TextureButton.hpp"
 #include "gana/ui/Button.hpp"
 #include "gana/ui/box_container/HBoxContainer.hpp"
 #include "gana/ui/box_container/VBoxContainer.hpp"
@@ -25,6 +26,7 @@ class EpisodeDetail: public gana::RectContainer {
         void on_data_receive(gana::Request::RCode code);
         void on_play_btn_pressed();
         void on_resume_btn_pressed();
+        void on_back_btn_pressed();
         gana::NavigationManager &_nav;
         std::shared_ptr<JellyfinClient> _jclient;
         std::shared_ptr<ItemRequest> _rdata;
@@ -35,6 +37,7 @@ class EpisodeDetail: public gana::RectContainer {
         gana::Label _lbl_episode_number;
         gana::Label _lbl_duration;
         gana::MultiLineLabel _mlbl_overview;
+        gana::TextureButton _btn_back;
         gana::GradientColorRect _gdt_background;
         gana::VBoxContainer _ctn_info;
         gana::HBoxContainer _ctn_name_duration;

@@ -9,6 +9,7 @@
 #include "gana/ui/GradientColorRect.hpp"
 #include "gana/ui/RectContainer.hpp"
 #include "gana/ui/Button.hpp"
+#include "gana/ui/TextureButton.hpp"
 #include "gana/ui/box_container/HBoxContainer.hpp"
 #include "gana/ui/box_container/VBoxContainer.hpp"
 #include "network/JellyfinClient.hpp"
@@ -25,6 +26,7 @@ class MovieDetail: public gana::RectContainer {
         void on_data_receive(gana::Request::RCode code);
         void on_play_btn_pressed();
         void on_resume_btn_pressed();
+        void on_back_btn_pressed();
         gana::NavigationManager &_nav;
         std::shared_ptr<JellyfinClient> _jclient;
         std::shared_ptr<ItemRequest> _rdata;
@@ -33,6 +35,7 @@ class MovieDetail: public gana::RectContainer {
         gana::NetworkImage _img_vignette;
         gana::Label _lbl_title;
         gana::Label _lbl_duration;
+        gana::TextureButton _btn_back;
         gana::MultiLineLabel _mlbl_overview;
         gana::GradientColorRect _gdt_background;
         gana::HBoxContainer _ctn_info;
