@@ -100,19 +100,26 @@ void ScrollView::preprocess_event(Event &evt)
 {
     if (evt.type == sf::Event::MouseWheelScrolled && inside_node(evt.get_position())) {
         Vector2f new_pos = _childs.front()->get_position();
-        Vector2f size = _childs.front()->get_draw_size();
+        const Vector2f &size = _childs.front()->get_draw_size();
+        const Rectf &margin = _childs.front()->get_margin();
         if (X_SCROLL && evt.mouseWheelScroll.wheel == sf::Mouse::Wheel::HorizontalWheel) {
             float x = new_pos.x + evt.mouseWheelScroll.delta;
             evt.handle = true;
-            if (x <= 0 && x >= get_draw_size().x - size.x) {
-                new_pos.x = x;
+            if (evt.mouseWheelScroll.delta > 0) {
+                new_pos.x = x <= 0 ? x : 0;
+            } else {
+                float left = get_draw_size().x - size.x - margin.w;
+                new_pos.x = x >= left ? x : left;
             }
         }
         if (Y_SCROLL && evt.mouseWheelScroll.wheel == sf::Mouse::Wheel::VerticalWheel) {
             float y = new_pos.y + evt.mouseWheelScroll.delta;
             evt.handle = true;
-            if (y <= 0 && y >= get_draw_size().y - size.y) {
-                new_pos.y = y;
+            if (evt.mouseWheelScroll.delta > 0) {
+                new_pos.y = y <= 0 ? y : 0;
+            } else {
+                float top = get_draw_size().y - size.y - margin.h;
+                new_pos.y = y >= top ? y : top;
             }
         }
         _childs.front()->set_position(new_pos);
