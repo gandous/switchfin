@@ -5,6 +5,9 @@
 #include "ui/movie_detail/MovieDetail.hpp"
 #include "ui/movie_detail/SerieDetail.hpp"
 #include "ui/movie_detail/EpisodeDetail.hpp"
+#include "ui/movie_detail/MediaList.hpp"
+#include "MediaVignette.hpp"
+#include "BigMovieVignette.hpp"
 #include "Home.hpp"
 
 
@@ -48,6 +51,18 @@ Home::Home(gana::NavigationManager &nav, std::shared_ptr<JellyfinClient> client)
 
     _ctn_next_up.set_expand();
     scroll_next_up->add_child(&_ctn_next_up);
+
+    _lbl_my_media.set_text("My media");
+    _lbl_my_media.set_font_size(40);
+    _ctn_main.add_child(&_lbl_my_media);
+
+    gana::ScrollView *scroll_my_media = _ctn_main.make_managed<gana::ScrollView>();
+    scroll_my_media->set_hsizing(gana::Node::Sizing::FILL);
+    scroll_my_media->set_scroll_direction(gana::ScrollView::X);
+    _ctn_main.add_child(scroll_my_media);
+
+    _ctn_my_media.set_expand();
+    scroll_my_media->add_child(&_ctn_my_media);
 
     _ctn_resume_movie.set_expand();
     _scr_resume.add_child(&_ctn_resume_movie);
@@ -113,6 +128,9 @@ void Home::on_views_receive(gana::Request::RCode code)
         LatestView *view = make_managed<LatestView>(*_jclient.get(), item.get_id());
         view->on_item_selected.connect(*this, &Home::on_item_click);
         _ctn_main.add_child(view);
+        MediaVignette *media = make_managed<MediaVignette>(_jclient->get_http(), _jclient->get_img_url(item.get_id(), JellyfinClient::PRIMARY), item);
+        _ctn_my_media.add_child(media);
+        media->on_click.connect(*this, &Home::on_item_click);
     }
 }
 
@@ -128,6 +146,9 @@ void Home::on_item_click(const Item &item)
             break;
         case Item::EPISODE:
             _nav.navigate_down<EpisodeDetail>(_jclient, item);
+            break;
+        case Item::COLLECTION_FOLDER:
+            _nav.navigate_down<MediaList>(_jclient, item);
             break;
         default:
             gana::Logger::error("failed to navigate down. Unknow item type");

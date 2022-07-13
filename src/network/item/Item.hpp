@@ -17,6 +17,7 @@ class Item {
             MOVIE,
             SERIE,
             EPISODE,
+            COLLECTION_FOLDER,
             UNKNOW,
         };
 

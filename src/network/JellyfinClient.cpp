@@ -100,6 +100,22 @@ std::shared_ptr<ItemRequest> JellyfinClient::get_info(const std::string &id)
     return (req);
 }
 
+std::shared_ptr<ItemsRequest> JellyfinClient::get_items(const std::string &parent_id)
+{
+    std::ostringstream url;
+    gana::Http::UrlParams params = {
+        {"ParentId", parent_id},
+        {"SortBy", "SortName,ProductionYear"},
+        {"SortOrder", "Ascending"},
+        {"Limit", "100"}
+    };
+
+    url << _url << "/Users/" << _user_id << "/Items";
+    std::shared_ptr<ItemsRequest> req = std::make_shared<ItemsRequest>();
+    _http.get(req, url.str(), _default_header, params);
+    return (req);
+}
+
 std::shared_ptr<ItemsRequest> JellyfinClient::get_seasons(const std::string &show_id)
 {
     std::ostringstream url;

@@ -10,7 +10,6 @@
 #include "ui/Label.hpp"
 #include "ui/ColorRect.hpp"
 #include "ui/NavigationManager.hpp"
-#include "BigMovieVignette.hpp"
 
 class Home: public gana::ColorRect {
     public:
@@ -33,8 +32,10 @@ class Home: public gana::ColorRect {
         gana::VBoxContainer _ctn_main;
         gana::HBoxContainer _ctn_resume_movie;
         gana::HBoxContainer _ctn_next_up;
+        gana::HBoxContainer _ctn_my_media;
         gana::Label _lbl_continue_watching;
         gana::Label _lbl_next_up;
+        gana::Label _lbl_my_media;
         gana::ScrollView _scr_resume;
 };
 

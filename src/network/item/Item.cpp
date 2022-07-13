@@ -167,6 +167,8 @@ Item::Type Item::parse_type(const std::string &type)
         return (Type::SERIE);
     else if (type == "Episode")
         return (Type::EPISODE);
+    else if (type == "CollectionFolder")
+        return (Type::COLLECTION_FOLDER);
     else
         return (Type::UNKNOW);
 }

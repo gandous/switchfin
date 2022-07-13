@@ -35,6 +35,7 @@ class JellyfinClient {
         std::shared_ptr<ItemsRequest> get_views();
         std::shared_ptr<ItemListRequest> get_latest(const std::string &parent_id);
         std::shared_ptr<ItemRequest> get_info(const std::string &id);
+        std::shared_ptr<ItemsRequest> get_items(const std::string &parent_id);
         std::shared_ptr<ItemsRequest> get_seasons(const std::string &show_id);
         std::shared_ptr<ItemsRequest> get_episodes(const std::string &show_id, const std::string &season_id);
         std::shared_ptr<ItemsRequest> get_next_up(const std::string &series_id = "");
