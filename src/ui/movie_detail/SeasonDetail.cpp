@@ -2,6 +2,7 @@
 #include "gana/ui/box_container/HBoxContainer.hpp"
 #include "EpisodeVignette.hpp"
 #include "App.hpp"
+#include "ui/player/Player.hpp"
 #include "SeasonDetail.hpp"
 
 static const gana::Vector2f SIZE = gana::Vector2f(1280, 720);
@@ -70,9 +71,10 @@ void SeasonDetail::on_episodes_receive(gana::Request::RCode code)
         return;
     }
     for (auto &c: _repisodes->get_items()) {
-        EpisodeVignette *vign = _ctn_episode.make_managed<EpisodeVignette>(*_jclient.get(), c);
-        vign->set_hsizing(gana::Node::Sizing::FILL);
-        _ctn_episode.add_child(vign);
+        EpisodeVignette *vignette = _ctn_episode.make_managed<EpisodeVignette>(*_jclient.get(), c);
+        vignette->set_hsizing(gana::Node::Sizing::FILL);
+        vignette->signal_item_click.connect(*this, &SeasonDetail::on_item_click);
+        _ctn_episode.add_child(vignette);
     }
     _app->set_focused_node(&_ctn_episode);
 }
@@ -80,4 +82,9 @@ void SeasonDetail::on_episodes_receive(gana::Request::RCode code)
 void SeasonDetail::on_back_btn_pressed()
 {
     _nav.navigate_up();
+}
+
+void SeasonDetail::on_item_click(const Item &item)
+{
+    _nav.navigate_down<Player>(_jclient, item);
 }

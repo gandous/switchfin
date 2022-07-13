@@ -7,21 +7,20 @@
 #include "gana/ui/MultiLineLabel.hpp"
 #include "gana/ui/box_container/VBoxContainer.hpp"
 #include "gana/ui/BGRectContainer.hpp"
+#include "gana/ui/BaseButton.hpp"
 #include "gana/type/Signal.hpp"
 #include "network/item/Item.hpp"
 #include "network/JellyfinClient.hpp"
 #include "PlayButtonContainer.hpp"
 
-class EpisodeVignette: public gana::BGRectContainer {
+class EpisodeVignette: public gana::BaseButton {
     public:
         EpisodeVignette(JellyfinClient &client, const Item &item);
         ~EpisodeVignette();
 
-        gana::Signal<const Item&> signal_pressed;
-    protected:
-        void process_event(gana::Event &evt) override;
-        // int get_outline_corner_radius() const;
+        gana::Signal<const Item&> signal_item_click;
     private:
+        void on_item_click();
         const Item &_item;
         gana::HBoxContainer _ctn;
         gana::VBoxContainer _ctn_text;
