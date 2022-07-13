@@ -163,7 +163,7 @@ std::string JellyfinClient::get_stream_url(const std::string &id) const
 #else
     str << _url;
 #endif
-    str << "/videos/" << id << "/stream?static=true&api_key=" << _token;
+    str << "/videos/" << id << "/stream?static=true";
     return (str.str());
 }
 
